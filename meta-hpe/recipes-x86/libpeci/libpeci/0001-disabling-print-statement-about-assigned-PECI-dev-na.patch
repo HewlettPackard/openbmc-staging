@@ -1,0 +1,26 @@
+From 5a3398fd2c57881761edfbd9ebefc4c8030b302f Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Tue, 29 Apr 2025 13:12:44 -0500
+Subject: [PATCH] disabling print statement about assigned PECI dev name
+
+Signed-off-by: Chris Sides <Christopher.Sides@hpe.com>
+Upstream-Status: Pending
+---
+ peci.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/peci.c b/peci.c
+index d52913d..3bb1ae5 100644
+--- a/peci.c
++++ b/peci.c
+@@ -47,7 +47,9 @@ void peci_SetDevName(char* peci_dev)
+         peci_name_new[DEV_NAME_SIZE - 1] = '\0';
+         peci_device_list[0] = peci_name_new;
+         peci_device_list[1] = NULL;
+-        syslog(LOG_INFO, "PECI set dev name to %s\n", peci_device_list[0]);
++        // syslog(LOG_INFO, "PECI set dev name to %s\n", peci_device_list[0]); //this was flooding the logs, seems to be triggered by 1 CPU being installed, plus a CPU slot
++                                                                                //being left empty, and the rescan for the empty slot being changed from '5' to '1'
++                                                                                //TODO: re-enable this after solving things at the CPU daemon level.
+     }
+     else
+     {

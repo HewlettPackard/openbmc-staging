@@ -1,0 +1,13 @@
+[Unit]
+Description=Service to add HPE vNIC gadget and corresponding D-Bus interface at startup
+Requires=sys-kernel-config.mount
+After=sys-kernel-config.mount
+
+[Service]
+ExecStart=/usr/bin/vnic-gadget.sh add
+ExecStop=/usr/bin/vnic-gadget.sh remove
+Type=oneshot
+RemainAfterExit=Yes
+
+[Install]
+WantedBy=multi-user.target

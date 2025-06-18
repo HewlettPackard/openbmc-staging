@@ -1,0 +1,114 @@
+From c26e316672782d23d907bbb5c2a125d150640959 Mon Sep 17 00:00:00 2001
+From: Tom Hancock <tom.hancock@hpe.com>
+Date: Mon, 10 Jun 2024 00:00:00 +0000
+Subject: [PATCH] Find Fans
+
+Signed-off-by: Tom Hancock <tom.hancock@hpe.com>
+Upstream-Status: Inappropriate
+---
+ src/GxpFanMain.cpp | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/src/GxpFanMain.cpp b/src/GxpFanMain.cpp
+index 4e65ec9..dee02e3 100644
+--- a/src/GxpFanMain.cpp
++++ b/src/GxpFanMain.cpp
+@@ -58,7 +58,8 @@ bool isGxpFanCtrl(const fs::path& parentPath)
+     fs::path linkPath = parentPath / "device";
+     std::string canonical = fs::read_symlink(linkPath);
+ 
+-    if (boost::ends_with(canonical, "c1000c00.fanctrl"))
++    if (boost::ends_with(canonical, "c1000c00.fanctrl") ||
++	boost::ends_with(canonical, "c0000c00.fanctrl"))
+     {
+         std::cerr << "(o)isGxpFanCtrl: " << canonical << "\n";
+         return true;
+@@ -114,7 +115,7 @@ void createSensors(
+                 std::vector<thresholds::Threshold> thresholds;
+                 if(!parseThresholdsFromConfig(sensorData, thresholds))
+                 {
+-                    std::cerr << "error populating threhsolds for " << configurationPath.str << "\n";
++                    std::cerr << "error populating thresholds for " << configurationPath.str << std::endl;
+                 }
+ 
+                 // get name
+@@ -197,7 +197,7 @@ void createSensors(
+                         {
+                             continue;
+                         }
+-                        if(!boost::ends_with(pwm.string(), std::to_string(index))) {
++                        if(!boost::ends_with(pwm.string(), std::to_string(index+1))) {
+                             continue;
+                         }
+                         if(tachSensors.find(name) != tachSensors.end())
+@@ -206,7 +207,7 @@ void createSensors(
+                         }
+                         if constexpr (debug)
+                         {
+-                            std::cerr << "create GxpTachSensor index=" << index << "sysPath ="<< pwm.string()<<"\n";
++                            std::cerr << "create GxpTachSensor index=" << std::to_string(index) << " sysPath =" << pwm.string() << std::endl;
+                         }
+                         tachSensors.insert(
+                             std::pair<std::string, std::unique_ptr<GxpTachSensor>>(
+@@ -228,7 +228,7 @@ void createSensors(
+                         {
+                             continue;
+                         }
+-                        if(!boost::ends_with(pwm.string(), std::to_string(index)))
++                        if(!boost::ends_with(pwm.string(), std::to_string(index+1)))
+                         {
+                             continue;
+                         }
+@@ -238,7 +239,7 @@ void createSensors(
+                         }
+                         if constexpr (debug)
+                         {
+-                            std::cerr << "create pwmSensor index=" << index << "sysPath ="<<pwm.string()<<"\n";
++                            std::cerr << "create pwmSensor index=" << std::to_string(index) << " sysPath ="<< pwm.string() << std::endl;
+                         }
+                         pwmSensors.insert(
+                             std::pair<std::string, std::unique_ptr<GxpPwmSensor>>(
+@@ -264,6 +265,7 @@ int main()
+     auto dbusConnection = std::make_shared<sdbusplus::asio::connection>(io);
+     dbusConnection->request_name("xyz.openbmc_project.GxpFanSensor");
+     sdbusplus::asio::object_server objectServer(dbusConnection);
++    objectServer.add_manager("/xyz/openbmc_project/sensors");
+     boost::container::flat_map<std::string, std::unique_ptr<GxpPwmSensor>> pwmSensors;
+     boost::container::flat_map<std::string, std::unique_ptr<GxpTachSensor>> tachSensors;
+     std::vector<std::unique_ptr<sdbusplus::bus::match::match>> matches;
+diff --git a/src/GxpTachSensor.cpp b/src/GxpTachSensor.cpp
+index f0c0083..25e08d8 100644
+--- a/src/GxpTachSensor.cpp
++++ b/src/GxpTachSensor.cpp
+@@ -72,7 +72,7 @@ GxpTachSensor::GxpTachSensor(
+     inputDev(io, open(path.c_str(), O_RDONLY)), unit("xyz.openbmc_project.Sensor.Value.Unit.Percent"), failLine(gpiod::find_line(fail)), instLine(gpiod::find_line(inst))
+ {
+     sensorInterface = objectServer.add_interface(
+-        "/xyz/openbmc_project/sensors/fan_tach/" + name,
++        "/xyz/openbmc_project/sensors/utilization/" + name,
+         "xyz.openbmc_project.Sensor.Value");
+
+     sensorInterface->register_property("Unit", unit);
+@@ -80,19 +80,19 @@ GxpTachSensor::GxpTachSensor(
+     if (thresholds::hasWarningInterface(thresholds))
+     {
+         thresholdInterfaceWarning = objectServer.add_interface(
+-            "/xyz/openbmc_project/sensors/fan_tach/" + name,
++            "/xyz/openbmc_project/sensors/utilization/" + name,
+             "xyz.openbmc_project.Sensor.Threshold.Warning");
+     }
+
+     if (thresholds::hasCriticalInterface(thresholds))
+     {
+         thresholdInterfaceCritical = objectServer.add_interface(
+-            "/xyz/openbmc_project/sensors/fan_tach/" + name,
++            "/xyz/openbmc_project/sensors/utilization/" + name,
+             "xyz.openbmc_project.Sensor.Threshold.Critical");
+     }
+
+     association = objectServer.add_interface(
+-        "/xyz/openbmc_project/sensors/fan_tach/" + name,
++        "/xyz/openbmc_project/sensors/utilization/" + name,
+         association::interface);
+
+     if(failLine)

@@ -1,0 +1,30 @@
+bootargs=earlycon=ns16550a,0xc00000f0 console=ttyS0,115200 uio_dmem_genirq.of_id=generic-uio net.ifnames=0
+bootcmd=run spiboot
+baudrate=115200
+ramboot=bootm 0xfc1a0000
+# Check the status of the UID Button
+checkbto=setexpr uidbto 0xd10000c2; setexpr.b st *$uidbto \\& 0x02
+# Blink the UID Led
+blinkuid=setexpr i 0; \
+	while itest $i < 15; do \
+		mw.b 0xd1000005 0xc0; \
+		sleep .1; \
+		mw.b 0xd1000005 0x80; \
+		sleep .1; \
+		setexpr i $i + 1; \
+	done;
+# Force recovery if the UIB Button is held.
+recovery=run checkbto; \
+	if itest.b $st -ne 0x0; then \
+		mw.b 0xd1000006 0x40; \
+		while itest.b $st -ne 0x0; \
+			do sleep .5; \
+			run checkbto; \
+		done; \
+		sf probe; \
+		sf erase 0x3F70000 0x10000; \
+		run blinkuid; \
+		reset; \
+        fi;
+loadfit=sf probe;sf read 0x2000000 0x1a0000 0xa00000
+spiboot=run recovery; run loadfit; bootm 0x2000000; run ramboot; while itest 0 < 1; do echo KERNEL BOOT FAILURE!; done

@@ -1,0 +1,50 @@
+From a9340375c81c80102e5fd63c03a507718fb5f4ef Mon Sep 17 00:00:00 2001
+From: Tom Hancock <tom.hancock@hpe.com>
+Date: Mon, 10 Jun 2024 00:00:00 +0000
+Subject: [PATCH] fixTempManagedObjects.patch
+
+Signed-off-by: Tom Hancock <tom.hancock@hpe.com>
+Upstream-Status: Inappropriate
+---
+ src/GxpTempSensor.cpp | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/GxpTempSensor.cpp b/src/GxpTempSensor.cpp
+index 90d09cd..3bcba1f 100644
+--- a/src/GxpTempSensor.cpp
++++ b/src/GxpTempSensor.cpp
+@@ -186,7 +186,7 @@ bool isGxpTemp(const fs::path& parentPath)
+     if (boost::ends_with(devicePath, "c0000130.coretemp")) {
+         return true;
+     }
+-    std::cerr << devicePath << "is not matched gxptempsensor\n";
++    std::cerr << devicePath << " is not matched gxptempsensor\n";
+     return false;
+ }
+ 
+@@ -239,7 +239,7 @@ void createSensor(
+                     }
+                     if (baseConfiguration == nullptr)
+                     {
+-                        std::cerr << "error finding base configruation for GxpTemp\n";
++                        std::cerr << "error finding base configuration for GxpTemp\n";
+                         continue;
+                     }
+                     baseConfigMap = &(baseConfiguration->second);
+@@ -255,7 +255,7 @@ void createSensor(
+                 //find name
+                 auto findName = baseConfigMap->find("Name");
+                 if(findName == baseConfigMap->end()) {
+-                    std::cerr << "could not determine configruation name for GxpTemp\n";
++                    std::cerr << "could not determine configuration name for GxpTemp\n";
+                     continue;
+                 }
+                 std::string sensorName = std::get<std::string>(findName->second);
+@@ -300,6 +300,7 @@ int main()
+     auto dbusConnection = std::make_shared<sdbusplus::asio::connection>(io);
+     dbusConnection->request_name("xyz.openbmc_project.GxpTempSensor");
+     sdbusplus::asio::object_server objectServer(dbusConnection);
++    objectServer.add_manager("/xyz/openbmc_project/sensors");
+     std::shared_ptr<GxpTempSensor> sensor = nullptr;
+     std::vector<std::unique_ptr<sdbusplus::bus::match::match>> matches;
+ 

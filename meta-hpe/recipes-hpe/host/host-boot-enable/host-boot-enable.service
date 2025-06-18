@@ -1,0 +1,18 @@
+[Unit]
+Description=Enable HPE Host Boot
+Wants=phosphor-ipmi-host.service
+After=phosphor-ipmi-host.service
+After=com.hpe.bmc.safsvrom.service
+Before=xyz.openbmc_project.Chassis.Control.Power@0.service
+StartLimitIntervalSec=200
+StartLimitBurst=3
+
+[Service]
+ExecStart=/bin/sh -c "host-boot-enable.sh"
+SyslogIdentifier=host-boot-enable
+Type=oneshot
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

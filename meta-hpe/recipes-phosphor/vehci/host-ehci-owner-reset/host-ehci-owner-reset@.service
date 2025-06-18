@@ -1,0 +1,11 @@
+[Unit]
+Description=GXP EHCI Owner Reset Service
+Wants=obmc-ikvm.service
+After=obmc-ikvm.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "udc-reconnect.sh %i"
+SyslogIdentifier=host-ehci-owner-reset@%i
+

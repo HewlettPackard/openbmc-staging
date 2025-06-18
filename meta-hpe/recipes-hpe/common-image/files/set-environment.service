@@ -1,0 +1,10 @@
+[Unit]
+Description=Set Systemd Environment
+
+[Service]
+ExecStart=/bin/sh -c '/usr/bin/systemctl set-environment BOARD="$(/usr/bin/cat /sys/devices/platform/ahb@80000000/d1000000.xreg/soc/xreg/server_id)"'
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

@@ -1,0 +1,80 @@
+From f0af11c64b37b44e9de09b70c8dfab8262131319 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Wed, 4 Jun 2025 18:01:51 -0500
+Subject: [PATCH] IntelCPU now has a deltaTempFilter for reporting temps with
+ more than a 20 degree change from one polling to another
+
+Upstream-Status: Pending
+---
+ src/intel-cpu/IntelCPUSensor.cpp | 34 ++++++++++++++++++++++++--------
+ src/intel-cpu/IntelCPUSensor.hpp |  1 +
+ 2 files changed, 27 insertions(+), 8 deletions(-)
+
+diff --git a/src/intel-cpu/IntelCPUSensor.cpp b/src/intel-cpu/IntelCPUSensor.cpp
+index 5c10967..d3b782a 100644
+--- a/src/intel-cpu/IntelCPUSensor.cpp
++++ b/src/intel-cpu/IntelCPUSensor.cpp
+@@ -157,6 +157,8 @@ void IntelCPUSensor::setupRead()
+         }
+ 
+         inputDev.assign(fd);
++        deltaFilteredReads = 0;
++        
+     }
+     else
+     {
+@@ -275,18 +277,34 @@ void IntelCPUSensor::handleResponse(const boost::system::error_code& err)
+         {
+             rawValue = std::stod(response);
+             double nvalue = rawValue / IntelCPUSensor::sensorScaleFactor;
++            auto deltaTempValue = std::abs(value - nvalue); 
++            auto maxTempReadDelta = 40.0; //we don't expect a jump larger than this between pollings
++            auto deltaMaxfilteredReads = 4; //after this many 'oddball' reads, start reporting it! 
+ 
+-            if (show)
+-            {
+-                updateValue(nvalue);
+-            }
+-            else
++            
++
++            if (deltaFilteredReads < deltaMaxfilteredReads && 
++                deltaTempValue > maxTempReadDelta)
+             {
+-                value = nvalue;
++                deltaFilteredReads++;
+             }
+-            if (minMaxReadCounter++ % 8 == 0)
++            else //don't update if we're trying to read a 'bad value' -- unless we get 2 of those in a row, in
++                // which case, we'll report whatever the third reading is w/o checking it.
+             {
+-                updateMinMaxValues();
++                deltaFilteredReads = 0;
++                
++                if (show)
++                {
++                    updateValue(nvalue);
++                }
++                else
++                {
++                    value = nvalue;
++                }
++                if (minMaxReadCounter++ % 8 == 0)
++                {
++                    updateMinMaxValues();
++                }
+             }
+ 
+             double gTcontrol = gCpuSensors[nameTcontrol]
+diff --git a/src/intel-cpu/IntelCPUSensor.hpp b/src/intel-cpu/IntelCPUSensor.hpp
+index f51158b..1749530 100644
+--- a/src/intel-cpu/IntelCPUSensor.hpp
++++ b/src/intel-cpu/IntelCPUSensor.hpp
+@@ -52,6 +52,7 @@ class IntelCPUSensor :
+     double dtsOffset;
+     bool show;
+     size_t pollTime;
++    int deltaFilteredReads;
+     bool loggedInterfaceDown = false;
+     uint8_t minMaxReadCounter{0};
+     int fd{};

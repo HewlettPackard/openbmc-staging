@@ -1,0 +1,34 @@
+#!/bin/bash
+# This script sets up the HPE OpenBMC build environment
+# Usage: . setup [machine] [build]
+# Example: . setup gsc build
+
+# Check if the script is being sourced
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    echo "ERROR: This script must be sourced, not executed."
+    echo "Please run it as: . setup [machine] [build]"
+    exit 1
+fi
+
+machine=${1:-"gsc"}
+build=${2:-"build"}
+
+mkdir -p ${build}/${machine}
+
+export TEMPLATECONF="../meta-hpe/meta-${machine}/conf/templates/default"
+
+# Check if openbmc build environment file exists
+if [ ! -f ./openbmc/oe-init-build-env ]; then
+    echo "ERROR: Could not find OpenBMC build environment file."
+    echo "Please make sure the OpenBMC repository is properly cloned at ./openbmc"
+    return 1
+fi
+
+# Source the build environment with error handling
+if ! source ./openbmc/oe-init-build-env ${build}/${machine} ; then
+    echo "ERROR: Failed to initialize OpenBMC build environment."
+    return 1
+fi
+
+# Return to the original directory
+cd -

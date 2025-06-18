@@ -1,0 +1,88 @@
+From e05ac448fd640d914ebe89b268eecac59046b806 Mon Sep 17 00:00:00 2001
+From: Nick Hawkins <nick.hawkins@hpe.com>
+Date: Mon, 22 Apr 2024 09:34:27 -0500
+Subject: [PATCH] Fix x86-power-control issues
+
+The patches were not made correctly so I have removed
+both patches and combined to one fix a power on issue
+where CPLD wants us to hit a certain bit before
+powering on.
+
+Upstream-Status: Pending
+Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
+---
+ config/power-config-host0.json |  4 ++--
+ src/power_control.cpp          | 20 +++++++++++++++++++-
+ 2 files changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/config/power-config-host0.json b/config/power-config-host0.json
+index 74e96c9..0b7eb8b 100644
+--- a/config/power-config-host0.json
++++ b/config/power-config-host0.json
+@@ -40,7 +40,7 @@
+             "Name": "PowerOut",
+             "LineName": "POWER_OUT",
+             "Type": "GPIO",
+-            "Polarity": "ActiveLow"
++            "Polarity": "ActiveHigh"
+         },
+         {
+             "Name": "ResetButton",
+@@ -52,7 +52,7 @@
+             "Name": "ResetOut",
+             "LineName": "RESET_OUT",
+             "Type": "GPIO",
+-            "Polarity": "ActiveLow"
++            "Polarity": "ActiveHigh"
+         },
+         {
+             "Name": "SioOnControl",
+diff --git a/src/power_control.cpp b/src/power_control.cpp
+index bba7088..0b4995e 100644
+--- a/src/power_control.cpp
++++ b/src/power_control.cpp
+@@ -197,6 +197,10 @@ static gpiod::line postCompleteLine;
+ static boost::asio::posix::stream_descriptor postCompleteEvent(io);
+ static gpiod::line nmiOutLine;
+ static gpiod::line slotPowerLine;
++static gpiod::line fwValidatePassLine;
++std::string fwValidatePasslineName = "FW_VALIDATION_PASSED";
++static gpiod::line pS5tS5SSLine;
++std::string pS5tS5SSLineName = "PS5_TS5_SS_CMP";
+
+ static constexpr uint8_t beepPowerFail = 8;
+
+@@ -1177,7 +1181,15 @@ static bool requestGPIOEvents(
+
+     try
+     {
+-        gpioLine.request({appName, gpiod::line_request::EVENT_BOTH_EDGES, {}});
++        // for our platform SIO_POWER_GOOD and POWER_BUTTON are active low. hence requesting them as active low
++        if((name == "SIO_POWER_GOOD") || (name == "POWER_BUTTON"))
++        {
++            gpioLine.request({appName, gpiod::line_request::EVENT_BOTH_EDGES,gpiod::line_request::FLAG_ACTIVE_LOW});
++        }
++        else
++        {
++            gpioLine.request({appName, gpiod::line_request::EVENT_BOTH_EDGES, {}});
++        }
+     }
+     catch (const std::exception& e)
+     {
+@@ -1831,10 +1843,16 @@ static void powerStateOff(const Event event)
+             setPowerState(PowerState::waitForPowerOK);
+             break;
+         case Event::sioPowerGoodAssert:
++            setGPIOOutput(fwValidatePasslineName,true,fwValidatePassLine);
++            setGPIOOutput(pS5tS5SSLineName,
++                          true, pS5tS5SSLine);
+             setPowerState(PowerState::on);
+             break;
+         case Event::powerButtonPressed:
+             powerOKWatchdogTimerStart();
++            setGPIOOutput(fwValidatePasslineName,true,fwValidatePassLine);
++            setGPIOOutput(pS5tS5SSLineName,
++                          true, pS5tS5SSLine);
+             setPowerState(PowerState::waitForPowerOK);
+             break;
+         case Event::powerOnRequest:

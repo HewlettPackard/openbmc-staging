@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# Instance id, default 0
+G_INSTANCE_ID="0"
+
+CHASSIS_SERVICE=xyz.openbmc_project.State.Chassis
+HOST_SERVICE=xyz.openbmc_project.State.Host
+
+OBJECT_ROOT=/xyz/openbmc_project
+STATE_OBJECT=$OBJECT_ROOT/state
+OBJECT=$STATE_OBJECT/host$G_INSTANCE_ID
+
+INTERFACE_ROOT=xyz.openbmc_project
+STATE_INTERFACE=$INTERFACE_ROOT.State
+INTERFACE=$STATE_INTERFACE.Host
+
+function print_help()
+{
+    echo "pwr: host power commands:"
+    echo "pwr help|?             - display this message"
+    echo "pwr                    - display the current host power state"
+    echo "pwr on                 - turn the host on"
+    echo "pwr reboot-orderly     - turn the host Graceful Restart"
+    echo "pwr reboot-immediate   - turn the host Force Restart"
+    echo "pwr shutdown-orderly   - turn the host Graceful Shutdown"
+    echo "pwr shutdown-immediate - turn the host Force Off"
+    exit 0
+}
+
+function set_property()
+{
+    busctl set-property "$@"
+}
+
+function get_property()
+{
+    busctl get-property "$@"
+}
+
+if [ $# -eq 0 ]; then
+    PROPERTY=CurrentHostState
+    state=$(get_property $HOST_SERVICE $OBJECT $INTERFACE $PROPERTY | cut -d '"' -f2 | cut -d '.' -f6)
+    printf "%-20s: %s\n" "$PROPERTY" "$state"
+else
+    case $1 in
+        help|?)
+            print_help
+            ;;
+        on)
+            PROPERTY=RequestedHostTransition
+            VALUE=$INTERFACE.Transition.On
+            set_property "$HOST_SERVICE" "$OBJECT" $INTERFACE $PROPERTY "s" $VALUE
+            ;;
+        reboot-orderly)
+            PROPERTY=RequestedHostTransition
+            VALUE=$INTERFACE.Transition.GracefulWarmReboot
+            set_property "$HOST_SERVICE" "$OBJECT" $INTERFACE $PROPERTY "s" $VALUE
+            ;;
+        reboot-immediate)
+            PROPERTY=RequestedHostTransition
+            VALUE=$INTERFACE.Transition.ForceWarmReboot
+            set_property "$HOST_SERVICE" "$OBJECT" $INTERFACE $PROPERTY "s" $VALUE
+            ;;
+        shutdown-orderly)
+            PROPERTY=RequestedHostTransition
+            VALUE=$INTERFACE.Transition.Off
+            set_property "$HOST_SERVICE" "$OBJECT" $INTERFACE $PROPERTY "s" $VALUE
+            ;;
+        shutdown-immediate)
+            OBJECT=$STATE_OBJECT/chassis$G_INSTANCE_ID
+            INTERFACE=$STATE_INTERFACE.Chassis
+            PROPERTY=RequestedPowerTransition
+            VALUE=$INTERFACE.Transition.Off
+            set_property "$CHASSIS_SERVICE" "$OBJECT" $INTERFACE $PROPERTY "s" $VALUE
+            ;;
+    esac
+fi

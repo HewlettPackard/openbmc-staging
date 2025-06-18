@@ -1,0 +1,14 @@
+[Match]
+Name=usb0
+
+[Network]
+DHCPServer=yes
+LinkLocalAddressing=yes
+
+[Address]
+Address=16.1.15.1/30
+Scope=link
+
+#TODO Need to revisit DHCP server configuration
+[DHCPServer]
+EmitRouter=no

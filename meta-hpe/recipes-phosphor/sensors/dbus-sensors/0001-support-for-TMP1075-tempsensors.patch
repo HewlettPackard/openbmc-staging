@@ -1,0 +1,22 @@
+From 010f4ff0b52bf06f62a57b207110d1f76f1fccb3 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Wed, 21 May 2025 16:09:51 -0500
+Subject: [PATCH] updated temp sesor support to recognize upstream changes
+
+Upstream-Status: Pending
+---
+ src/hwmon-temp/HwmonTempMain.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/hwmon-temp/HwmonTempMain.cpp b/src/hwmon-temp/HwmonTempMain.cpp
+index fe4f5b8..763c20d 100644
+--- a/src/hwmon-temp/HwmonTempMain.cpp
++++ b/src/hwmon-temp/HwmonTempMain.cpp
+@@ -88,6 +88,7 @@ static const I2CDeviceTypeMap sensorTypes{
+     {"TMP112", I2CDeviceType{"tmp112", true}},
+     {"TMP175", I2CDeviceType{"tmp175", true}},
+     {"TMP411", I2CDeviceType{"tmp411", true}},
++    {"TMP1075", I2CDeviceType{"tmp1075", true}},
+     {"TMP421", I2CDeviceType{"tmp421", true}},
+     {"TMP432", I2CDeviceType{"tmp432", true}},
+     {"TMP441", I2CDeviceType{"tmp441", true}},

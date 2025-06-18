@@ -1,0 +1,13 @@
+[Unit]
+Description=A service to enable/disable HPE vNIC
+After=com.hpe.bmc.vnic-init.service
+Requires=com.hpe.bmc.vnic-init.service
+PartOf=com.hpe.bmc.vnic-init.service
+
+[Service]
+ExecStart=/usr/bin/vnic-gadget.sh connect
+ExecStop=/usr/bin/vnic-gadget.sh disconnect
+RemainAfterExit=Yes
+
+[Install]
+WantedBy=multi-user.target

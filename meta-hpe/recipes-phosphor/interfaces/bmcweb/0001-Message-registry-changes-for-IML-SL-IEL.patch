@@ -1,0 +1,112 @@
+From 34864fe403762358bedfbe93ad0c31dc11653047 Mon Sep 17 00:00:00 2001
+From: Tom Hancock <tom.hancock@hpe.com>
+Date: Fri, 12 Jan 2024 12:07:42 +0000
+Subject: [PATCH] Message registry changes for IML/SL/IEL
+
+Upstream-Status: Pending
+---
+ redfish-core/include/registries/openbmc.json  | 27 +++++++++++
+ .../registries/openbmc_message_registry.hpp   | 45 +++++++++++++++++++
+ 2 files changed, 72 insertions(+)
+
+diff --git a/redfish-core/include/registries/openbmc.json b/redfish-core/include/registries/openbmc.json
+index f3ec1e89..03d7e339 100644
+--- a/redfish-core/include/registries/openbmc.json
++++ b/redfish-core/include/registries/openbmc.json
+@@ -918,6 +918,33 @@
+             "Resolution": "None.",
+             "Severity": "Critical"
+         },
++	"OemEventOk": {
++            "Description": "This an OEM event with severity OK.",
++            "Message": "%1 With Class: %2 and Code: %3",
++            "MessageSeverity": "OK",
++            "NumberOfArgs": 3,
++            "ParamTypes": ["string", "number", "number"],
++            "Resolution": "None.",
++            "Severity": "OK"
++        },
++        "OemEventCaution": {
++            "Description": "This an OEM event with severity Caution.",
++            "Message": "%1 With Class: %2 and Code: %3",
++            "MessageSeverity": "Warning",
++            "NumberOfArgs": 3,
++            "ParamTypes": ["string", "number", "number"],
++            "Resolution": "None.",
++            "Severity": "Warning"
++        },
++        "OemEventCritical": {
++            "Description": "This an OEM event with severity Critical.",
++            "Message": "%1 With Class: %2 and Code: %3",
++            "MessageSeverity": "Critical",
++            "NumberOfArgs": 3,
++            "ParamTypes": ["string", "number", "number"],
++            "Resolution": "None.",
++            "Severity": "Critical"
++        },
+         "PCIeCorrectableAdvisoryNonFatal": {
+             "Description": "Indicates a PCIe Correctable Advisory Non-fatal Error.",
+             "Message": "PCIe Correctable Advisory Non-fatal Error. Bus=%1 Device=%2 Function=%3.",
+diff --git a/redfish-core/include/registries/openbmc_message_registry.hpp b/redfish-core/include/registries/openbmc_message_registry.hpp
+index 0f221535..9c14c39b 100644
+--- a/redfish-core/include/registries/openbmc_message_registry.hpp
++++ b/redfish-core/include/registries/openbmc_message_registry.hpp
+@@ -2354,6 +2354,48 @@ static constexpr std::array registry =
+             },
+             "None.",
+         }},
++    MessageEntry{
++        "OemEventCaution",
++        {
++            "This an OEM event with severity Caution.",
++            "%1 With Class: %2 and Code: %3",
++            "Warning",
++            3,
++            {
++                "string",
++                "number",
++                "number",
++            },
++            "None.",
++        }},
++    MessageEntry{
++        "OemEventCritical",
++        {
++            "This an OEM event with severity Critical.",
++            "%1 With Class: %2 and Code: %3",
++            "Critical",
++            3,
++            {
++                "string",
++                "number",
++                "number",
++            },
++            "None.",
++        }},
++    MessageEntry{
++        "OemEventOk",
++        {
++            "This an OEM event with severity OK.",
++            "%1 With Class: %2 and Code: %3",
++            "OK",
++            3,
++            {
++                "string",
++                "number",
++                "number",
++            },
++            "None.",
++        }},
+ 
+ };
+ 
+@@ -2551,6 +2593,9 @@ enum class Index
+     systemPowerOffFailed = 189,
+     systemPowerOnFailed = 190,
+     voltageRegulatorOverheated = 191,
++    oemEventCaution = 192,
++    oemEventCritical = 193,
++    oemEventOk = 194,
+ };
+ }; // struct openbmc
+ 

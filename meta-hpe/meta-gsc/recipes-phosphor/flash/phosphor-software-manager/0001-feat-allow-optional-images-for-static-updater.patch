@@ -1,0 +1,27 @@
+From 42f5b7a735d40791971dc5635e18b0222145151e Mon Sep 17 00:00:00 2001
+From: Ian Woloschin <ian.woloschin@hpe.com>
+Date: Fri, 9 May 2025 14:45:09 -0500
+Subject: [PATCH] feat: allow optional images for static updater
+
+Upstream-Status: Pending
+---
+ bmc/item_updater.cpp | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/bmc/item_updater.cpp b/bmc/item_updater.cpp
+index 2e889fb..51bec52 100644
+--- a/bmc/item_updater.cpp
++++ b/bmc/item_updater.cpp
+@@ -583,6 +583,12 @@ ItemUpdater::ActivationStatus ItemUpdater::validateSquashFSImage(
+     {
+         imageUpdateList.clear();
+         imageUpdateList.assign(bmcImages.begin(), bmcImages.end());
++        auto optionalImages = getOptionalImages();
++        if (!optionalImages.empty())
++        {
++            imageUpdateList.insert(imageUpdateList.end(), optionalImages.begin(),
++                                   optionalImages.end());
++        }
+         valid = checkImage(filePath, imageUpdateList);
+         if (!valid)
+         {

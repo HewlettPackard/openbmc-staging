@@ -1,0 +1,26 @@
+From ff4f34e157785d080f35f46f1c2857e955d00931 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Thu, 29 May 2025 17:51:06 -0500
+Subject: [PATCH] don't build or install the gxp-fan-sensors daemon
+
+Upstream-Status: Pending
+---
+ CMakeLists.txt | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2226050..a581a5d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -49,11 +49,3 @@ target_link_libraries (gxptempsensor ${SENSOR_LINK_LIBS})
+ install (TARGETS gxptempsensor RUNTIME DESTINATION bin)
+ 
+ install (FILES ${SERVICE_FILE_SRC_DIR}/xyz.openbmc_project.GxpTempSensor.service DESTINATION ${SERVICE_FILE_INSTALL_DIR})
+-
+-set (GXPFANSENSOR_SRC_FILES src/GxpFanMain.cpp src/GxpPwmSensor.cpp src/GxpTachSensor.cpp src/Utils.cpp src/Thresholds.cpp)
+-add_executable (gxpfansensor ${GXPFANSENSOR_SRC_FILES})
+-add_dependencies (gxpfansensor sdbusplus-project)
+-target_link_libraries (gxpfansensor ${SENSOR_LINK_LIBS})
+-target_link_libraries (gxpfansensor gpiodcxx)
+-install (TARGETS gxpfansensor RUNTIME DESTINATION bin)
+-install (FILES ${SERVICE_FILE_SRC_DIR}/xyz.openbmc_project.GxpFanSensor.service DESTINATION ${SERVICE_FILE_INSTALL_DIR})

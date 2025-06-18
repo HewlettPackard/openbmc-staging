@@ -1,0 +1,148 @@
+From 995be8458e4f79b9280507f57c046dac9d347e25 Mon Sep 17 00:00:00 2001
+From: Tom Hancock <tom.hancock@hpe.com>
+Date: Tue, 6 May 2025 13:49:48 +0100
+Subject: [PATCH] fix: update io_service to io_context
+
+Upstream-Status: Pending
+
+---
+ include/GxpTachSensor.hpp | 2 +-
+ include/GxpTempSensor.hpp | 2 +-
+ include/Thresholds.hpp    | 6 +++---
+ src/GxpFanMain.cpp        | 6 +++---
+ src/GxpTachSensor.cpp     | 2 +-
+ src/GxpTempSensor.cpp     | 6 +++---
+ 6 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/include/GxpTachSensor.hpp b/include/GxpTachSensor.hpp
+index f214897..f90841c 100644
+--- a/include/GxpTachSensor.hpp
++++ b/include/GxpTachSensor.hpp
+@@ -27,7 +27,7 @@
+ class GxpTachSensor : public Sensor
+ {
+ 	public:
+-		GxpTachSensor(boost::asio::io_service& io,
++		GxpTachSensor(boost::asio::io_context& io,
+                   std::shared_ptr<sdbusplus::asio::connection>& dbusConnection,
+                   sdbusplus::asio::object_server& objectServer,
+                   const std::string& sensorName,
+diff --git a/include/GxpTempSensor.hpp b/include/GxpTempSensor.hpp
+index 0c02c1e..3413231 100644
+--- a/include/GxpTempSensor.hpp
++++ b/include/GxpTempSensor.hpp
+@@ -32,7 +32,7 @@ struct GxpTempSensor :
+   public std::enable_shared_from_this<GxpTempSensor>
+ {
+   public:
+-    GxpTempSensor(boost::asio::io_service& io,
++    GxpTempSensor(boost::asio::io_context& io,
+                   std::shared_ptr<sdbusplus::asio::connection>& dbusConnection,
+                   sdbusplus::asio::object_server& objectServer,
+                   const std::string& name,
+diff --git a/include/Thresholds.hpp b/include/Thresholds.hpp
+index ca2b0a0..f959ddc 100644
+--- a/include/Thresholds.hpp
++++ b/include/Thresholds.hpp
+@@ -2,7 +2,7 @@
+ #include "Utils.hpp"
+ 
+ #include <boost/asio/deadline_timer.hpp>
+-#include <boost/asio/io_service.hpp>
++#include <boost/asio/io_context.hpp>
+ #include <nlohmann/json.hpp>
+ 
+ #include <list>
+@@ -60,7 +60,7 @@ using TimerPair = std::pair<struct TimerUsed, boost::asio::deadline_timer>;
+ struct ThresholdTimer
+ {
+ 
+-    ThresholdTimer(boost::asio::io_service& ioService, Sensor* sensor) :
++    ThresholdTimer(boost::asio::io_context& ioService, Sensor* sensor) :
+         io(ioService), sensor(sensor)
+     {}
+ 
+@@ -145,7 +145,7 @@ struct ThresholdTimer
+         });
+     }
+ 
+-    boost::asio::io_service& io;
++    boost::asio::io_context& io;
+     std::list<TimerPair> timers;
+     Sensor* sensor;
+ };
+diff --git a/src/GxpFanMain.cpp b/src/GxpFanMain.cpp
+index e496d42..d7dfc72 100644
+--- a/src/GxpFanMain.cpp
++++ b/src/GxpFanMain.cpp
+@@ -26,7 +26,7 @@
+ #include <boost/algorithm/string.hpp>
+ #include <boost/algorithm/string/predicate.hpp>
+ #include <boost/algorithm/string/replace.hpp>
+-#include <boost/asio/io_service.hpp>
++#include <boost/asio/io_context.hpp>
+ #include <boost/asio/streambuf.hpp>
+ #include <boost/asio/deadline_timer.hpp>
+ #include <boost/asio/read_until.hpp>
+@@ -69,7 +69,7 @@ bool isGxpFanCtrl(const fs::path& parentPath)
+ }
+ 
+ void createSensors(
+-    boost::asio::io_service& io,
++    boost::asio::io_context& io,
+     std::shared_ptr<sdbusplus::asio::connection>& dbusConnection,
+     sdbusplus::asio::object_server& objectServer,
+     boost::container::flat_map<std::string, std::unique_ptr<GxpPwmSensor>>& pwmSensors,
+@@ -261,7 +261,7 @@ void createSensors(
+ 
+ int main()
+ {
+-    boost::asio::io_service io;
++    boost::asio::io_context io;
+     auto dbusConnection = std::make_shared<sdbusplus::asio::connection>(io);
+     dbusConnection->request_name("xyz.openbmc_project.GxpFanSensor");
+     sdbusplus::asio::object_server objectServer(dbusConnection);
+diff --git a/src/GxpTachSensor.cpp b/src/GxpTachSensor.cpp
+index f7b8302..45de6a6 100644
+--- a/src/GxpTachSensor.cpp
++++ b/src/GxpTachSensor.cpp
+@@ -53,7 +53,7 @@ static constexpr double maxReading = 255;
+ static constexpr double minReading = 0;
+ 
+ GxpTachSensor::GxpTachSensor(
+-                            boost::asio::io_service& io,
++                            boost::asio::io_context& io,
+                             std::shared_ptr<sdbusplus::asio::connection>& dbusConnection,
+                             sdbusplus::asio::object_server& objectServer,
+                             const std::string& sensorName,
+diff --git a/src/GxpTempSensor.cpp b/src/GxpTempSensor.cpp
+index 3bcba1f..3bae9bf 100644
+--- a/src/GxpTempSensor.cpp
++++ b/src/GxpTempSensor.cpp
+@@ -54,7 +54,7 @@ static constexpr double maxReading = 127;
+ static constexpr double minReading = -127;
+ 
+ GxpTempSensor::GxpTempSensor(
+-                            boost::asio::io_service& io,
++                            boost::asio::io_context& io,
+                             std::shared_ptr<sdbusplus::asio::connection>& dbusConnection,
+                             sdbusplus::asio::object_server& objectServer,
+                             const std::string& sensorName,
+@@ -191,7 +191,7 @@ bool isGxpTemp(const fs::path& parentPath)
+ }
+ 
+ void createSensor(
+-    boost::asio::io_service& io,
++    boost::asio::io_context& io,
+     std::shared_ptr<sdbusplus::asio::connection>& dbusConnection,
+     sdbusplus::asio::object_server& objectServer,
+     std::shared_ptr<GxpTempSensor>& sensor)
+@@ -296,7 +296,7 @@ void createSensor(
+ 
+ int main()
+ {
+-    boost::asio::io_service io;
++    boost::asio::io_context io;
+     auto dbusConnection = std::make_shared<sdbusplus::asio::connection>(io);
+     dbusConnection->request_name("xyz.openbmc_project.GxpTempSensor");
+     sdbusplus::asio::object_server objectServer(dbusConnection);

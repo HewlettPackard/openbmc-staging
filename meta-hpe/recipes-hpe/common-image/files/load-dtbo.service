@@ -1,0 +1,11 @@
+[Unit]
+Description=Load DTBOs
+After=set-environment.service
+
+[Service]
+ExecStart=/usr/libexec/load-dtbo.sh
+Type=oneshot
+RemainAfterExit=yes
+
+[Install]
+WantedBy=sysinit.target

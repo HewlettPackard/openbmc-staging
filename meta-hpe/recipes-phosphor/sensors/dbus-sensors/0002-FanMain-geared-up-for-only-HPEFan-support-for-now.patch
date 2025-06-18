@@ -1,0 +1,42 @@
+From 7aa822c44b416a4ffe9f70dc8a583b8d265f38da Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Wed, 21 May 2025 15:44:33 -0500
+Subject: [PATCH] FanMain geared up for (only) HPEFan support (for now)
+
+Upstream-Status: Pending
+---
+ src/fan/FanMain.cpp | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/fan/FanMain.cpp b/src/fan/FanMain.cpp
+index 98e41a0..f210f7f 100644
+--- a/src/fan/FanMain.cpp
++++ b/src/fan/FanMain.cpp
+@@ -71,7 +71,7 @@ static_assert(std::tuple_size<decltype(sensorTypes)>::value == FanTypes::max,
+ 
+ constexpr const char* redundancyConfiguration =
+     "xyz.openbmc_project.Configuration.FanRedundancy";
+-static std::regex inputRegex(R"(fan(\d+)_input)");
++static std::regex inputRegex(R"(pwm(\d+))");
+ 
+ // todo: power supply fan redundancy
+ std::optional<RedundancySensor> systemRedundancy;
+@@ -206,7 +206,8 @@ void enableFanInput(const std::filesystem::path& fanInputPath)
+ {
+     std::error_code ec;
+     std::string path(fanInputPath.string());
+-    boost::replace_last(path, "input", "enable");
++    boost::replace_last(path, "pwm", "fan");
++    path+="_enable";
+ 
+     bool exists = std::filesystem::exists(path, ec);
+     if (ec || !exists)
+@@ -295,7 +296,7 @@ void createSensors(
+         bool firstScan = sensorsChanged == nullptr;
+         std::vector<std::filesystem::path> paths;
+         if (!findFiles(std::filesystem::path("/sys/class/hwmon"),
+-                       R"(fan\d+_input)", paths))
++                       R"(pwm\d+)", paths))
+         {
+             lg2::error("No fan sensors in system");
+             return;
