@@ -1,0 +1,23 @@
+From bf393550d0a63e4fc897b479b75ff4952e4dd056 Mon Sep 17 00:00:00 2001
+From: Tom Hancock <tom.hancock@hpe.com>
+Date: Wed, 16 Apr 2025 09:47:24 +0100
+Subject: [PATCH] fix: newer cxx std
+
+Upstream-Status: Pending
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c918ead..4616e7c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 2.8.10 FATAL_ERROR)
+ project (gxp-fru-device)
+ 
+ set (BUILD_SHARED_LIBRARIES OFF)
+-set (CMAKE_CXX_STANDARD 20)
++set (CMAKE_CXX_STANDARD 23)
+ set (CMAKE_CXX_STANDARD_REQUIRED ON)
+ set (
+     CMAKE_CXX_FLAGS
