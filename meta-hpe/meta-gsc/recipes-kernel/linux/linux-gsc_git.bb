@@ -3,7 +3,7 @@ require recipes-kernel/linux/linux-yocto.inc
 
 SRCREV = "2413f21e375e0934795dca7bc66e8688f62706a5"
 KBRANCH = "linux-6.12.20"
-SRC_URI = "git://git@github.com/HewlettPackard/gsc-linux.git;protocol=ssh;branch=${KBRANCH};depth=1 \
+SRC_URI = "git://github.com/HewlettPackard/gsc-linux.git;protocol=https;branch=${KBRANCH};depth=1 \
            file://gsc_defconfig \
            "
 
