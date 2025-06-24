@@ -1,7 +1,7 @@
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
-SRCREV = "2413f21e375e0934795dca7bc66e8688f62706a5"
+SRCREV = "ef7b6d6693c9954c607dfed23ab05919f722b206"
 KBRANCH = "linux-6.12.20"
 SRC_URI = "git://github.com/HewlettPackard/gsc-linux.git;protocol=https;branch=${KBRANCH};depth=1 \
            file://gsc_defconfig \
