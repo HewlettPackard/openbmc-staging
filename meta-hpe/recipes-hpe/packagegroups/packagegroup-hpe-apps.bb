@@ -83,6 +83,7 @@ RDEPENDS:${PN}-system:append = " \
     libmctp \
     openssl-bin \
     openssl-engines \
+    proliant-support \
     udev-mtd-partitions \
     gxp-dbus-sensors \
     common-image \
