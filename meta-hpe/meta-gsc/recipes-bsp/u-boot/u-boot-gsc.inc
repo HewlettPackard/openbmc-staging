@@ -11,7 +11,7 @@ PE = "1"
 CVE_PRODUCT = "u-boot"
 PROVIDES += "u-boot"
 
-SRC_URI = "git://git@github.com/HewlettPackard/gsc-uboot.git;protocol=ssh;branch=${BRANCH}"
+SRC_URI = "git://github.com/HewlettPackard/gsc-uboot.git;protocol=https;branch=${BRANCH}"
 BRANCH ?= "gsc-${PV}"
 
 S = "${WORKDIR}/git"
