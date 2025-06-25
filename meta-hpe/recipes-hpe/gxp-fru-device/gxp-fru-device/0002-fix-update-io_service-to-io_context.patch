@@ -1,0 +1,33 @@
+From 0254b9cde89b5d3b110ef1bd023baad359f39103 Mon Sep 17 00:00:00 2001
+From: Tom Hancock <tom.hancock@hpe.com>
+Date: Tue, 6 May 2025 13:51:11 +0100
+Subject: [PATCH] fix: update io_service to io_context
+
+Upstream-Status: Pending
+
+---
+ src/GxpFruDevice.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/GxpFruDevice.cpp b/src/GxpFruDevice.cpp
+index 9842eae..c98da29 100644
+--- a/src/GxpFruDevice.cpp
++++ b/src/GxpFruDevice.cpp
+@@ -24,7 +24,7 @@
+ 
+ #include <boost/algorithm/string/predicate.hpp>
+ #include <boost/asio/deadline_timer.hpp>
+-#include <boost/asio/io_service.hpp>
++#include <boost/asio/io_context.hpp>
+ #include <boost/container/flat_map.hpp>
+ #include <nlohmann/json.hpp>
+ #include <sdbusplus/asio/connection.hpp>
+@@ -58,7 +58,7 @@ extern "C"
+ namespace fs = std::filesystem;
+ static constexpr bool DEBUG = false;
+ 
+-boost::asio::io_service io;
++boost::asio::io_context io;
+ auto systemBus = std::make_shared<sdbusplus::asio::connection>(io);
+ auto objServer = sdbusplus::asio::object_server(systemBus);
+ 
