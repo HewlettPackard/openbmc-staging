@@ -24,4 +24,13 @@ ls build/gsc/tmp/deploy/images/gsc/
 ```
 
 # Run OpenBMC On Your HPE Proliant Gen12 Servers
-Installing OpenBMC on a HPE Proliant Gen12 server requires Transfer of Ownership, for more details please see https://www.hpe.com/us/en/compute/openbmc-proliant-servers.html.
+Installing OpenBMC on a HPE Proliant Gen12 server for the first time requires Transfer of Ownership, for more details please see https://www.hpe.com/us/en/compute/openbmc-proliant-servers.html.  iLO 1.16 or later is needed for this process to work.
+
+# Currently Supported Systems
+This code has been primarily tested against DL340 Gen 12 Proliant systems.
+
+# Recovering Back to iLO
+There are several ways to recover your system back to iLO but all methods lead back to a recovery process which can take up to 30 minutes.  During recovery there is no feedback to the user.  Note: One a recovery is complete, a Transfer of Ownership process will need to begin again before OpenBMC can be used on the system.
+
+1. Users can unplug the power and hold down the UID button within the first 30 seconds. Once the LED is flashing the button can be released and recovery will begin.
+2. For advanced users, from a booted OpenBMC a user can write data to the SPI and will trigger a recovery process. Advanced users need to write to or erase 64kb at offset 0x3F70000 and power cycle.
