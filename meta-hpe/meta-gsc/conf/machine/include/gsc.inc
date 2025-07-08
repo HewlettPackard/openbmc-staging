@@ -24,6 +24,7 @@ FLASH_UBOOT_SIGNING_SIZE ?= "384"
 PREFERRED_PROVIDER_virtual/bootloader = "u-boot-gsc"
 PREFERRED_PROVIDER_u-boot = "u-boot-gsc"
 PREFERRED_VERSION_u-boot-glider = "2025.01%"
+PREFERRED_PROVIDER_u-boot-fw-utils ?= "u-boot-fw-utils-gsc"
 UBOOT_MACHINE = "gsc_defconfig"
 UBOOT_ENTRYPOINT = "0x00200000"
 
