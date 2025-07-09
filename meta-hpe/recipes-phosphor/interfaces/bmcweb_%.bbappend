@@ -16,5 +16,4 @@ EXTRA_OEMESON:prepend = " \
 # enabled for all builds
 EXTRA_OEMESON:append = " \
     -Dredfish-dump-log=enabled \
-    -Dredfish-dbus-log=enabled \
     "

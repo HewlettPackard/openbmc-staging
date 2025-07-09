@@ -75,8 +75,6 @@ RDEPENDS:${PN}-system:append = " \
     phosphor-certificate-manager \
     phosphor-user-manager \
     phosphor-inventory-manager \
-    chif \
-    gxp-fru-device \
     phosphor-hwmon \
     smbios-mdr \
     srvcfg-manager \

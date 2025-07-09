@@ -3,7 +3,7 @@ bootcmd=run spiboot
 baudrate=115200
 ramboot=bootm 0xfc1a0000
 # Check the status of the UID Button
-checkbto=setexpr uidbto 0xd10000c2; setexpr.b st *$uidbto \\& 0x02
+checkbto=setexpr uidbto 0xd10000c2; setexpr.b st *$uidbto \\\\& 0x02
 # Blink the UID Led
 blinkuid=setexpr i 0; \
 	while itest $i < 15; do \

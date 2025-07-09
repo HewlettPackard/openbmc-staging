@@ -1,11 +1,12 @@
 {
   "Exposes": [
     {
-      "Address": "0x30",
+      "Name": "CPU 1",
+      "Type": "XeonCPU",
       "Bus": 0,
+      "Address": "0x30",
       "CpuID": 1,
       "DtsCritOffset": -2,
-      "Name": "CPU 1",
       "Thresholds": [
         {
           "Direction": "greater than",
@@ -21,15 +22,15 @@
           "Severity": 0,
           "Value": 89
         }
-      ],
-      "Type": "XeonCPU"
+      ]
     },
     {
-      "Address": "0x31",
+      "Name": "CPU 2",
+      "Type": "XeonCPU",
       "Bus": 0,
+      "Address": "0x31",
       "CpuID": 2,
       "DtsCritOffset": -2,
-      "Name": "CPU 2",
       "Thresholds": [
         {
           "Direction": "greater than",
@@ -45,28 +46,244 @@
           "Severity": 0,
           "Value": 89
         }
-      ],
-      "Type": "XeonCPU"
+      ]
     },
     {
-      "Address": "0x5C",
-      "Bus": 67,
-      "Labels": [
-        "iin",
-        "iout1",
-        "vin",
-        "vout1",
-        "pin"
-      ],
+      "Name": "GSC Temp",
+      "Type": "GxpTempSensor",
+      "Thresholds": [
+        {
+          "Direction": "greater than",
+          "Name": "upper critical",
+          "Severity": 1,
+          "Value": 80
+        },
+        {
+          "Direction": "greater than",
+          "Name": "upper non critical",
+          "Severity": 0,
+          "Value": 75
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower non critical",
+          "Severity": 0,
+          "Value": 5
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower critical",
+          "Severity": 1,
+          "Value": 0
+        }
+      ]
+    },
+    {
+      "Name": "01-Inlet Ambient",
+      "Name1": "45-Board Inlet",
+      "Type": "TMP411",
+      "Bus": "47",
+      "Address": "0x4c",
+      "PowerState": "On",
+      "Thresholds": [
+        {
+          "Index": 1,
+          "Direction": "less than",
+          "Name": "lower non critical",
+          "Severity": 0,
+          "Value": 5
+        },
+        {
+          "Index": 1,
+          "Direction": "less than",
+          "Name": "lower critical",
+          "Severity": 1,
+          "Value": 0
+        },
+        {
+          "Index": 1,
+          "Direction": "greater than",
+          "Name": "upper critical",
+          "Severity": 1,
+          "Value": 47
+        },
+        {
+          "Index": 1,
+          "Direction": "greater than",
+          "Name": "upper non critical",
+          "Severity": 0,
+          "Value": 42
+        },
+	{
+          "Index": 2,
+          "Direction": "less than",
+          "Name": "lower non critical",
+          "Severity": 0,
+          "Value": 5
+        },
+        {
+          "Index": 2,
+          "Direction": "less than",
+          "Name": "lower critical",
+          "Severity": 1,
+          "Value": 0
+        },
+        {
+          "Index": 2,
+          "Direction": "greater than",
+          "Name": "upper critical",
+          "Severity": 1,
+          "Value": 95
+        },
+        {
+          "Index": 2,	
+          "Direction": "greater than",
+          "Name": "upper non critical",
+          "Severity": 0,
+          "Value": 85
+        }
+      ]
+    },
+    {
+      "Name": "23-BMC Zone",
+      "Type": "TMP1075",
+      "Bus": "2",
+      "Address": "0x4B",
+      "PowerState": "On",
+      "Thresholds": [
+        {
+          "Direction": "greater than",
+          "Name": "upper critical",
+          "Severity": 1,
+          "Value": 95
+        },
+        {
+          "Direction": "greater than",
+          "Name": "upper non critical",
+          "Severity": 0,
+          "Value": 85
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower non critical",
+          "Severity": 0,
+          "Value": 5
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower critical",
+          "Severity": 1,
+          "Value": 0
+        }
+      ]
+    },
+    
+    {
+      "Name": "46-Battery Zone",
+      "Type": "TMP1075",
+      "Bus": "48",
+      "Address": "0x4A",
+      "PowerState": "On",
+      "Thresholds": [
+        {
+          "Direction": "greater than",
+          "Name": "upper critical",
+          "Severity": 1,
+          "Value": 95
+        },
+        {
+          "Direction": "greater than",
+          "Name": "upper non critical",
+          "Severity": 0,
+          "Value": 85
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower non critical",
+          "Severity": 0,
+          "Value": 5
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower critical",
+          "Severity": 1,
+          "Value": 0
+        }
+      ]
+    },
+    {
+      "Name": "47-Sys Exhaust 1",
+      "Type": "TMP1075",
+      "Bus": "48",
+      "Address": "0x4B",
+      "PowerState": "On",
+      "Thresholds": [
+        {
+          "Direction": "greater than",
+          "Name": "upper critical",
+          "Severity": 1,
+          "Value": 95
+        },
+        {
+          "Direction": "greater than",
+          "Name": "upper non critical",
+          "Severity": 0,
+          "Value": 85
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower non critical",
+          "Severity": 0,
+          "Value": 5
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower critical",
+          "Severity": 1,
+          "Value": 0
+        }
+      ]
+    },
+    {
+      "Name": "48-Sys Exhaust 2",
+      "Type": "TMP1075",
+      "Bus": "48",
+      "Address": "0x49",
+      "PowerState": "On",
+      "Thresholds": [
+        {
+          "Direction": "greater than",
+          "Name": "upper critical",
+          "Severity": 1,
+          "Value": 95
+        },
+        {
+          "Direction": "greater than",
+          "Name": "upper non critical",
+          "Severity": 0,
+          "Value": 85
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower non critical",
+          "Severity": 0,
+          "Value": 5
+        },
+        {
+          "Direction": "less than",
+          "Name": "lower critical",
+          "Severity": 1,
+          "Value": 0
+        }
+      ]
+    },
+    {
       "Name": "PSU0",
       "Name1": "BCM0",
-      "PollRate": 5.0,
-      "PowerState": "Always",
-      "Type": "CRPS185"
-    },
-    {
+      "Type": "CRPS185",
+      "Bus": 67,
       "Address": "0x5C",
-      "Bus": 68,
+      "PowerState": "Always",
       "Labels": [
         "iin",
         "iout1",
@@ -74,173 +291,23 @@
         "vout1",
         "pin"
       ],
+      "PollRate": 5.0
+    },
+    {
       "Name": "PSU1",
       "Name1": "BCM1",
-      "PollRate": 5.0,
-      "PowerState": "Always",
-      "Type": "CRPS185"
-    },
-    {
-      "Name": "GXP Temp",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 80
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 75
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
+      "Type": "CRPS185",
+      "Bus": 68,
+      "Address": "0x5C",
+      "PowerState": "Always",  
+      "Labels": [
+        "iin",
+        "iout1",
+        "vin",
+        "vout1",
+        "pin"
       ],
-      "Type": "GxpTempSensor"
-    },
-    {
-      "Address": "0x4c",
-      "Bus": "47",
-      "Name": "Front Inlet",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 80
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 75
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ],
-      "Type": "TMP411"
-    },
-    {
-      "Address": "0x49",
-      "Bus": "48",
-      "Name": "OCP 1",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 80
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 75
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ],
-      "Type": "TMP1075"
-    },
-    {
-      "Address": "0x4A",
-      "Bus": "48",
-      "Name": "OCP 2",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 80
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 75
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ],
-      "Type": "TMP1075"
-    },
-    {
-      "Address": "0x4B",
-      "Bus": "48",
-      "Name": "SCM",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 80
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 75
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ],
-      "Type": "TMP1075"
+      "PollRate": 5.0
     },
     {
       "Address": "0x48",
@@ -252,13 +319,13 @@
           "Direction": "greater than",
           "Name": "upper critical",
           "Severity": 1,
-          "Value": 80
+          "Value": 95
         },
         {
           "Direction": "greater than",
           "Name": "upper non critical",
           "Severity": 0,
-          "Value": 75
+          "Value": 85
         },
         {
           "Direction": "less than",
@@ -275,24 +342,24 @@
       ],
       "Type": "TMP1075"
     },
-    
     {
       "Address": "0x48",
       "Bus": "7",
       "Name": "PSU @ 1U PDB Temp",
+      "_comment1": "49-P/S2 Zone",
       "PowerState": "On",
       "Thresholds": [
         {
           "Direction": "greater than",
           "Name": "upper critical",
           "Severity": 1,
-          "Value": 80
+          "Value": 95
         },
         {
           "Direction": "greater than",
           "Name": "upper non critical",
           "Severity": 0,
-          "Value": 75
+          "Value": 85
         },
         {
           "Direction": "less than",
@@ -311,25 +378,15 @@
     },
     {
       "Connector": {
-        "Fail": "FAN1_FAIL",
-        "Inst": "FAN1_INST",
-        "Name": "Fan Connector 1",
-        "Pwm": 0,
-        "Tachs": [ 0 ]
-      },
-      "Name": "Fan 1",
-      "Type": "HPEFan",
-      "Index": 0
-    },
-    {
-      "Connector": {
+        "_comment1": "on the Dl340, fans reads start from 'hwmon/pwm2' so start fan 1 numbering from pwm=1, and index=1 instead of the usual 0-based",
         "Fail": "FAN3_FAIL",
         "Inst": "FAN2_INST",
-        "Name": "Fan Connector 2",
+        "Name": "Fan Conn 1",
         "Pwm": 1,
+        "PwmName": "Fan 1",
         "Tachs": [ 1 ]
       },
-      "Name": "Fan 2",
+      "Name": "Raw Fan 1",
       "Type": "HPEFan",
       "Index": 1
     },
@@ -337,11 +394,12 @@
       "Connector": {
         "Fail": "FAN5_FAIL",
         "Inst": "FAN3_INST",
-        "Name": "Fan Connector 3",
+        "Name": "Fan Conn 2",
         "Pwm": 2,
+        "PwmName": "Fan 2",
         "Tachs": [ 2 ]
       },
-      "Name": "Fan 3",
+      "Name": "Raw Fan 2",
       "Type": "HPEFan",
       "Index": 2
     },
@@ -349,11 +407,12 @@
       "Connector": {
         "Fail": "FAN7_FAIL",
         "Inst": "FAN4_INST",
-        "Name": "Fan Connector 4",
+        "Name": "Fan Conn 3",
         "Pwm": 3,
+        "PwmName": "Fan 3",
         "Tachs": [ 3 ]
       },
-      "Name": "Fan 4",
+      "Name": "Raw Fan 3",
       "Type": "HPEFan",
       "Index": 3
     },
@@ -361,11 +420,12 @@
       "Connector": {
         "Fail": "FAN9_FAIL",
         "Inst": "FAN5_INST",
-        "Name": "Fan Connector 5",
+        "Name": "Fan Conn 4",
         "Pwm": 4,
+        "PwmName": "Fan 4",
         "Tachs": [ 4 ]
       },
-      "Name": "Fan 5",
+      "Name": "Raw Fan 4",
       "Type": "HPEFan",
       "Index": 4
     },
@@ -373,23 +433,25 @@
       "Connector": {
         "Fail": "FAN11_FAIL",
         "Inst": "FAN6_INST",
-        "Name": "Fan Connector 6",
+        "Name": "Fan Conn 5",
         "Pwm": 5,
+        "PwmName": "Fan 5",
         "Tachs": [ 5 ]
       },
-      "Name": "Fan 6",
+      "Name": "Raw Fan 5",
       "Type": "HPEFan",
       "Index": 5
     },
     {
       "Connector": {
         "Fail": "FAN13_FAIL",
-        "Inst": "FAN7_INST",
-        "Name": "Fan Connector 7",
+        "Inst": "FAN8_INST",
+        "Name": "Fan Conn 6",
         "Pwm": 6,
+        "PwmName": "Fan 6",
         "Tachs": [ 6 ]
       },
-      "Name": "Fan 7",
+      "Name": "Raw Fan 6",
       "Type": "HPEFan",
       "Index": 6
     },
@@ -401,26 +463,24 @@
       "ILimitMax": 0,
       "ILimitMin": 0,
       "Inputs": [
+        "Raw Fan 1",
+        "Raw Fan 2",
+        "Raw Fan 3",
+        "Raw Fan 4",
+        "Raw Fan 5",
+        "Raw Fan 6"
+      ],
+      "Name": "Fan 1-6",
+      "NegativeHysteresis": 0,
+      "OutLimitMax": 100,
+      "OutLimitMin": 30,
+      "Outputs": [
         "Fan 1",
         "Fan 2",
         "Fan 3",
         "Fan 4",
         "Fan 5",
-        "Fan 6",
-        "Fan 7"
-      ],
-      "Name": "Fan 1-7",
-      "NegativeHysteresis": 0,
-      "OutLimitMax": 100,
-      "OutLimitMin": 30,
-      "Outputs": [
-        "Pwm 1",
-        "Pwm 2",
-        "Pwm 3",
-        "Pwm 4",
-        "Pwm 5",
-        "Pwm 6",
-        "Pwm 7"
+        "Fan 6"
       ],
       "PCoefficient": 0,
       "PositiveHysteresis": 0,
