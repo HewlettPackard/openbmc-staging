@@ -380,6 +380,7 @@
       "Name": "Fan 1",
       "Type": "HPEFan",
       "Index": 1,
+      "MaxReading": 16500,
       "Connector": {
         "_comment1": "on the Dl340, fans reads start from 'hwmon/pwm2' so start fan 1 numbering from pwm=1, and index=1 instead of the usual 0-based",
         "Name": "Fan Conn 1",
@@ -401,6 +402,7 @@
       "Name": "Fan 2",
       "Type": "HPEFan",
       "Index": 2,
+      "MaxReading": 16500,
       "Connector": {
         "Name": "Fan Conn 2",
         "Pwm": 2,
@@ -421,6 +423,7 @@
       "Name": "Fan 3",
       "Type": "HPEFan",
       "Index": 3,
+      "MaxReading": 16500,
       "Connector": {
         "Name": "Fan Conn 3",
         "Pwm": 3,
@@ -441,6 +444,7 @@
       "Name": "Fan 4",
       "Type": "HPEFan",
       "Index": 4,
+      "MaxReading": 16500,
       "Connector": {
         "Name": "Fan Conn 4",
         "Pwm": 4,
@@ -461,6 +465,7 @@
       "Name": "Fan 5",
       "Type": "HPEFan",
       "Index": 5,
+      "MaxReading": 16500,
       "Connector": {
         "Name": "Fan Conn 5",
         "Pwm": 5,
@@ -481,6 +486,7 @@
       "Name": "Fan 6",
       "Type": "HPEFan",
       "Index": 6,
+      "MaxReading": 16500,
       "Connector": {
         "Name": "Fan Conn 6",
         "Pwm": 6,
