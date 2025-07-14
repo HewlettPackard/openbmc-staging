@@ -6,6 +6,7 @@ Subject: [PATCH] now supports gpio based fail bit monitoring as well as
  'not present' sensors as 'failed' and goes to failsale speed w/o checking
  redundancy rules or fan status on dbus first
 
+Upstream-Status: Pending
 ---
  src/fan/FanMain.cpp    | 155 ++++++++++++++++++++++++++++++++++++-----
  src/fan/TachSensor.cpp |  48 ++++++++++++-

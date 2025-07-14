@@ -383,7 +383,8 @@
       "Connector": {
         "_comment1": "on the Dl340, fans reads start from 'hwmon/pwm2' so start fan 1 numbering from pwm=1, and index=1 instead of the usual 0-based",
         "Name": "Fan Conn 1",
-        "Pwm": 1
+        "Pwm": 1,
+        "PwmName": "Pwm 1"
       },
       "Presence": {
         "PinName": "FAN2_INST",
@@ -402,7 +403,8 @@
       "Index": 2,
       "Connector": {
         "Name": "Fan Conn 2",
-        "Pwm": 2
+        "Pwm": 2,
+        "PwmName": "Pwm 2"
       },
       "Presence": {
         "PinName": "FAN3_INST",
@@ -416,12 +418,13 @@
       }
     },
     { 
-      "Name": "Raw Fan 3",
+      "Name": "Fan 3",
       "Type": "HPEFan",
       "Index": 3,
       "Connector": {
         "Name": "Fan Conn 3",
-        "Pwm": 3
+        "Pwm": 3,
+        "PwmName": "Pwm 3"
       },
       "Presence": {
         "PinName": "FAN4_INST",
@@ -440,7 +443,8 @@
       "Index": 4,
       "Connector": {
         "Name": "Fan Conn 4",
-        "Pwm": 4
+        "Pwm": 4,
+        "PwmName": "Pwm 4"
       },
       "Presence": {
         "PinName": "FAN5_INST",
@@ -459,7 +463,8 @@
       "Index": 5,
       "Connector": {
         "Name": "Fan Conn 5",
-        "Pwm": 5
+        "Pwm": 5,
+        "PwmName": "Pwm 5"
       },
       "Presence": {
         "PinName": "FAN6_INST",
@@ -478,7 +483,8 @@
       "Index": 6,
       "Connector": {
         "Name": "Fan Conn 6",
-        "Pwm": 6
+        "Pwm": 6,
+        "PwmName": "Pwm 6"
       },
       "Presence": {
         "PinName": "FAN8_INST",
