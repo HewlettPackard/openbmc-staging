@@ -56,13 +56,13 @@
           "Direction": "greater than",
           "Name": "upper critical",
           "Severity": 1,
-          "Value": 80
+          "Value": 115
         },
         {
           "Direction": "greater than",
           "Name": "upper non critical",
           "Severity": 0,
-          "Value": 75
+          "Value": 110
         },
         {
           "Direction": "less than",
@@ -79,8 +79,8 @@
       ]
     },
     {
-      "Name": "01-Inlet Ambient",
-      "Name1": "45-Board Inlet",
+      "Name": "01 Inlet Ambient",
+      "Name1": "45 Board Inlet",
       "Type": "TMP411",
       "Bus": "47",
       "Address": "0x4c",
@@ -145,7 +145,7 @@
       ]
     },
     {
-      "Name": "23-BMC Zone",
+      "Name": "23 BMC Zone",
       "Type": "TMP1075",
       "Bus": "2",
       "Address": "0x4B",
@@ -179,7 +179,7 @@
     },
     
     {
-      "Name": "46-Battery Zone",
+      "Name": "46 Battery Zone",
       "Type": "TMP1075",
       "Bus": "48",
       "Address": "0x4A",
@@ -212,7 +212,7 @@
       ]
     },
     {
-      "Name": "47-Sys Exhaust 1",
+      "Name": "47 Sys Exhaust 1",
       "Type": "TMP1075",
       "Bus": "48",
       "Address": "0x4B",
@@ -245,7 +245,7 @@
       ]
     },
     {
-      "Name": "48-Sys Exhaust 2",
+      "Name": "48 Sys Exhaust 2",
       "Type": "TMP1075",
       "Bus": "48",
       "Address": "0x49",
@@ -375,85 +375,127 @@
         }
       ],
       "Type": "TMP1075"
-    },
+    },    
     {
+      "Name": "Fan 1",
+      "Type": "HPEFan",
+      "Index": 1,
       "Connector": {
         "_comment1": "on the Dl340, fans reads start from 'hwmon/pwm2' so start fan 1 numbering from pwm=1, and index=1 instead of the usual 0-based",
-        "Fail": "FAN3_FAIL",
-        "Inst": "FAN2_INST",
         "Name": "Fan Conn 1",
-        "Pwm": 1,
-        "PwmName": "Fan 1",
-        "Tachs": [ 1 ]
+        "Pwm": 1
       },
-      "Name": "Raw Fan 1",
-      "Type": "HPEFan",
-      "Index": 1
+      "Presence": {
+        "PinName": "FAN2_INST",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
+      "Monitor": {
+        "PinName": "FAN3_FAIL",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      }
     },
-    {
+    { 
+      "Name": "Fan 2",
+      "Type": "HPEFan",
+      "Index": 2,
       "Connector": {
-        "Fail": "FAN5_FAIL",
-        "Inst": "FAN3_INST",
         "Name": "Fan Conn 2",
-        "Pwm": 2,
-        "PwmName": "Fan 2",
-        "Tachs": [ 2 ]
+        "Pwm": 2
       },
-      "Name": "Raw Fan 2",
-      "Type": "HPEFan",
-      "Index": 2
+      "Presence": {
+        "PinName": "FAN3_INST",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
+      "Monitor": {
+        "PinName": "FAN5_FAIL",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      }
     },
-    {
-      "Connector": {
-        "Fail": "FAN7_FAIL",
-        "Inst": "FAN4_INST",
-        "Name": "Fan Conn 3",
-        "Pwm": 3,
-        "PwmName": "Fan 3",
-        "Tachs": [ 3 ]
-      },
+    { 
       "Name": "Raw Fan 3",
       "Type": "HPEFan",
-      "Index": 3
+      "Index": 3,
+      "Connector": {
+        "Name": "Fan Conn 3",
+        "Pwm": 3
+      },
+      "Presence": {
+        "PinName": "FAN4_INST",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
+      "Monitor": {
+        "PinName": "FAN7_FAIL",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
     },
     {
+      "Name": "Fan 4",
+      "Type": "HPEFan",
+      "Index": 4,
       "Connector": {
-        "Fail": "FAN9_FAIL",
-        "Inst": "FAN5_INST",
         "Name": "Fan Conn 4",
-        "Pwm": 4,
-        "PwmName": "Fan 4",
-        "Tachs": [ 4 ]
+        "Pwm": 4
       },
-      "Name": "Raw Fan 4",
-      "Type": "HPEFan",
-      "Index": 4
+      "Presence": {
+        "PinName": "FAN5_INST",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
+      "Monitor": {
+        "PinName": "FAN9_FAIL",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      }
     },
     {
+      "Name": "Fan 5",
+      "Type": "HPEFan",
+      "Index": 5,
       "Connector": {
-        "Fail": "FAN11_FAIL",
-        "Inst": "FAN6_INST",
         "Name": "Fan Conn 5",
-        "Pwm": 5,
-        "PwmName": "Fan 5",
-        "Tachs": [ 5 ]
+        "Pwm": 5
       },
-      "Name": "Raw Fan 5",
-      "Type": "HPEFan",
-      "Index": 5
+      "Presence": {
+        "PinName": "FAN6_INST",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
+      "Monitor": {
+        "PinName": "FAN11_FAIL",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
     },
     {
-      "Connector": {
-        "Fail": "FAN13_FAIL",
-        "Inst": "FAN8_INST",
-        "Name": "Fan Conn 6",
-        "Pwm": 6,
-        "PwmName": "Fan 6",
-        "Tachs": [ 6 ]
-      },
-      "Name": "Raw Fan 6",
+      "Name": "Fan 6",
       "Type": "HPEFan",
-      "Index": 6
+      "Index": 6,
+      "Connector": {
+        "Name": "Fan Conn 6",
+        "Pwm": 6
+      },
+      "Presence": {
+        "PinName": "FAN8_INST",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
+      "Monitor": {
+        "PinName": "FAN13_FAIL",
+        "Polarity": "High",
+        "MonitorType": "Polling"
+      },
+    },
+    {
+      "Name": "Zone 1",
+      "Type": "Pid.Zone",
+      "FailSafePercent": 100,
+      "MinThermalOutput": 10
     },
     {
       "Class": "fan",
@@ -463,24 +505,24 @@
       "ILimitMax": 0,
       "ILimitMin": 0,
       "Inputs": [
-        "Raw Fan 1",
-        "Raw Fan 2",
-        "Raw Fan 3",
-        "Raw Fan 4",
-        "Raw Fan 5",
-        "Raw Fan 6"
-      ],
-      "Name": "Fan 1-6",
-      "NegativeHysteresis": 0,
-      "OutLimitMax": 100,
-      "OutLimitMin": 30,
-      "Outputs": [
         "Fan 1",
         "Fan 2",
         "Fan 3",
         "Fan 4",
         "Fan 5",
         "Fan 6"
+      ],
+      "Name": "Fan 1-6",
+      "NegativeHysteresis": 0,
+      "OutLimitMax": 100,
+      "OutLimitMin": 30,
+      "Outputs": [
+        "Pwm 1",
+        "Pwm 2",
+        "Pwm 3",
+        "Pwm 4",
+        "Pwm 5",
+        "Pwm 6"
       ],
       "PCoefficient": 0,
       "PositiveHysteresis": 0,
@@ -499,7 +541,7 @@
       "ILimitMax": 100,
       "ILimitMin": 30,
       "Inputs": [
-        "DTS CPU1"
+        "DTS CPU 1"
       ],
       "Name": "DTS CPU1 Zn",
       "NegativeHysteresis": 5,
@@ -518,22 +560,64 @@
       ]
     },
     {
+      "_comment1": "Experimental FanAlg work below",
       "Class": "temp",
+      "Inputs": [
+        "01 Inlet Ambient"
+      ],
+      "Name": "01 Inlet Ambient FanAlg",
+      "NegativeHysteresis": 0,
+      "Reading": [
+                15.0,
+                20.0,
+                25.0,
+                30.0,
+                37.0,
+                40.0,
+                45.0
+      ],
+      "_comment2": "Converted output from duty cycle x/255 to perccentage",
+      "Output": [
+                12.0,
+                12.0,
+                12.0,
+                12.0,
+                12.0,
+                39.0,
+                59.0
+      ],
+      "PositiveHysteresis": 0,
+      
+      "Type": "Stepwise",
+      "Zones": [
+                "Zone 1"
+      ]
+    },
+    {
+      "_comment1": "Experimental FanAlg work",
+      "Class": "temp",
+      "Name": "GSC Temp FanAlg",
+      "Inputs": [ "GSC Temp" ],
+      "Outputs": [],
+
+      "SetPoint": 95,
+      "PCoefficient": -5,
+      "ICoefficient": -0.15,
+      "DCoefficient": 0,
+
+      "OutLimitMin": 0,
+      "OutLimitMax": 100,
+      
+      "ILimitMin": 12,
+      "ILimitMax": 100,
+
       "FFGainCoefficient": 0,
       "FFOffCoefficient": 0,
-      "ICoefficient": -0.2,
-      "ILimitMax": 70,
-      "ILimitMin": 10,
-      "Inputs": [
-        "Front Inlet"
-      ],
-      "Name": "Ambient Temp Zn",
-      "OutLimitMax": 70,
-      "OutLimitMin": 10,
-      "Outputs": [],
-      "PCoefficient": -3,
-      "SetPoint": 25,
-      "SlewNeg": -1,
+      
+      "NegativeHysteresis": 3.0,
+      "PositiveHysteresis": 0,
+      
+      "SlewNeg": 0,
       "SlewPos": 0,
       "Type": "Pid",
       "Zones": [
@@ -541,10 +625,190 @@
       ]
     },
     {
-      "FailSafePercent": 100,
-      "MinThermalOutput": 10,
-      "Name": "Zone 1",
-      "Type": "Pid.Zone"
+      "_comment1": "Experimental FanAlg work",
+      "Class": "temp",
+      "Name": "23 BMC Zone FanAlg",
+      "Inputs": [ "23 BMC Zone" ],
+      "Outputs": [],
+
+      "SetPoint": 60,
+      "PCoefficient": -5,
+      "ICoefficient": -0.15,
+      "DCoefficient": 0,
+
+      "OutLimitMin": 12,
+      "OutLimitMax": 100,
+      
+      "ILimitMin": 12,
+      "ILimitMax": 100,
+
+      "FFGainCoefficient": 0,
+      "FFOffCoefficient": 0,
+      
+      "NegativeHysteresis": 0.0,
+      "PositiveHysteresis": 0,
+      
+      "SlewNeg": 0,
+      "SlewPos": 0,
+      "Type": "Pid",
+      "Zones": [
+        "Zone 1"
+      ]
+    },
+    {
+      "_comment1": "Experimental FanAlg work",
+      "Class": "temp",
+      "Name": "46 Battery Zone FanAlg",
+      "Inputs": [ "46 Battery Zone" ],
+      "Outputs": [],
+
+      "SetPoint": 65,
+      "PCoefficient":-5,
+      "ICoefficient": -0.15,
+      "DCoefficient": 0,
+
+      "OutLimitMin": 0,
+      "OutLimitMax": 100,
+      
+      "ILimitMin": 12,
+      "ILimitMax": 100,
+
+      "FFGainCoefficient": 0,
+      "FFOffCoefficient": 0,
+      
+      "NegativeHysteresis": 0.0,
+      "PositiveHysteresis": 0,
+      
+      "SlewNeg": 0,
+      "SlewPos": 0,
+      "Type": "Pid",
+      "Zones": [
+        "Zone 1"
+      ]
+    },
+    {
+      "_comment1": "Experimental FanAlg work",
+      "Class": "temp",
+      "Name": "47 Sys Exhaust 1 FanAlg",
+      "Inputs": [ "47 Sys Exhaust 1" ],
+      "Outputs": [],
+
+      "SetPoint": 65,
+      "PCoefficient": -5,
+      "ICoefficient": -0.15,
+      "DCoefficient": 0,
+
+      "OutLimitMin": 0,
+      "OutLimitMax": 100,
+      
+      "ILimitMin": 12,
+      "ILimitMax": 100,
+
+      "FFGainCoefficient": 0,
+      "FFOffCoefficient": 0,
+      
+      "NegativeHysteresis": 0.0,
+      "PositiveHysteresis": 0,
+      
+      "SlewNeg": 0,
+      "SlewPos": 0,
+      "Type": "Pid",
+      "Zones": [
+        "Zone 1"
+      ]
+    },
+    {
+      "_comment1": "Experimental FanAlg work",
+      "Class": "temp",
+      "Name": "48 Sys Exhaust 2 FanAlg",
+      "Inputs": [ "48 Sys Exhaust 2" ],
+      "Outputs": [],
+
+      "SetPoint": 55,
+      "PCoefficient": -5,
+      "ICoefficient": -0.15,
+      "DCoefficient": 0,
+
+      "OutLimitMin": 0,
+      "OutLimitMax": 100,
+      
+      "ILimitMin": 12,
+      "ILimitMax": 100,
+
+      "FFGainCoefficient": 0,
+      "FFOffCoefficient": 0,
+      
+      "NegativeHysteresis": 0.0,
+      "PositiveHysteresis": 0,
+      
+      "SlewNeg": 0,
+      "SlewPos": 0,
+      "Type": "Pid",
+      "Zones": [
+        "Zone 1"
+      ]
+    },
+    {
+      "_comment1": "Experimental FanAlg work",
+      "Class": "temp",
+      "Name": "PSU @ 1U PDB Temp FanAlg",
+      "Inputs": [ "PSU @ 1U PDB Temp" ],
+      "Outputs": [],
+
+      "SetPoint": 60,
+      "PCoefficient": -5,
+      "ICoefficient": -0.15,
+      "DCoefficient": 0,
+
+      "OutLimitMin": 0,
+      "OutLimitMax": 100,
+      
+      "ILimitMin": 12,
+      "ILimitMax": 100,
+
+      "FFGainCoefficient": 0,
+      "FFOffCoefficient": 0,
+      
+      "NegativeHysteresis": 0.0,
+      "PositiveHysteresis": 0,
+      
+      "SlewNeg": 0,
+      "SlewPos": 0,
+      "Type": "Pid",
+      "Zones": [
+        "Zone 1"
+      ]
+    },
+    {
+      "_comment1": "Experimental FanAlg work",
+      "Class": "temp",
+      "Name": "DIMMs FanAlg",
+      "Inputs": [ "CPU\d+_DIMM_[a-zA-Z]\d+" ],
+      "Outputs": [],
+
+      "SetPoint": 76,
+      "PCoefficient": -5,
+      "ICoefficient": -0.5,
+      "DCoefficient": 0,
+
+      "OutLimitMin": 0,
+      "OutLimitMax": 100,
+      
+      "ILimitMin": 12,
+      "ILimitMax": 100,
+
+      "FFGainCoefficient": 0,
+      "FFOffCoefficient": 0,
+      
+      "NegativeHysteresis": 0.0,
+      "PositiveHysteresis": 0,
+      
+      "SlewNeg": 0,
+      "SlewPos": 0,
+      "Type": "Pid",
+      "Zones": [
+        "Zone 1"
+      ]
     }
   ],
   "Name": "DL340 G12 Server",
