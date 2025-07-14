@@ -432,7 +432,7 @@
         "PinName": "FAN7_FAIL",
         "Polarity": "High",
         "MonitorType": "Polling"
-      },
+      }
     },
     {
       "Name": "Fan 4",
@@ -470,7 +470,7 @@
         "PinName": "FAN11_FAIL",
         "Polarity": "High",
         "MonitorType": "Polling"
-      },
+      }
     },
     {
       "Name": "Fan 6",
@@ -489,7 +489,7 @@
         "PinName": "FAN13_FAIL",
         "Polarity": "High",
         "MonitorType": "Polling"
-      },
+      }
     },
     {
       "Name": "Zone 1",
@@ -783,7 +783,7 @@
       "_comment1": "Experimental FanAlg work",
       "Class": "temp",
       "Name": "DIMMs FanAlg",
-      "Inputs": [ "CPU\d+_DIMM_[a-zA-Z]\d+" ],
+      "Inputs": [ "CPU\\d+_DIMM_[a-zA-Z]\\d+" ],
       "Outputs": [],
 
       "SetPoint": 76,

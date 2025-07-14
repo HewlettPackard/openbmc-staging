@@ -1,0 +1,393 @@
+From 5e55c26fe657d04ef6714d922f01a3080df66740 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Mon, 14 Jul 2025 15:41:03 -0500
+Subject: [PATCH] now supports gpio based fail bit monitoring as well as
+ presence detection. Also workaround for issue where swampd incorrectly marked
+ 'not present' sensors as 'failed' and goes to failsale speed w/o checking
+ redundancy rules or fan status on dbus first
+
+---
+ src/fan/FanMain.cpp    | 155 ++++++++++++++++++++++++++++++++++++-----
+ src/fan/TachSensor.cpp |  48 ++++++++++++-
+ src/fan/TachSensor.hpp |   2 +
+ 3 files changed, 185 insertions(+), 20 deletions(-)
+
+diff --git a/src/fan/FanMain.cpp b/src/fan/FanMain.cpp
+index f210f7f..4cd5a61 100644
+--- a/src/fan/FanMain.cpp
++++ b/src/fan/FanMain.cpp
+@@ -198,14 +198,32 @@ bool findPwmPath(const std::filesystem::path& directory, unsigned int pwm,
+     return true;
+ }
+ 
+-// The argument to this function should be the fanN_input file that we want to
+-// enable. The function will locate the corresponding fanN_enable file if it
+-// exists. Note that some drivers don't provide this file if the sensors are
+-// always enabled.
+-void enableFanInput(const std::filesystem::path& fanInputPath)
++//takes a hwmon pwm (output) handle as a parameter
++//returns 'fanN_input' hwmon path if it exists, otherwise returns the original path 'pwmN'
++//to allow for controlling fans with no acessible tachometer
++std::filesystem::path getFanInputPath(const std::filesystem::path& fanOutputPath)
++{
++    std::string path(fanOutputPath.string());
++    boost::replace_last(path, "pwm", "fan"); //look for fanN_input
++    path+="_input";
++    std::filesystem::path fanInputPath(path);
++
++    if (std::filesystem::exists(fanInputPath))
++    {
++        return fanInputPath;
++    }
++
++    return fanOutputPath; 
++}
++
++// The argument to this function should be the 'pwmN' file associated with the 
++// fanN_input that we want to enable. The function will locate the
++// corresponding fanN_enable file if it exists. Note that some drivers don't
++// provide this file if the sensors are always enabled.
++void enableFanInput(const std::filesystem::path& fanOutputPath)
+ {
+     std::error_code ec;
+-    std::string path(fanInputPath.string());
++    std::string path(fanOutputPath.string());
+     boost::replace_last(path, "pwm", "fan");
+     path+="_enable";
+ 
+@@ -280,6 +298,8 @@ void createSensors(
+         pwmSensors,
+     boost::container::flat_map<std::string, std::weak_ptr<PresenceGpio>>&
+         presenceGpios,
++    boost::container::flat_map<std::string, std::weak_ptr<PresenceGpio>>&
++        monitorGpios,
+     std::shared_ptr<sdbusplus::asio::connection>& dbusConnection,
+     const std::shared_ptr<boost::container::flat_set<std::string>>&
+         sensorsChanged,
+@@ -289,30 +309,31 @@ void createSensors(
+         GetSensorConfiguration>(dbusConnection, [&io, &objectServer,
+                                                  &tachSensors, &pwmSensors,
+                                                  &presenceGpios,
++                                                 &monitorGpios,
+                                                  &dbusConnection,
+                                                  sensorsChanged](
+                                                     const ManagedObjectType&
+                                                         sensorConfigurations) {
+         bool firstScan = sensorsChanged == nullptr;
+-        std::vector<std::filesystem::path> paths;
++        std::vector<std::filesystem::path> fanOutputPaths;
+         if (!findFiles(std::filesystem::path("/sys/class/hwmon"),
+-                       R"(pwm\d+)", paths))
++                       R"(pwm\d+)", fanOutputPaths))
+         {
+-            lg2::error("No fan sensors in system");
++            lg2::error("No fan pwm controls in system");
+             return;
+         }
+ 
+         // iterate through all found fan sensors, and try to match them with
+         // configuration
+-        for (const auto& path : paths)
++        for (const auto& fanOutputPath : fanOutputPaths)
+         {
+             std::smatch match;
+-            std::string pathStr = path.string();
++            std::string pathStr = fanOutputPath.string();
+ 
+             std::regex_search(pathStr, match, inputRegex);
+             std::string indexStr = *(match.begin() + 1);
+ 
+-            std::filesystem::path directory = path.parent_path();
++            std::filesystem::path directory = fanOutputPath.parent_path();
+             FanTypes fanType = getFanType(directory);
+             std::string cfgIntf = configInterfaceName(sensorTypes[fanType]);
+ 
+@@ -396,7 +417,7 @@ void createSensors(
+             if (sensorData == nullptr)
+             {
+                 lg2::error("failed to find match for '{PATH}'", "PATH",
+-                           path.string());
++                           fanOutputPath.string());
+                 continue;
+             }
+ 
+@@ -406,7 +427,7 @@ void createSensors(
+             {
+                 lg2::error(
+                     "could not determine configuration name for '{PATH}'",
+-                    "PATH", path.string());
++                    "PATH", fanOutputPath.string());
+                 continue;
+             }
+             std::string sensorName =
+@@ -531,6 +552,98 @@ void createSensors(
+                     }
+                 }
+             }
++
++            auto monitorConfig = 
++                sensorData->find(cfgIntf + std::string(".Monitor"));  //monitor for failures
++            
++            std::shared_ptr<PresenceGpio> monitorGpio(nullptr);
++            
++            // monitor sensors are optional
++            if (monitorConfig != sensorData->end())
++            {
++                auto findFailPolarity = monitorConfig->second.find("Polarity");
++                auto findFailPinName = monitorConfig->second.find("PinName");
++
++                if (findFailPinName == monitorConfig->second.end() ||
++                    findFailPolarity == monitorConfig->second.end())
++                {
++                    lg2::error("Malformed Monitor Configuration");
++                }
++                else
++                {
++                    bool inverted =
++                        std::get<std::string>(findFailPolarity->second) == "Low";
++                    const auto* pinName =
++                        std::get_if<std::string>(&findFailPinName->second);
++
++                    if (pinName != nullptr)
++                    {
++                        auto findmonitorGpio = monitorGpios.find(*pinName);
++                        if (findmonitorGpio != monitorGpios.end())
++                        {
++                            auto p = findmonitorGpio->second.lock();
++                            if (p)
++                            {
++                                monitorGpio = p;
++                            }
++                        }
++                        if (!monitorGpio)
++                        {
++                            auto findMonitorType =
++                                monitorConfig->second.find("MonitorType");
++                            bool polling = false;
++                            if (findMonitorType != monitorConfig->second.end())
++                            {
++                                auto mType = std::get<std::string>(
++                                    findMonitorType->second);
++                                if (mType == "Polling")
++                                {
++                                    polling = true;
++                                }
++                                else if (mType != "Event")
++                                {
++                                    lg2::error(
++                                        "Unsupported GPIO MonitorType of '{TYPE}' for '{NAME}', "
++                                        "supported types: Polling, Event default",
++                                        "TYPE", mType, "NAME", sensorName);
++                                }
++                            }
++                            try
++                            {
++                                if (polling)
++                                {
++                                    monitorGpio =
++                                        std::make_shared<PollingPresenceGpio>(
++                                            "Fan", sensorName, *pinName,
++                                            inverted, io);
++                                }
++                                else
++                                {
++                                    monitorGpio =
++                                        std::make_shared<EventPresenceGpio>(
++                                            "Fan", sensorName, *pinName,
++                                            inverted, io);
++                                }
++                                monitorGpios[*pinName] = monitorGpio;
++                            }
++                            catch (const std::system_error& e)
++                            {
++                                lg2::error(
++                                    "Failed to create GPIO monitor object for "
++                                    "'{PIN_NAME}' / '{SENSOR_NAME}': '{ERROR}'",
++                                    "PIN_NAME", *pinName, "SENSOR_NAME",
++                                    sensorName, "ERROR", e);
++                            }
++                        }
++                    }
++                    else
++                    {
++                        lg2::error(
++                            "Malformed monitor pinName for sensor '{NAME}'",
++                            "NAME", sensorName);
++                    }
++                }
++            }
+             std::optional<RedundancySensor>* redundancy = nullptr;
+             if (fanType == FanTypes::aspeed)
+             {
+@@ -624,13 +737,15 @@ void createSensors(
+ 
+             findLimits(limits, baseConfiguration);
+ 
+-            enableFanInput(path);
++            enableFanInput(fanOutputPath);
++
++            auto fanInputPath = getFanInputPath(fanOutputPath);
+ 
+             auto& tachSensor = tachSensors[sensorName];
+             tachSensor = nullptr;
+             tachSensor = std::make_shared<TachSensor>(
+-                path.string(), baseType, objectServer, dbusConnection,
+-                presenceGpio, redundancy, io, sensorName,
++                fanInputPath.string(), baseType, objectServer, dbusConnection,
++                presenceGpio, monitorGpio, redundancy, io, sensorName,
+                 std::move(sensorThresholds), *interfacePath, limits, powerState,
+                 led);
+             tachSensor->setupRead();
+@@ -667,11 +782,13 @@ int main()
+         pwmSensors;
+     boost::container::flat_map<std::string, std::weak_ptr<PresenceGpio>>
+         presenceGpios;
++    boost::container::flat_map<std::string, std::weak_ptr<PresenceGpio>>
++        monitorGpios;
+     auto sensorsChanged =
+         std::make_shared<boost::container::flat_set<std::string>>();
+ 
+     boost::asio::post(io, [&]() {
+-        createSensors(io, objectServer, tachSensors, pwmSensors, presenceGpios,
++        createSensors(io, objectServer, tachSensors, pwmSensors, presenceGpios, monitorGpios,
+                       systemBus, nullptr);
+     });
+ 
+@@ -699,7 +816,7 @@ int main()
+                     return;
+                 }
+                 createSensors(io, objectServer, tachSensors, pwmSensors,
+-                              presenceGpios, systemBus, sensorsChanged, 5);
++                              presenceGpios, monitorGpios, systemBus, sensorsChanged, 5);
+             });
+         };
+ 
+diff --git a/src/fan/TachSensor.cpp b/src/fan/TachSensor.cpp
+index c8a3c40..258d9e7 100644
+--- a/src/fan/TachSensor.cpp
++++ b/src/fan/TachSensor.cpp
+@@ -48,6 +48,7 @@ TachSensor::TachSensor(
+     sdbusplus::asio::object_server& objectServer,
+     std::shared_ptr<sdbusplus::asio::connection>& conn,
+     std::shared_ptr<PresenceGpio>& presenceGpio,
++    std::shared_ptr<PresenceGpio>& monitorGpio,
+     std::optional<RedundancySensor>* redundancy, boost::asio::io_context& io,
+     const std::string& fanName,
+     std::vector<thresholds::Threshold>&& thresholdsIn,
+@@ -58,6 +59,7 @@ TachSensor::TachSensor(
+            objectType, false, false, limits.second, limits.first, conn,
+            powerState),
+     objServer(objectServer), redundancy(redundancy), presence(presenceGpio),
++    monitor(monitorGpio),
+     inputDev(io, path, boost::asio::random_access_file::read_only),
+     waitTimer(io), path(path), led(ledIn)
+ {
+@@ -85,6 +87,10 @@ TachSensor::TachSensor(
+         itemIface->register_property("PrettyName",
+                                      std::string()); // unused property
+         itemIface->register_property("Present", true);
++
++        if (monitor) 
++           itemIface->register_property("Functional", true);
++
+         itemIface->initialize();
+         itemAssoc = objectServer.add_interface(
+             "/xyz/openbmc_project/inventory/" + name, association::interface);
+@@ -95,6 +101,12 @@ TachSensor::TachSensor(
+                  "/xyz/openbmc_project/sensors/fan_tach/" + name}});
+         itemAssoc->initialize();
+     }
++
++    if (monitor) 
++    {
++        monitor->monitorPresence(); //kick off monitoring (polling) for the monitor/fail bit or handle        
++    }
++    
+     setInitialProperties(sensor_paths::unitRPMs);
+ }
+ 
+@@ -156,6 +168,7 @@ void TachSensor::handleResponse(const boost::system::error_code& err,
+         return; // we're being destroyed
+     }
+     bool missing = false;
++    bool failed = false;
+     size_t pollTime = pwmPollMs;
+     if (presence)
+     {
+@@ -168,7 +181,24 @@ void TachSensor::handleResponse(const boost::system::error_code& err,
+         itemIface->set_property("Present", !missing);
+     }
+ 
+-    if (!missing)
++    if (monitor)
++    {
++        failed  = monitor->isPresent();
++        if (failed) 
++        {
++            markFunctional(false);
++            pollTime = sensorFailedPollTimeMs;
++        }
++
++        if (presence) //if presence checks are happening, then there's an invetory item to update
++            itemIface->set_property("Functional", !failed);
++
++        lg2::error("TachSensor '{NAME}' marked as Functional: '{FAILED}'", "NAME", name, "FAILED",
++                   !failed);
++
++    }
++
++    if (!failed)
+     {
+         if (!err)
+         {
+@@ -192,14 +222,30 @@ void TachSensor::handleResponse(const boost::system::error_code& err,
+             pollTime = sensorFailedPollTimeMs;
+         }
+     }
++    else   
++        updateValue(0); //writing a '0' instead of leaving the value as NaN works around a phosphor-pid-control issue with it marking
++                        //fans as 'failed' if NaN is set and immediately going to failsafe speeds w/o looking
++                        //at redundancy rules first TODO: fix how swampd handles 'NaN' values for fans
+ 
+     restartRead(pollTime);
+ }
+ 
+ void TachSensor::checkThresholds()
+ {
++    
+     bool status = thresholds::checkThresholds(this);
+ 
++    if (presence->isPresent() && monitor)
++    {
++        bool failureDetected = monitor->isPresent();
++        
++        if (failureDetected)
++        {
++            status = false; 
++            lg2::error("failbit seen for fan_tach '{NAME}', status=false", "NAME", name);
++        }
++    }
++
+     if ((redundancy != nullptr) && *redundancy)
+     {
+         (*redundancy)
+diff --git a/src/fan/TachSensor.hpp b/src/fan/TachSensor.hpp
+index 6e22f76..d5b8b66 100644
+--- a/src/fan/TachSensor.hpp
++++ b/src/fan/TachSensor.hpp
+@@ -68,6 +68,7 @@ class TachSensor :
+                sdbusplus::asio::object_server& objectServer,
+                std::shared_ptr<sdbusplus::asio::connection>& conn,
+                std::shared_ptr<PresenceGpio>& presence,
++               std::shared_ptr<PresenceGpio>& monitor,
+                std::optional<RedundancySensor>* redundancy,
+                boost::asio::io_context& io, const std::string& fanName,
+                std::vector<thresholds::Threshold>&& thresholds,
+@@ -85,6 +86,7 @@ class TachSensor :
+     sdbusplus::asio::object_server& objServer;
+     std::optional<RedundancySensor>* redundancy;
+     std::shared_ptr<PresenceGpio> presence;
++    std::shared_ptr<PresenceGpio> monitor;
+     std::shared_ptr<sdbusplus::asio::dbus_interface> itemIface;
+     std::shared_ptr<sdbusplus::asio::dbus_interface> itemAssoc;
+     boost::asio::random_access_file inputDev;
