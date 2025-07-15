@@ -487,7 +487,7 @@
         "PwmName": "Pwm 6"
       },
       "Presence": {
-        "PinName": "FAN8_INST",
+        "PinName": "FAN7_INST",
         "Polarity": "High",
         "MonitorType": "Polling"
       },
