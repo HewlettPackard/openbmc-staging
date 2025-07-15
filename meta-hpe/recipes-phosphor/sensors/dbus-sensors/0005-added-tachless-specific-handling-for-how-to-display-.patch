@@ -4,6 +4,7 @@ Date: Mon, 14 Jul 2025 18:42:34 -0500
 Subject: [PATCH] added tachless-specific handling for how to display
  (estimated) 'fan_tach' info
 
+Upstream-Status: Pending
 ---
  src/fan/FanMain.cpp    | 13 +++++++++++--
  src/fan/TachSensor.cpp | 15 +++++++++++++--
