@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenSSH Console Server Socket
+Conflicts=sshd-console.service
+
+[Socket]
+ListenStream=2200
+Accept=yes
+
+[Install]
+WantedBy=sockets.target

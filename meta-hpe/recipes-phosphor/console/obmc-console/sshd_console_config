@@ -1,0 +1,34 @@
+# SSH Console Configuration
+# This configuration is specifically for console access on port 2200
+
+# Protocol and authentication
+Protocol 2
+PermitRootLogin yes
+PasswordAuthentication yes
+PubkeyAuthentication yes
+PermitEmptyPasswords no
+
+# Force console command for all connections on this port
+ForceCommand /usr/bin/obmc-console-client
+
+# Host keys
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+
+# Logging
+SyslogFacility AUTH
+LogLevel INFO
+
+# Security settings
+StrictModes yes
+MaxAuthTries 3
+MaxSessions 10
+
+# Disable features not needed for console
+AllowAgentForwarding no
+AllowTcpForwarding no
+GatewayPorts no
+X11Forwarding no
+PrintMotd no
+PrintLastLog no
+TCPKeepAlive yes
