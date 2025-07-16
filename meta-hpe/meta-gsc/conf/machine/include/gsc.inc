@@ -1,6 +1,6 @@
 require conf/machine/include/obmc-bsp-common.inc
 
-# The Gen12 iLO ASIC is a Coretex A53 with the crypto extension
+# The Gen12 iLO ASIC is a Cortex A53 with the crypto extension
 include conf/machine/include/arm/armv8a/tune-cortexa53.inc
 DEFAULTTUNE = "cortexa53-crypto"
 
