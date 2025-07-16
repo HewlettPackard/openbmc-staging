@@ -89,4 +89,6 @@ RDEPENDS:${PN}-system:append = " \
     common-image \
     vnic \
     host-boot-enable \
+    chif \
+    safs-vrom \
     "
