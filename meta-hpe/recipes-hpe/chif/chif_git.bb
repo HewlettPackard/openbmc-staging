@@ -3,7 +3,7 @@ DESCRIPTION = "HPE CHIF service to support BIOS"
 
 BRANCH = "main"
 SRC_URI = "git://github.com/HewlettPackard/openbmc-chif-svc.git;branch=${BRANCH};protocol=https"
-SRCREV = "c17e25ba8c8520dc8dc9b4d4af33656a1d155d2d"
+SRCREV = "ae5d2948b9da23456c88a45ce081c1f4d2755277"
 
 PV = "0.1+git${SRCPV}"
 
@@ -23,5 +23,3 @@ DEPENDS += " \
 S = "${WORKDIR}/git"
 
 inherit meson obmc-phosphor-systemd pkgconfig
-
-EXTRA_OECMAKE = ""
