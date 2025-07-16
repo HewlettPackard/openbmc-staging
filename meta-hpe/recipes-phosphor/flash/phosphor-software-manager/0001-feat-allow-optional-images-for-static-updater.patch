@@ -1,0 +1,28 @@
+From c6c693045b17b87dfd3d2642979efaadf25d2de0 Mon Sep 17 00:00:00 2001
+From: Ian Woloschin <ian.woloschin@hpe.com>
+Date: Fri, 27 Jun 2025 08:48:43 -0500
+Subject: [PATCH] feat: allow optional images for static updater
+
+Upstream-Status: Pending
+---
+ bmc/static/flash.cpp | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/bmc/static/flash.cpp b/bmc/static/flash.cpp
+index a478644..4c8465b 100644
+--- a/bmc/static/flash.cpp
++++ b/bmc/static/flash.cpp
+@@ -57,6 +57,13 @@ void Activation::flashWrite()
+         fs::copy_file(uploadDir / versionId / bmcImage, toPath / bmcImage,
+                       fs::copy_options::overwrite_existing, ec);
+     }
++    for (const auto& optionalImage : getOptionalImages())
++    {
++        std::error_code ec;
++        fs::copy_file(uploadDir / versionId / optionalImage,
++                      toPath / optionalImage,
++                      fs::copy_options::overwrite_existing, ec);
++    }
+ }
+ 
+ void Activation::onStateChanges([[maybe_unused]] sdbusplus::message_t& msg)
