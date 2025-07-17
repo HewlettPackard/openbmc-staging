@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenSSH Console Server per-connection daemon
+After=network.target
+
+[Service]
+ExecStart=@SBINDIR@/sshd -i -f @SYSCONFDIR@/ssh/sshd_console_config
+StandardInput=socket
+StandardOutput=socket
+StandardError=journal
+KillMode=process
