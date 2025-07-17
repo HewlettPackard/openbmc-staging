@@ -33,3 +33,10 @@ PACKAGECONFIG:remove = "ssh"
 
 # Add openssh dependency for console SSH access
 RDEPENDS:${PN} += "openssh-sshd"
+
+SYSTEMD_SERVICE:${PN} += " sshd-console.socket"
+
+# Add systemd and ssh config files to package
+FILES:${PN} += "${systemd_system_unitdir}/sshd-console.socket \
+                ${systemd_system_unitdir}/sshd-console@.service \
+                ${sysconfdir}/ssh/sshd_console_config"
