@@ -28,7 +28,7 @@ do_install:append() {
            ${D}${systemd_system_unitdir}/sshd-console@.service
 }
 
-# disable ssh port 2200 as it only supports dropbear
+# disable dropbear support
 PACKAGECONFIG:remove = "ssh"
 
 # Add openssh dependency for console SSH access
