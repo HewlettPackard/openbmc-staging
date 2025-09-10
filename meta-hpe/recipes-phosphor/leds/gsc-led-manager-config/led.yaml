@@ -1,9 +1,0 @@
-bmc_booted:
-    # No LED required.
-
-# Status LED indication
-# Managed by callback-manager
-enclosure_identify:
-  identify:
-    Action: 'On'
-    Priority: 'On'

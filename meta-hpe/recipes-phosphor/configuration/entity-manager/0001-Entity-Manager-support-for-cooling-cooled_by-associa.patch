@@ -1,0 +1,51 @@
+From 27fd7f418728aa0a2f15e88e5372ab94d2198d06 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Mon, 11 Aug 2025 16:10:55 -0500
+Subject: [PATCH] Entity-Manager support for cooling/cooled_by associations
+
+Upstream-Status: Pending
+---
+ src/entity_manager/topology.cpp | 10 ++++++++++
+ src/entity_manager/topology.hpp |  1 +
+ 2 files changed, 11 insertions(+)
+
+diff --git a/src/entity_manager/topology.cpp b/src/entity_manager/topology.cpp
+index fa95a85..490c7fe 100644
+--- a/src/entity_manager/topology.cpp
++++ b/src/entity_manager/topology.cpp
+@@ -34,6 +34,10 @@ void Topology::addBoard(const std::string& path, const std::string& boardType,
+         {
+             powerPaths.insert(path);
+         }
++        else if (exposesItem.find("FanPort") != exposesItem.end())
++        {
++            fanPaths.insert(path);
++        }
+     }
+     else if (exposesType.ends_with("Port"))
+     {
+@@ -75,6 +79,12 @@ std::unordered_map<std::string, std::vector<Association>> Topology::getAssocs(
+                             result[upstream].emplace_back(
+                                 "powered_by", "powering", downstream);
+                         }
++
++                        else if (fanPaths.contains(downstream))
++                        {
++                            result[upstream].emplace_back(
++                                "cooled_by", "cooling", downstream);
++                        }
+                     }
+                 }
+             }
+diff --git a/src/entity_manager/topology.hpp b/src/entity_manager/topology.hpp
+index 816704a..fed3353 100644
+--- a/src/entity_manager/topology.hpp
++++ b/src/entity_manager/topology.hpp
+@@ -28,6 +28,7 @@ class Topology
+     std::unordered_map<PortType, std::vector<Path>> upstreamPorts;
+     std::unordered_map<PortType, std::vector<Path>> downstreamPorts;
+     std::set<Path> powerPaths;
++    std::set<Path> fanPaths;
+     std::unordered_map<Path, BoardType> boardTypes;
+     std::unordered_map<BoardName, Path> boardNames;
+ };

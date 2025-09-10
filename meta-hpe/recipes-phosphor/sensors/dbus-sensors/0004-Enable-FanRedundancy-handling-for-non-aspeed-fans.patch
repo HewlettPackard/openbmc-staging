@@ -1,0 +1,29 @@
+From de145c0e5ac784fceef5abaeb42f4eb87f65da44 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Mon, 21 Jul 2025 15:03:48 -0500
+Subject: [PATCH] Enable FanRedundancy handling for non-aspeed fans. Should not
+ cause any issues.
+
+Upstream-Status: Pending
+---
+ src/fan/FanMain.cpp | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/src/fan/FanMain.cpp b/src/fan/FanMain.cpp
+index f210f7f..82435e2 100644
+--- a/src/fan/FanMain.cpp
++++ b/src/fan/FanMain.cpp
+@@ -532,11 +532,8 @@ void createSensors(
+                 }
+             }
+             std::optional<RedundancySensor>* redundancy = nullptr;
+-            if (fanType == FanTypes::aspeed)
+-            {
+-                redundancy = &systemRedundancy;
+-            }
+-
++            redundancy = &systemRedundancy;
++            
+             PowerState powerState = getPowerState(baseConfiguration->second);
+ 
+             constexpr double defaultMaxReading = 25000;
