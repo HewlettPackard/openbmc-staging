@@ -58,5 +58,3 @@ PREFERRED_PROVIDER_virtual/obmc-chassis-mgmt = "packagegroup-hpe-apps"
 PREFERRED_PROVIDER_virtual/obmc-fan-mgmt = "packagegroup-hpe-apps"
 PREFERRED_PROVIDER_virtual/obmc-flash-mgmt = "packagegroup-hpe-apps"
 PREFERRED_PROVIDER_virtual/obmc-system-mgmt = "packagegroup-hpe-apps"
-PREFERRED_PROVIDER_virtual/phosphor-led-manager-config-native = "gsc-led-manager-config-native"
-

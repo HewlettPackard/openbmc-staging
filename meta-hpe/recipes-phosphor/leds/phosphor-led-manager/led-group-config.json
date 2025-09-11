@@ -1,0 +1,59 @@
+{
+  "leds": [
+    {
+      "group": "enclosure_identify",
+      "members": [
+        {
+          "Name": "indicator_blue",
+          "Action": "On",
+          "Priority": "On"
+        }
+      ]
+    },
+    {
+      "group": "enclosure_identify_blink",
+      "members": [
+        {
+          "Name": "indicator_blue",
+          "Action": "On",
+          "Priority": "On"
+        }
+      ]
+    },
+    {
+      "group": "system_fault_critical",
+      "members": [
+        {
+          "Name": "health_red",
+          "Action": "On",
+          "Priority": "On"
+        }
+      ]
+    },
+    {
+      "group": "system_fault_warning",
+      "members": [
+        {
+          "Name": "health_amber",
+          "Action": "On",
+          "Priority": "On"
+        }
+      ]
+    },
+    {
+      "group": "enclosure_fault",
+      "members": [
+        {
+          "Name": "health_red",
+          "Action": "On",
+          "Priority": "On"
+        }
+      ]
+    },
+    {
+      "group" : "bmc_booted",
+      "members" : [
+      ]
+    }
+  ]
+}

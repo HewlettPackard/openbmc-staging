@@ -1,4 +1,5 @@
-{
+[
+  {
   "Exposes": [
     {
       "Address": "0x30",
@@ -22,6 +23,11 @@
           "Value": 89
         }
       ],
+      "PresenceGpio": [
+        {
+          "Name": "PROC1_INST",
+          "Polarity": "High"
+        } ],
       "Type": "XeonCPU"
     },
     {
@@ -46,6 +52,11 @@
           "Value": 89
         }
       ],
+      "PresenceGpio": [
+        {
+          "Name": "PROC2_INST",
+          "Polarity": "High"
+        } ],
       "Type": "XeonCPU"
     },
     {
@@ -278,88 +289,32 @@
       "Type": "TMP1075"
     },
     {
-      "Connector": {
-        "Fail": "FAN1_FAIL",
-        "Inst": "FAN1_INST",
-        "Name": "Fan Connector 1",
-        "Pwm": 0,
-        "Tachs": [ 0 ]
-      },
-      "Name": "Fan 1",
-      "Type": "HPEFan",
-      "Index": 0
+     "Name": "FanConnector1Port",
+     "Type": "FanConnector1Port"
     },
     {
-      "Connector": {
-        "Fail": "FAN3_FAIL",
-        "Inst": "FAN2_INST",
-        "Name": "Fan Connector 2",
-        "Pwm": 1,
-        "Tachs": [ 1 ]
-      },
-      "Name": "Fan 2",
-      "Type": "HPEFan",
-      "Index": 1
+      "Name": "FanConnector2Port",
+      "Type": "FanConnector2Port"
     },
     {
-      "Connector": {
-        "Fail": "FAN5_FAIL",
-        "Inst": "FAN3_INST",
-        "Name": "Fan Connector 3",
-        "Pwm": 2,
-        "Tachs": [ 2 ]
-      },
-      "Name": "Fan 3",
-      "Type": "HPEFan",
-      "Index": 2
+      "Name": "FanConnector3Port",
+      "Type": "FanConnector3Port"
     },
     {
-      "Connector": {
-        "Fail": "FAN7_FAIL",
-        "Inst": "FAN4_INST",
-        "Name": "Fan Connector 4",
-        "Pwm": 3,
-        "Tachs": [ 3 ]
-      },
-      "Name": "Fan 4",
-      "Type": "HPEFan",
-      "Index": 3
+      "Name": "FanConnector4Port",
+      "Type": "FanConnector4Port"
     },
     {
-      "Connector": {
-        "Fail": "FAN9_FAIL",
-        "Inst": "FAN5_INST",
-        "Name": "Fan Connector 5",
-        "Pwm": 4,
-        "Tachs": [ 4 ]
-      },
-      "Name": "Fan 5",
-      "Type": "HPEFan",
-      "Index": 4
+      "Name": "FanConnector5Port",
+      "Type": "FanConnector5Port"
     },
     {
-      "Connector": {
-        "Fail": "FAN11_FAIL",
-        "Inst": "FAN6_INST",
-        "Name": "Fan Connector 6",
-        "Pwm": 5,
-        "Tachs": [ 5 ]
-      },
-      "Name": "Fan 6",
-      "Type": "HPEFan",
-      "Index": 5
+      "Name": "FanConnector6Port",
+      "Type": "FanConnector6Port"
     },
     {
-      "Connector": {
-        "Fail": "FAN13_FAIL",
-        "Inst": "FAN7_INST",
-        "Name": "Fan Connector 7",
-        "Pwm": 6,
-        "Tachs": [ 6 ]
-      },
-      "Name": "Fan 7",
-      "Type": "HPEFan",
-      "Index": 6
+      "Name": "FanConnector7Port",
+      "Type": "FanConnector7Port"
     },
     {
       "Class": "fan",
@@ -454,26 +409,338 @@
       "Name": "Zone 1",
       "Type": "Pid.Zone"
     }
-  ],
-  "Name": "DL360/DL380 G12 Server",
-  "Probe": "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0265|0x0266'})",
-  "Type": "Chassis",
-  "xyz.openbmc_project.Inventory.Decorator.Asset": {
-    "Manufacturer": "$PRODUCT_MANUFACTURER",
-    "PartNumber": "$PCA_PART_NUMBER",
-    "SerialNumber": "$PCA_SERIAL_NUMBER"
+    ],
+    "Name": "DL360/DL380 G12 Server",
+    "Probe": ["xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'P02466-001'})",
+              "OR",
+              "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0265|0x0266'})"],
+    "_Comment1": "update probe with DL380 model info later. I've only included a DL360 model for now..",
+    "Type": "Chassis",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "$PRODUCT_MANUFACTURER",
+      "PartNumber": "$PCA_PART_NUMBER",
+      "SerialNumber": "$PCA_SERIAL_NUMBER"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.AssetTag": {
+      "AssetTag": "HPE-OBMC-001"
+    },
+    "xyz.openbmc_project.Inventory.Item": {
+      "PrettyName": "DL360/DL380 Gen12"
+    },
+    "xyz.openbmc_project.Inventory.Item.Board.Motherboard": {
+      "ProductId": "$SERVER_ID"
+    },
+    "xyz.openbmc_project.Inventory.Item.System": {
+      "PartNumber": "$PRODUCT_PART_NUMBER",
+      "SerialNumber": "$PRODUCT_SERIAL_NUMBER"
+    }
   },
-  "xyz.openbmc_project.Inventory.Decorator.AssetTag": {
-    "AssetTag": "HPE-OBMC-001"
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector1Port",
+        "Name": "HPEFan 1 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      {
+        "Name": "Fan 1",
+        "Type": "HPEFan",
+        "Index": 0,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 1",
+          "Pwm": 0
+        },
+        "Presence": {
+          "PinName": "FAN1_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN1_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_1",
+    "Probe": "FOUND('DL360/DL380 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL360/DL380-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item": {
+      "PrettyName": "Fan 1"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
   },
-  "xyz.openbmc_project.Inventory.Item": {
-    "PrettyName": "DL360/DL380 Gen12"
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector2Port",
+        "Name": "HPEFan 2 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      { 
+        "Name": "Fan 2",
+        "Type": "HPEFan",
+        "Index": 1,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 2",
+          "Pwm": 1
+        },
+        "Presence": {
+          "PinName": "FAN2_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN3_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_2",
+    "Probe": "FOUND('DL360/DL380 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL360/DL380-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item.Fan": {
+      "PrettyName": "Fan 2"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
   },
-  "xyz.openbmc_project.Inventory.Item.Board.Motherboard": {
-    "ProductId": "$SERVER_ID"
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector3Port",
+        "Name": "HPEFan 3 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      { 
+        "Name": "Fan 3",
+        "Type": "HPEFan",
+        "Index": 2,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 3",
+          "Pwm": 2
+        },
+        "Presence": {
+          "PinName": "FAN3_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN5_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_3",
+    "Probe": "FOUND('DL360/DL380 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL360/DL380-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item": {
+      "PrettyName": "Fan 3"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
   },
-  "xyz.openbmc_project.Inventory.Item.System": {
-    "PartNumber": "$PRODUCT_PART_NUMBER",
-    "SerialNumber": "$PRODUCT_SERIAL_NUMBER"
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector4Port",
+        "Name": "HPEFan 4 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      {
+        "Name": "Fan 4",
+        "Type": "HPEFan",
+        "Index": 3,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 4",
+          "Pwm": 3
+        },
+        "Presence": {
+          "PinName": "FAN4_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN7_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_4",
+    "Probe": "FOUND('DL360/DL380 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL360/DL380-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item": {
+      "PrettyName": "Fan 4"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
+  },
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector5Port",
+        "Name": "HPEFan 5 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      { 
+        "Name": "Fan 5",
+        "Type": "HPEFan",
+        "Index": 4,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 5",
+          "Pwm": 4
+        },
+        "Presence": {
+          "PinName": "FAN5_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN9_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_5",
+    "Probe": "FOUND('DL360/DL380 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL360/DL380-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item.Fan": {
+      "PrettyName": "Fan 5"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
+  },
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector6Port",
+        "Name": "HPEFan 6 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      { 
+        "Name": "Fan 6",
+        "Type": "HPEFan",
+        "Index": 5,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 6",
+          "Pwm": 5
+        },
+        "Presence": {
+          "PinName": "FAN6_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN11_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_6",
+    "Probe": "FOUND('DL360/DL380 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL360/DL380-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item.Fan": {
+      "PrettyName": "Fan 6"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
+  },
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector7Port",
+        "Name": "HPEFan 7 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      { 
+        "Name": "Fan 7",
+        "Type": "HPEFan",
+        "Index": 6,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 7",
+          "Pwm": 6
+        },
+        "Presence": {
+          "PinName": "FAN7_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN13_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_7",
+    "Probe": "FOUND('DL360/DL380 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL360/DL380-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item.Fan": {
+      "PrettyName": "Fan 7"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
   }
-}
+]

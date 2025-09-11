@@ -1,0 +1,92 @@
+From 5a0834b21d215d6c3f57062092f9432b3426d6d2 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Tue, 12 Aug 2025 10:10:02 -0500
+Subject: [PATCH] support fans with cooling/cooled_by associations, and hide
+ fan_tach sensor from sensors BMCWeb page for tachless fans
+
+Upstream-Status: Pending
+---
+ src/PwmSensor.cpp      | 12 ++----------
+ src/Utils.cpp          |  3 ++-
+ src/fan/TachSensor.cpp | 17 ++++++++++-------
+ 3 files changed, 14 insertions(+), 18 deletions(-)
+
+diff --git a/src/PwmSensor.cpp b/src/PwmSensor.cpp
+index 646f0c6..0ea0e04 100644
+--- a/src/PwmSensor.cpp
++++ b/src/PwmSensor.cpp
+@@ -176,16 +176,8 @@ PwmSensor::PwmSensor(const std::string& pwmname, const std::string& sysPath,
+     association = objectServer.add_interface(
+         "/xyz/openbmc_project/sensors/fan_pwm/" + name, association::interface);
+ 
+-    // PowerSupply sensors should be associated with chassis board path
+-    // and inventory along with psu object.
+-    if (sensorType == "PSU")
+-    {
+-        createInventoryAssoc(conn, association, sensorConfiguration);
+-    }
+-    else
+-    {
+-        createAssociation(association, sensorConfiguration);
+-    }
++    createInventoryAssoc(conn, association, sensorConfiguration);
++    
+ }
+ PwmSensor::~PwmSensor()
+ {
+diff --git a/src/Utils.cpp b/src/Utils.cpp
+index 52f9394..5eae06d 100644
+--- a/src/Utils.cpp
++++ b/src/Utils.cpp
+@@ -632,7 +632,8 @@ void setInventoryAssociation(
+     associations.emplace_back("inventory", "sensors", inventoryPath);
+     associations.emplace_back("chassis", "all_sensors", chassisPath);
+ 
+-    association->register_property("Associations", associations);
++    if (association->register_property("Associations", associations) == false)
++        association->set_property("Associations", associations); //if Associations prop already exists, it doesn't need to be re-registered. Just set it.
+     association->initialize();
+ }
+ 
+diff --git a/src/fan/TachSensor.cpp b/src/fan/TachSensor.cpp
+index 283a85a..cbc5064 100644
+--- a/src/fan/TachSensor.cpp
++++ b/src/fan/TachSensor.cpp
+@@ -83,7 +83,7 @@ TachSensor::TachSensor(
+         presence->monitorPresence();
+         itemIface =
+             objectServer.add_interface("/xyz/openbmc_project/inventory/" + name,
+-                                       "xyz.openbmc_project.Inventory.Item");
++                                       "xyz.openbmc_project.Inventory.Item.Fan");
+         itemIface->register_property("PrettyName",
+                                      std::string()); // unused property
+         itemIface->register_property("Present", true);
+@@ -91,12 +91,8 @@ TachSensor::TachSensor(
+         itemIface->initialize();
+         itemAssoc = objectServer.add_interface(
+             "/xyz/openbmc_project/inventory/" + name, association::interface);
+-        itemAssoc->register_property(
+-            "Associations",
+-            std::vector<Association>{
+-                {"sensors", "inventory",
+-                 "/xyz/openbmc_project/sensors/fan_tach/" + name}});
+-        itemAssoc->initialize();
++
++        createInventoryAssoc(conn, itemAssoc, sensorConfiguration);
+     }
+ 
+     if (statusMonitor)
+@@ -105,6 +101,13 @@ TachSensor::TachSensor(
+     }
+ 
+     setInitialProperties(sensor_paths::unitRPMs);
++
++    if (isTachlessFan) 
++        createAssociation(association, sensorConfiguration); //skip fan_tach sensor association to chassis if tachless fan
++    else
++    {
++       createInventoryAssoc(conn, association, sensorConfiguration);
++    }
+ }
+ 
+ TachSensor::~TachSensor()

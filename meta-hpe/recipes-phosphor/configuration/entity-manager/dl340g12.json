@@ -1,571 +1,1014 @@
-{
-  "Exposes": [
-    {
-      "Name": "CPU 1",
-      "Type": "XeonCPU",
-      "Bus": 0,
-      "Address": "0x30",
-      "CpuID": 1,
-      "DtsCritOffset": -2,
-      "Thresholds": [
+[
+  {
+    "Exposes": [
+      {
+        "Name": "CPU 1",
+        "Type": "XeonCPU",
+        "Bus": 0,
+        "Address": "0x30",
+        "CpuID": 1,
+        "DtsCritOffset": -2,
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Label": "DIMM",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 99
+          },
+          {
+            "Direction": "greater than",
+            "Label": "DIMM",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 89
+          }
+        ],
+        "PresenceGpio": [
         {
-          "Direction": "greater than",
-          "Label": "DIMM",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 99
-        },
-        {
-          "Direction": "greater than",
-          "Label": "DIMM",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 89
-        }
-      ]
-    },
-    {
-      "Name": "CPU 2",
-      "Type": "XeonCPU",
-      "Bus": 0,
-      "Address": "0x31",
-      "CpuID": 2,
-      "DtsCritOffset": -2,
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Label": "DIMM",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 99
-        },
-        {
-          "Direction": "greater than",
-          "Label": "DIMM",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 89
-        }
-      ]
-    },
-    {
-      "Name": "GSC Temp",
-      "Type": "GxpTempSensor",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 80
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 75
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ]
-    },
-    {
-      "Name": "01-Inlet Ambient",
-      "Name1": "45-Board Inlet",
-      "Type": "TMP411",
-      "Bus": "47",
-      "Address": "0x4c",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Index": 1,
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Index": 1,
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        },
-        {
-          "Index": 1,
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 47
-        },
-        {
-          "Index": 1,
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 42
-        },
-	{
-          "Index": 2,
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Index": 2,
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        },
-        {
-          "Index": 2,
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 95
-        },
-        {
-          "Index": 2,	
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 85
-        }
-      ]
-    },
-    {
-      "Name": "23-BMC Zone",
-      "Type": "TMP1075",
-      "Bus": "2",
-      "Address": "0x4B",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 95
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 85
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ]
-    },
-    
-    {
-      "Name": "46-Battery Zone",
-      "Type": "TMP1075",
-      "Bus": "48",
-      "Address": "0x4A",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 95
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 85
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ]
-    },
-    {
-      "Name": "47-Sys Exhaust 1",
-      "Type": "TMP1075",
-      "Bus": "48",
-      "Address": "0x4B",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 95
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 85
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ]
-    },
-    {
-      "Name": "48-Sys Exhaust 2",
-      "Type": "TMP1075",
-      "Bus": "48",
-      "Address": "0x49",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 95
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 85
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ]
-    },
-    {
-      "Name": "PSU0",
-      "Name1": "BCM0",
-      "Type": "CRPS185",
-      "Bus": 67,
-      "Address": "0x5C",
-      "PowerState": "Always",
-      "Labels": [
-        "iin",
-        "iout1",
-        "vin",
-        "vout1",
-        "pin"
-      ],
-      "PollRate": 5.0
-    },
-    {
-      "Name": "PSU1",
-      "Name1": "BCM1",
-      "Type": "CRPS185",
-      "Bus": 68,
-      "Address": "0x5C",
-      "PowerState": "Always",  
-      "Labels": [
-        "iin",
-        "iout1",
-        "vin",
-        "vout1",
-        "pin"
-      ],
-      "PollRate": 5.0
-    },
-    {
-      "Address": "0x48",
-      "Bus": "6",
-      "Name": "PSU @ 2U PDB Temp",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 95
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 85
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ],
-      "Type": "TMP1075"
-    },
-    {
-      "Address": "0x48",
-      "Bus": "7",
-      "Name": "PSU @ 1U PDB Temp",
-      "_comment1": "49-P/S2 Zone",
-      "PowerState": "On",
-      "Thresholds": [
-        {
-          "Direction": "greater than",
-          "Name": "upper critical",
-          "Severity": 1,
-          "Value": 95
-        },
-        {
-          "Direction": "greater than",
-          "Name": "upper non critical",
-          "Severity": 0,
-          "Value": 85
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower non critical",
-          "Severity": 0,
-          "Value": 5
-        },
-        {
-          "Direction": "less than",
-          "Name": "lower critical",
-          "Severity": 1,
-          "Value": 0
-        }
-      ],
-      "Type": "TMP1075"
-    },
-    {
-      "Connector": {
-        "_comment1": "on the Dl340, fans reads start from 'hwmon/pwm2' so start fan 1 numbering from pwm=1, and index=1 instead of the usual 0-based",
-        "Fail": "FAN3_FAIL",
-        "Inst": "FAN2_INST",
-        "Name": "Fan Conn 1",
-        "Pwm": 1,
-        "PwmName": "Fan 1",
-        "Tachs": [ 1 ]
+          "Name": "PROC1_INST",
+          "Polarity": "High"
+        } ]
       },
-      "Name": "Raw Fan 1",
-      "Type": "HPEFan",
-      "Index": 1
-    },
-    {
-      "Connector": {
-        "Fail": "FAN5_FAIL",
-        "Inst": "FAN3_INST",
-        "Name": "Fan Conn 2",
-        "Pwm": 2,
-        "PwmName": "Fan 2",
-        "Tachs": [ 2 ]
+      {
+        "Name": "CPU 2",
+        "Type": "XeonCPU",
+        "Bus": 0,
+        "Address": "0x31",
+        "CpuID": 2,
+        "DtsCritOffset": -2,
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Label": "DIMM",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 99
+          },
+          {
+            "Direction": "greater than",
+            "Label": "DIMM",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 89
+          }
+        ],
+        "PresenceGpio": [
+        {
+          "Name": "PROC2_INST",
+          "Polarity": "High"
+        } ]
       },
-      "Name": "Raw Fan 2",
-      "Type": "HPEFan",
-      "Index": 2
-    },
-    {
-      "Connector": {
-        "Fail": "FAN7_FAIL",
-        "Inst": "FAN4_INST",
-        "Name": "Fan Conn 3",
-        "Pwm": 3,
-        "PwmName": "Fan 3",
-        "Tachs": [ 3 ]
+      {
+        "Name": "GSC Temp",
+        "Type": "GxpTempSensor",
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 115
+          },
+          {
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 110
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          }
+        ]
       },
-      "Name": "Raw Fan 3",
-      "Type": "HPEFan",
-      "Index": 3
-    },
-    {
-      "Connector": {
-        "Fail": "FAN9_FAIL",
-        "Inst": "FAN5_INST",
-        "Name": "Fan Conn 4",
-        "Pwm": 4,
-        "PwmName": "Fan 4",
-        "Tachs": [ 4 ]
+      {
+        "Name": "Inlet Ambient",
+        "Name1": "Board Inlet",
+        "Type": "TMP411",
+        "Bus": "47",
+        "Address": "0x4c",
+        "PowerState": "On",
+        "Thresholds": [
+          {
+            "Index": 1,
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Index": 1,
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          },
+          {
+            "Index": 1,
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 47
+          },
+          {
+            "Index": 1,
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 42
+          },
+          {
+            "Index": 2,
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Index": 2,
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          },
+          {
+            "Index": 2,
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 95
+          },
+          {
+            "Index": 2,	
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 85
+          }
+        ]
       },
-      "Name": "Raw Fan 4",
-      "Type": "HPEFan",
-      "Index": 4
-    },
-    {
-      "Connector": {
-        "Fail": "FAN11_FAIL",
-        "Inst": "FAN6_INST",
-        "Name": "Fan Conn 5",
-        "Pwm": 5,
-        "PwmName": "Fan 5",
-        "Tachs": [ 5 ]
+      {
+        "Name": "BMC Zone",
+        "Type": "TMP1075",
+        "Bus": "2",
+        "Address": "0x4B",
+        "PowerState": "On",
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 95
+          },
+          {
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 85
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          }
+        ]
       },
-      "Name": "Raw Fan 5",
-      "Type": "HPEFan",
-      "Index": 5
-    },
-    {
-      "Connector": {
-        "Fail": "FAN13_FAIL",
-        "Inst": "FAN8_INST",
-        "Name": "Fan Conn 6",
-        "Pwm": 6,
-        "PwmName": "Fan 6",
-        "Tachs": [ 6 ]
+      {
+        "Name": "Battery Zone",
+        "Type": "TMP1075",
+        "Bus": "48",
+        "Address": "0x4A",
+        "PowerState": "On",
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 95
+          },
+          {
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 85
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          }
+        ]
       },
-      "Name": "Raw Fan 6",
-      "Type": "HPEFan",
-      "Index": 6
-    },
-    {
-      "Class": "fan",
-      "FFGainCoefficient": 1,
-      "FFOffCoefficient": 0,
-      "ICoefficient": 0,
-      "ILimitMax": 0,
-      "ILimitMin": 0,
-      "Inputs": [
-        "Raw Fan 1",
-        "Raw Fan 2",
-        "Raw Fan 3",
-        "Raw Fan 4",
-        "Raw Fan 5",
-        "Raw Fan 6"
-      ],
-      "Name": "Fan 1-6",
-      "NegativeHysteresis": 0,
-      "OutLimitMax": 100,
-      "OutLimitMin": 30,
-      "Outputs": [
-        "Fan 1",
-        "Fan 2",
-        "Fan 3",
-        "Fan 4",
-        "Fan 5",
-        "Fan 6"
-      ],
-      "PCoefficient": 0,
-      "PositiveHysteresis": 0,
-      "SlewNeg": 0,
-      "SlewPos": 0,
-      "Type": "Pid",
-      "Zones": [
+      {
+        "Name": "Sys Exhaust 1",
+        "Type": "TMP1075",
+        "Bus": "48",
+        "Address": "0x4B",
+        "PowerState": "On",
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 95
+          },
+          {
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 85
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          }
+        ]
+      },
+      {
+        "Name": "Sys Exhaust 2",
+        "Type": "TMP1075",
+        "Bus": "48",
+        "Address": "0x49",
+        "PowerState": "On",
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 95
+          },
+          {
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 85
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          }
+        ]
+      },
+      {
+        "Name": "PSU0",
+        "Name1": "BCM0",
+        "Type": "CRPS185",
+        "Bus": 67,
+        "Address": "0x5C",
+        "PowerState": "Always",
+        "Labels": [
+          "iin",
+          "iout1",
+          "vin",
+          "vout1",
+          "pin"
+        ],
+        "PollRate": 5.0
+      },
+      {
+        "Name": "PSU1",
+        "Name1": "BCM1",
+        "Type": "CRPS185",
+        "Bus": 68,
+        "Address": "0x5C",
+        "PowerState": "Always",  
+        "Labels": [
+          "iin",
+          "iout1",
+          "vin",
+          "vout1",
+          "pin"
+        ],
+        "PollRate": 5.0
+      },
+      {
+        "Address": "0x48",
+        "Bus": "6",
+        "Name": "PSU @ 2U PDB Temp",
+        "PowerState": "On",
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 95
+          },
+          {
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 85
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          }
+        ],
+        "Type": "TMP1075"
+      },
+      {
+        "Address": "0x48",
+        "Bus": "7",
+        "Name": "PSU @ 1U PDB Temp",
+        "PowerState": "On",
+        "Thresholds": [
+          {
+            "Direction": "greater than",
+            "Name": "upper critical",
+            "Severity": 1,
+            "Value": 95
+          },
+          {
+            "Direction": "greater than",
+            "Name": "upper non critical",
+            "Severity": 0,
+            "Value": 85
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower non critical",
+            "Severity": 0,
+            "Value": 5
+          },
+          {
+            "Direction": "less than",
+            "Name": "lower critical",
+            "Severity": 1,
+            "Value": 0
+          }
+        ],
+        "Type": "TMP1075"
+      },    
+      {
+        "Name": "Zone 1",
+        "Type": "Pid.Zone",
+        "FailSafePercent": 100,
+        "MinThermalOutput": 10
+      },
+      {
+        "Name": "FanRedundancy",
+        "Type": "FanRedundancy",
+        "AllowedFailures": 1
+      },
+      {
+        "Name": "FanConnector1Port",
+        "Type": "FanConnector1Port"
+      },
+      {
+        "Name": "FanConnector2Port",
+        "Type": "FanConnector2Port"
+      },
+      {
+        "Name": "FanConnector3Port",
+        "Type": "FanConnector3Port"
+      },
+      {
+        "Name": "FanConnector4Port",
+        "Type": "FanConnector4Port"
+      },
+      {
+        "Name": "FanConnector5Port",
+        "Type": "FanConnector5Port"
+      },
+      {
+        "Name": "FanConnector6Port",
+        "Type": "FanConnector6Port"
+      },
+      {
+        "Class": "fan",
+        "FFGainCoefficient": 1,
+        "FFOffCoefficient": 0,
+        "ICoefficient": 0,
+        "ILimitMax": 0,
+        "ILimitMin": 0,
+        "Inputs": [
+          "Fan 1",
+          "Fan 2",
+          "Fan 3",
+          "Fan 4",
+          "Fan 5",
+          "Fan 6"
+        ],
+        "Name": "Fan 1-6",
+        "NegativeHysteresis": 0,
+        "OutLimitMax": 100,
+        "OutLimitMin": 30,
+        "Outputs": [
+          "Pwm 1",
+          "Pwm 2",
+          "Pwm 3",
+          "Pwm 4",
+          "Pwm 5",
+          "Pwm 6"
+        ],
+        "PCoefficient": 0,
+        "PositiveHysteresis": 0,
+        "SlewNeg": 0,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
+          "Zone 1"
+        ]
+      },
+      {
+        "Class": "temp",
+        "FFGainCoefficient": 0,
+        "FFOffCoefficient": 0,
+        "ICoefficient": -4.64,
+        "ILimitMax": 100,
+        "ILimitMin": 30,
+        "Inputs": [
+          "DTS CPU 1"
+        ],
+        "Name": "DTS CPU1 Zn",
+        "NegativeHysteresis": 5,
+        "OutLimitMax": 100,
+        "OutLimitMin": 30,
+        "Outputs": [],
+        "PCoefficient": -0.15,
+        "PositiveHysteresis": 0,
+        "SetPoint": -25,
+        "SetPointOffset": "WarningHigh",
+        "SlewNeg": -1,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
+          "Zone 1"
+        ]
+      },
+      {
+        "Class": "temp",
+        "Inputs": [
+          "01 Inlet Ambient"
+        ],
+        "Name": "01 Inlet Ambient FanAlg",
+        "NegativeHysteresis": 0,
+        "Reading": [
+                  15.0,
+                  20.0,
+                  25.0,
+                  30.0,
+                  37.0,
+                  40.0,
+                  45.0
+        ],
+        "_comment2": "Converted output from duty cycle x/255 to perccentage",
+        "Output": [
+                  12.0,
+                  12.0,
+                  12.0,
+                  12.0,
+                  12.0,
+                  39.0,
+                  59.0
+        ],
+        "PositiveHysteresis": 0,
+        
+        "Type": "Stepwise",
+        "Zones": [
+                  "Zone 1"
+        ]
+      },
+      {
+        "Class": "temp",
+        "Name": "GSC Temp FanAlg",
+        "Inputs": [ "GSC Temp" ],
+        "Outputs": [],
+
+        "SetPoint": 95,
+        "PCoefficient": -5,
+        "ICoefficient": -0.15,
+        "DCoefficient": 0,
+
+        "OutLimitMin": 0,
+        "OutLimitMax": 100,
+        
+        "ILimitMin": 12,
+        "ILimitMax": 100,
+
+        "FFGainCoefficient": 0,
+        "FFOffCoefficient": 0,
+        
+        "NegativeHysteresis": 3.0,
+        "PositiveHysteresis": 0,
+        
+        "SlewNeg": 0,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
+          "Zone 1"
+        ]
+      },
+      {
+        "Class": "temp",
+        "Name": "BMC Zone FanAlg",
+        "Inputs": [ "BMC Zone" ],
+        "Outputs": [],
+
+        "SetPoint": 60,
+        "PCoefficient": -5,
+        "ICoefficient": -0.15,
+        "DCoefficient": 0,
+
+        "OutLimitMin": 12,
+        "OutLimitMax": 100,
+        
+        "ILimitMin": 12,
+        "ILimitMax": 100,
+
+        "FFGainCoefficient": 0,
+        "FFOffCoefficient": 0,
+        
+        "NegativeHysteresis": 0.0,
+        "PositiveHysteresis": 0,
+        
+        "SlewNeg": 0,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
+          "Zone 1"
+        ]
+      },
+      {
+        "Class": "temp",
+        "Name": "Battery Zone FanAlg",
+        "Inputs": [ "Battery Zone" ],
+        "Outputs": [],
+
+        "SetPoint": 65,
+        "PCoefficient":-5,
+        "ICoefficient": -0.15,
+        "DCoefficient": 0,
+
+        "OutLimitMin": 0,
+        "OutLimitMax": 100,
+        
+        "ILimitMin": 12,
+        "ILimitMax": 100,
+
+        "FFGainCoefficient": 0,
+        "FFOffCoefficient": 0,
+        
+        "NegativeHysteresis": 0.0,
+        "PositiveHysteresis": 0,
+        
+        "SlewNeg": 0,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
+          "Zone 1"
+        ]
+      },
+      {
+        "Class": "temp",
+        "Name": "Sys Exhaust 1 FanAlg",
+        "Inputs": [ "Sys Exhaust 1" ],
+        "Outputs": [],
+
+        "SetPoint": 65,
+        "PCoefficient": -5,
+        "ICoefficient": -0.15,
+        "DCoefficient": 0,
+
+        "OutLimitMin": 0,
+        "OutLimitMax": 100,
+        
+        "ILimitMin": 12,
+        "ILimitMax": 100,
+
+        "FFGainCoefficient": 0,
+        "FFOffCoefficient": 0,
+        
+        "NegativeHysteresis": 0.0,
+        "PositiveHysteresis": 0,
+        
+        "SlewNeg": 0,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
+          "Zone 1"
+        ]
+      },
+      {
+        "Class": "temp",
+        "Name": "Sys Exhaust 2 FanAlg",
+        "Inputs": [ "Sys Exhaust 2" ],
+        "Outputs": [],
+
+        "SetPoint": 55,
+        "PCoefficient": -5,
+        "ICoefficient": -0.15,
+        "DCoefficient": 0,
+
+        "OutLimitMin": 0,
+        "OutLimitMax": 100,
+        
+        "ILimitMin": 12,
+        "ILimitMax": 100,
+
+        "FFGainCoefficient": 0,
+        "FFOffCoefficient": 0,
+        
+        "NegativeHysteresis": 0.0,
+        "PositiveHysteresis": 0,
+        
+        "SlewNeg": 0,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
+          "Zone 1"
+        ]
+      },
+      {
+        "Class": "temp",
+        "Name": "PSU @ 1U PDB Temp FanAlg",
+        "Inputs": [ "PSU @ 1U PDB Temp" ],
+        "Outputs": [],
+
+        "SetPoint": 60,
+        "PCoefficient": -5,
+        "ICoefficient": -0.15,
+        "DCoefficient": 0,
+
+        "OutLimitMin": 0,
+        "OutLimitMax": 100,
+        
+        "ILimitMin": 12,
+        "ILimitMax": 100,
+
+        "FFGainCoefficient": 0,
+        "FFOffCoefficient": 0,
+        
+        "NegativeHysteresis": 0.0,
+        "PositiveHysteresis": 0,
+        
+        "SlewNeg": 0,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
         "Zone 1"
-      ]
+        ]
+      },
+      {
+        "Class": "temp",
+        "Name": "DIMMs FanAlg",
+        "Inputs": [ "CPU\\d+_DIMM_[a-zA-Z]\\d+" ],
+        "Outputs": [],
+        "MissingIsAcceptable": [ "CPU\\d+_DIMM_[a-zA-Z]\\d+" ],
+
+        "SetPoint": 76,
+        "PCoefficient": -5,
+        "ICoefficient": -0.5,
+        "DCoefficient": 0,
+
+        "OutLimitMin": 0,
+        "OutLimitMax": 100,
+        
+        "ILimitMin": 12,
+        "ILimitMax": 100,
+
+        "FFGainCoefficient": 0,
+        "FFOffCoefficient": 0,
+        
+        "NegativeHysteresis": 0.0,
+        "PositiveHysteresis": 0,
+        
+        "SlewNeg": 0,
+        "SlewPos": 0,
+        "Type": "Pid",
+        "Zones": [
+          "Zone 1"
+        ]
+      }
+    ],
+    "Name": "DL340 G12 Server",
+    "Probe": ["xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'P68824-001'})", "OR",
+              "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'P75206-321'})", "OR",
+              "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'p75206-311'})", "OR",
+              "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"],
+    "Type": "Chassis",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "$PRODUCT_MANUFACTURER",
+      "PartNumber": "$PCA_PART_NUMBER",
+      "SerialNumber": "$PCA_SERIAL_NUMBER"
     },
-    {
-      "Class": "temp",
-      "FFGainCoefficient": 0,
-      "FFOffCoefficient": 0,
-      "ICoefficient": -4.64,
-      "ILimitMax": 100,
-      "ILimitMin": 30,
-      "Inputs": [
-        "DTS CPU1"
-      ],
-      "Name": "DTS CPU1 Zn",
-      "NegativeHysteresis": 5,
-      "OutLimitMax": 100,
-      "OutLimitMin": 30,
-      "Outputs": [],
-      "PCoefficient": -0.15,
-      "PositiveHysteresis": 0,
-      "SetPoint": -25,
-      "SetPointOffset": "WarningHigh",
-      "SlewNeg": -1,
-      "SlewPos": 0,
-      "Type": "Pid",
-      "Zones": [
-        "Zone 1"
-      ]
+    "xyz.openbmc_project.Inventory.Decorator.AssetTag": {
+      "AssetTag": "HPE-OBMC-001"
     },
-    {
-      "Class": "temp",
-      "FFGainCoefficient": 0,
-      "FFOffCoefficient": 0,
-      "ICoefficient": -0.2,
-      "ILimitMax": 70,
-      "ILimitMin": 10,
-      "Inputs": [
-        "Front Inlet"
-      ],
-      "Name": "Ambient Temp Zn",
-      "OutLimitMax": 70,
-      "OutLimitMin": 10,
-      "Outputs": [],
-      "PCoefficient": -3,
-      "SetPoint": 25,
-      "SlewNeg": -1,
-      "SlewPos": 0,
-      "Type": "Pid",
-      "Zones": [
-        "Zone 1"
-      ]
+    "xyz.openbmc_project.Inventory.Item": {
+      "PrettyName": "DL340 Gen12"
     },
-    {
-      "FailSafePercent": 100,
-      "MinThermalOutput": 10,
-      "Name": "Zone 1",
-      "Type": "Pid.Zone"
+    "xyz.openbmc_project.Inventory.Item.Board.Motherboard": {
+      "ProductId": "$SERVER_ID"
+    },
+    "xyz.openbmc_project.Inventory.Item.System": {
+      "PartNumber": "$PRODUCT_PART_NUMBER",
+      "SerialNumber": "$PRODUCT_SERIAL_NUMBER"
     }
-  ],
-  "Name": "DL340 G12 Server",
-  "Probe": "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})",
-  "Type": "Chassis",
-  "xyz.openbmc_project.Inventory.Decorator.Asset": {
-    "Manufacturer": "$PRODUCT_MANUFACTURER",
-    "PartNumber": "$PCA_PART_NUMBER",
-    "SerialNumber": "$PCA_SERIAL_NUMBER"
   },
-  "xyz.openbmc_project.Inventory.Decorator.AssetTag": {
-    "AssetTag": "HPE-OBMC-001"
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector1Port",
+        "Name": "HPEFan 1 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      {
+        "Name": "Fan 1",
+        "Type": "HPEFan",
+        "Index": 1,
+        "MaxReading": 16500,
+        "Connector": {
+          "_comment1": "on the Dl340, fans reads start from 'hwmon/pwm2' so start fan 1 numbering from pwm=1, and index=1 instead of the usual 0-based",
+          "Name": "Fan Conn 1",
+          "Pwm": 1,
+          "PwmName": "Pwm 1"
+        },
+        "Presence": {
+          "PinName": "FAN2_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN3_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_1",
+    "Probe": "FOUND('DL340 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL340-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item": {
+      "PrettyName": "Fan 1"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
   },
-  "xyz.openbmc_project.Inventory.Item": {
-    "PrettyName": "DL340 Gen12"
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector2Port",
+        "Name": "HPEFan 2 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      { 
+        "Name": "Fan 2",
+        "Type": "HPEFan",
+        "Index": 2,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 2",
+          "Pwm": 2,
+          "PwmName": "Pwm 2"
+        },
+        "Presence": {
+          "PinName": "FAN3_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN5_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_2",
+    "Probe": "FOUND('DL340 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL340-fan"
+    },
+    "xyz.openbmc_project.Inventory.Item.Fan": {
+      "PrettyName": "Fan 2"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
   },
-  "xyz.openbmc_project.Inventory.Item.Board.Motherboard": {
-    "ProductId": "$SERVER_ID"
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector3Port",
+        "Name": "HPEFan 3 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      { 
+        "Name": "Fan 3",
+        "Type": "HPEFan",
+        "Index": 3,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 3",
+          "Pwm": 3,
+          "PwmName": "Pwm 3"
+        },
+        "Presence": {
+          "PinName": "FAN4_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN7_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_3",
+    "Probe": "FOUND('DL340 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL340-fan"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
   },
-  "xyz.openbmc_project.Inventory.Item.System": {
-    "PartNumber": "$PRODUCT_PART_NUMBER",
-    "SerialNumber": "$PRODUCT_SERIAL_NUMBER"
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector4Port",
+        "Name": "HPEFan 4 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+            {
+        "Name": "Fan 4",
+        "Type": "HPEFan",
+        "Index": 4,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 4",
+          "Pwm": 4,
+          "PwmName": "Pwm 4"
+        },
+        "Presence": {
+          "PinName": "FAN5_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN9_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_4",
+    "Probe": "FOUND('DL340 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL340-fan"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
+  },
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector5Port",
+        "Name": "HPEFan 5 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      {
+        "Name": "Fan 5",
+        "Type": "HPEFan",
+        "Index": 5,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 5",
+          "Pwm": 5,
+          "PwmName": "Pwm 5"
+        },
+        "Presence": {
+          "PinName": "FAN6_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN11_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_5",
+    "Probe": "FOUND('DL340 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL340-fan"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
+  },
+  {
+    "Exposes": [
+      {
+        "ConnectsToType": "FanConnector6Port",
+        "Name": "HPEFan 6 Downstream Port",
+        "FanPort": true,
+        "Type": "DownstreamPort"
+      },
+      {
+        "Name": "Fan 6",
+        "Type": "HPEFan",
+        "Index": 6,
+        "MaxReading": 16500,
+        "Connector": {
+          "Name": "Fan Conn 6",
+          "Pwm": 6,
+          "PwmName": "Pwm 6"
+        },
+        "Presence": {
+          "PinName": "FAN7_INST",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        },
+        "StatusMonitor": {
+          "PinName": "FAN13_FAIL",
+          "Polarity": "High",
+          "MonitorType": "Polling"
+        }
+      }
+    ],
+    "Name": "HPEFan_6",
+    "Probe": "FOUND('DL340 G12 Server')",
+    "Type": "Fan",
+    "xyz.openbmc_project.Inventory.Decorator.Asset": {
+      "Manufacturer": "HPE",
+      "Model": "DL340-fan"
+    },
+    "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+      "FieldReplaceable": true,
+      "HotPluggable": true
+    }
   }
-}
+]

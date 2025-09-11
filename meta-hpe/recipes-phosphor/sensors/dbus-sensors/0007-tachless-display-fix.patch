@@ -1,0 +1,94 @@
+From e9791798a73f30913a48948afa902050b396267b Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Tue, 22 Jul 2025 09:55:41 -0500
+Subject: [PATCH] Adds display fix for fan_tach readings on tachless fans
+
+Upstream-Status: Pending
+---
+ src/fan/FanMain.cpp    | 13 ++++++++++---
+ src/fan/TachSensor.cpp | 13 ++++++++++---
+ src/fan/TachSensor.hpp |  2 ++
+ 3 files changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/src/fan/FanMain.cpp b/src/fan/FanMain.cpp
+index 885530b..d78c89e 100644
+--- a/src/fan/FanMain.cpp
++++ b/src/fan/FanMain.cpp
+@@ -737,13 +737,20 @@ void createSensors(
+ 
+             auto fanInputPath = getFanInputPath(fanOutputPath);
+ 
++            auto isTachlessFan= false;
++            if (fanInputPath == fanOutputPath)
++            {
++                // no tachometer found, so this is a tachless fan
++                isTachlessFan = true;
++            }
++
+             auto& tachSensor = tachSensors[sensorName];
+             tachSensor = nullptr;
+             tachSensor = std::make_shared<TachSensor>(
+                 fanInputPath.string(), baseType, objectServer, dbusConnection,
+                 presenceGpio, statusMonitorGpio, redundancy, io, sensorName,
+-                std::move(sensorThresholds), *interfacePath, limits, powerState,
+-                led);
++                std::move(sensorThresholds), *interfacePath, limits, isTachlessFan,
++                powerState, led);
+             tachSensor->setupRead();
+ 
+             if (!pwmPath.empty() && std::filesystem::exists(pwmPath) &&
+diff --git a/src/fan/TachSensor.cpp b/src/fan/TachSensor.cpp
+index a3d9fae..283a85a 100644
+--- a/src/fan/TachSensor.cpp
++++ b/src/fan/TachSensor.cpp
+@@ -53,13 +53,13 @@ TachSensor::TachSensor(
+     const std::string& fanName,
+     std::vector<thresholds::Threshold>&& thresholdsIn,
+     const std::string& sensorConfiguration,
+-    const std::pair<double, double>& limits, const PowerState& powerState,
+-    const std::optional<std::string>& ledIn) :
++    const std::pair<double, double>& limits, const bool isTachless,
++    const PowerState& powerState, const std::optional<std::string>& ledIn) :
+     Sensor(escapeName(fanName), std::move(thresholdsIn), sensorConfiguration,
+            objectType, false, false, limits.second, limits.first, conn,
+            powerState),
+     objServer(objectServer), redundancy(redundancy), presence(presenceGpio),
+-    statusMonitor(statusMonitorGpio),
++    statusMonitor(statusMonitorGpio), isTachlessFan(isTachless),
+     inputDev(io, path, boost::asio::random_access_file::read_only),
+     waitTimer(io), path(path), led(ledIn)
+ {
+@@ -203,6 +203,13 @@ void TachSensor::handleResponse(const boost::system::error_code& err,
+             }
+             else
+             {
++                if (isTachlessFan) //then we're reading a PWM duty cycle as input. Calculate a displayable RPM from any MaxReading defined for a fan
++                {
++                    static const auto PWM_DUTY_MAX = 255;
++                    auto calcFract = (double)nvalue / PWM_DUTY_MAX;
++                    nvalue = static_cast<int>(calcFract * this->maxValue);
++                }
++
+                 updateValue(nvalue);
+             }
+         }
+diff --git a/src/fan/TachSensor.hpp b/src/fan/TachSensor.hpp
+index dcd8e1f..3c59043 100644
+--- a/src/fan/TachSensor.hpp
++++ b/src/fan/TachSensor.hpp
+@@ -74,6 +74,7 @@ class TachSensor :
+                std::vector<thresholds::Threshold>&& thresholds,
+                const std::string& sensorConfiguration,
+                const std::pair<double, double>& limits,
++               const bool isTachless,
+                const PowerState& powerState,
+                const std::optional<std::string>& led);
+     ~TachSensor() override;
+@@ -89,6 +90,7 @@ class TachSensor :
+     std::shared_ptr<PresenceGpio> statusMonitor;
+     std::shared_ptr<sdbusplus::asio::dbus_interface> itemIface;
+     std::shared_ptr<sdbusplus::asio::dbus_interface> itemAssoc;
++    bool isTachlessFan = false;
+     boost::asio::random_access_file inputDev;
+     boost::asio::steady_timer waitTimer;
+     std::string path;
