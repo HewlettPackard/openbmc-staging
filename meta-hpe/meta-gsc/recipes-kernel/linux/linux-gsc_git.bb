@@ -1,8 +1,8 @@
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
 
-SRCREV = "6380fcf7f71a00593024e1d2f93aba9fd0ee422c"
-KBRANCH = "gsc-linux-6.12.38"
+SRCREV = "e2c69262baa7ec519f7c7e0aae55613cb031b81d"
+KBRANCH = "gsc-linux-6.12.47"
 SRC_URI = "git://github.com/HewlettPackard/gsc-linux.git;protocol=https;branch=${KBRANCH};depth=1 \
            file://gsc_defconfig \
            "
@@ -18,7 +18,7 @@ KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "1"
 KMETA_AUDIT_WERROR = "1"
 
-LINUX_VERSION ?= "6.12.38"
+LINUX_VERSION ?= "6.12.47"
 
 # Block install of full kernel image in /boot of the rootfs
 # https://docs.yoctoproject.org/kernel-dev/faq.html#how-do-i-install-not-install-the-kernel-image-on-the-root-filesystem
