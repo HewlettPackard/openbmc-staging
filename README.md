@@ -26,6 +26,8 @@ ls build/gsc/tmp/deploy/images/gsc/
 # Run OpenBMC On Your HPE Proliant Gen12 Servers
 Installing OpenBMC on a HPE Proliant Gen12 server for the first time requires Transfer of Ownership, for more details please see https://www.hpe.com/us/en/compute/openbmc-proliant-servers.html.  iLO 1.16 or later is needed for this process to work.
 
+Note: Running OpenBMC requires a minimum BIOS version of 1.52
+
 # Currently Supported Systems
 This code has been primarily tested against DL340 Gen 12 Proliant systems.
 
