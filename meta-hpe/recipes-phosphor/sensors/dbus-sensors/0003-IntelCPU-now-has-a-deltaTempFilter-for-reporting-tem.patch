@@ -16,10 +16,10 @@ index 5c10967..d3b782a 100644
 +++ b/src/intel-cpu/IntelCPUSensor.cpp
 @@ -157,6 +157,8 @@ void IntelCPUSensor::setupRead()
          }
- 
+
          inputDev.assign(fd);
 +        deltaFilteredReads = 0;
-+        
++
      }
      else
      {
@@ -27,18 +27,18 @@ index 5c10967..d3b782a 100644
          {
              rawValue = std::stod(response);
              double nvalue = rawValue / IntelCPUSensor::sensorScaleFactor;
-+            auto deltaTempValue = std::abs(value - nvalue); 
++            auto deltaTempValue = std::abs(value - nvalue);
 +            auto maxTempReadDelta = 40.0; //we don't expect a jump larger than this between pollings
-+            auto deltaMaxfilteredReads = 4; //after this many 'oddball' reads, start reporting it! 
- 
++            auto deltaMaxfilteredReads = 4; //after this many 'oddball' reads, start reporting it!
+
 -            if (show)
 -            {
 -                updateValue(nvalue);
 -            }
 -            else
-+            
 +
-+            if (deltaFilteredReads < deltaMaxfilteredReads && 
++
++            if (deltaFilteredReads < deltaMaxfilteredReads &&
 +                deltaTempValue > maxTempReadDelta)
              {
 -                value = nvalue;
@@ -50,7 +50,7 @@ index 5c10967..d3b782a 100644
              {
 -                updateMinMaxValues();
 +                deltaFilteredReads = 0;
-+                
++
 +                if (show)
 +                {
 +                    updateValue(nvalue);
@@ -64,7 +64,7 @@ index 5c10967..d3b782a 100644
 +                    updateMinMaxValues();
 +                }
              }
- 
+
              double gTcontrol = gCpuSensors[nameTcontrol]
 diff --git a/src/intel-cpu/IntelCPUSensor.hpp b/src/intel-cpu/IntelCPUSensor.hpp
 index f51158b..1749530 100644
@@ -73,7 +73,7 @@ index f51158b..1749530 100644
 @@ -52,6 +52,7 @@ class IntelCPUSensor :
      double dtsOffset;
      bool show;
-     size_t pollTime;
+     size_t pollTime{IntelCPUSensor::sensorPollMs};
 +    int deltaFilteredReads;
      bool loggedInterfaceDown = false;
      uint8_t minMaxReadCounter{0};
