@@ -10,7 +10,7 @@ SRC_URI = "git://github.com/HewlettPackard/gsc-linux.git;protocol=https;branch=$
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 PROVIDES += "virtual/kernel"
-KCONFIG_MODE="--alldefconfig"
+KCONFIG_MODE = "--alldefconfig"
 
 PV = "${LINUX_VERSION}+git"
 
