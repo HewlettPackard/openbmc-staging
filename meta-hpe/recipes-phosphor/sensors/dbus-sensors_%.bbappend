@@ -8,3 +8,4 @@ SRC_URI += "file://0005-fansensor-can-now-switch-between-hpe-and-other-fans-.pat
 SRC_URI += "file://0006-FanSensor-can-now-monitor-GPIO-fail-bits.patch"
 SRC_URI += "file://0007-tachless-display-fix.patch"
 SRC_URI += "file://0008-support-fans-with-cooling-cooled_by-associations-and.patch"
+SRC_URI += "file://0009-disable-confusing-fan-redundancy-inserted-removed-lo.patch"

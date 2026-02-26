@@ -84,7 +84,6 @@ RDEPENDS:${PN}-system:append = " \
     openssl-bin \
     openssl-engines \
     proliant-support \
-    udev-mtd-partitions \
     gxp-dbus-sensors \
     common-image \
     vnic \

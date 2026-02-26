@@ -58,6 +58,6 @@ PREFERRED_PROVIDER_virtual/obmc-chassis-mgmt = "packagegroup-hpe-apps"
 PREFERRED_PROVIDER_virtual/obmc-fan-mgmt = "packagegroup-hpe-apps"
 PREFERRED_PROVIDER_virtual/obmc-flash-mgmt = "packagegroup-hpe-apps"
 PREFERRED_PROVIDER_virtual/obmc-system-mgmt = "packagegroup-hpe-apps"
-+
-+# Enable serial console on ttyS0
-+SERIAL_CONSOLES = "115200;ttyS0"
+
+# Enable serial console on ttyS0
+SERIAL_CONSOLES = "115200;ttyS0"

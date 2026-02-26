@@ -728,9 +728,7 @@
       }
     ],
     "Name": "DL340 G12 Server",
-    "Probe": ["xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'P68824-001'})", "OR",
-              "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'P75206-321'})", "OR",
-              "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'p75206-311'})", "OR",
+    "Probe": ["xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})", "OR",
               "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"],
     "Type": "Chassis",
     "xyz.openbmc_project.Inventory.Decorator.Asset": {

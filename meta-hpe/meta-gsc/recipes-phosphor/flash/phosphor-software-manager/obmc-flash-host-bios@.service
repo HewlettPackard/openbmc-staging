@@ -1,0 +1,11 @@
+[Unit]
+Description=Flash Host BIOS firmware to /dev/mtd/host-prime (Gen12 simple method)
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+# Simple direct flash - comment out to use old hpe-stage-rom.sh method
+ExecStart=/usr/sbin/flash-host-simple.sh /tmp/images/%I
+# Old method (commented out):
+#ExecStart=/usr/sbin/hpe-stage-rom.sh /tmp/images/%I
+TimeoutSec=1200

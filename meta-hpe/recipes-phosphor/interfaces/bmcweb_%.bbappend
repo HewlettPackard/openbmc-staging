@@ -2,7 +2,8 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI += "file://0001-Message-registry-changes-for-IML-SL-IEL.patch \
             file://0002-fix-increase-buffer-size-in-websocket-connection-imp.patch \
-           "
+            file://0003-stop-reporting-critical-health-for-empty-dimm-slots-.patch \
+            "
 
 EXTRA_OEMESON:append = " \
     -Dhttp-body-limit=65 \

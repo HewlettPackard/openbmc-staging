@@ -411,7 +411,7 @@
     }
     ],
     "Name": "DL360/DL380 G12 Server",
-    "Probe": ["xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'P02466-001'})",
+    "Probe": ["xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0265|hpe,0x0266'})",
               "OR",
               "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0265|0x0266'})"],
     "_Comment1": "update probe with DL380 model info later. I've only included a DL360 model for now..",

@@ -1,0 +1,33 @@
+From b3e46b6afbbc16e26a6b6043efee56941d0c7c96 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Mon, 6 Oct 2025 15:23:47 -0500
+Subject: [PATCH] disable confusing fan redundancy inserted/removed log msg
+ output
+
+Upstream-Status: Pending
+---
+ src/fan/TachSensor.cpp | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/src/fan/TachSensor.cpp b/src/fan/TachSensor.cpp
+index cbc5064..79d4cda 100644
+--- a/src/fan/TachSensor.cpp
++++ b/src/fan/TachSensor.cpp
+@@ -306,11 +306,15 @@ void RedundancySensor::update(const std::string& name, bool failed)
+     {
+         if (state == redundancy::full)
+         {
+-            logFanRedundancyLost();
++            // Every fan on a system with a 'FanRedundancy' stanza in Entity-Manager config
++            // gets a confusing set of 'inserted' and 'removed' messages added to logs on init,
++            // We're simply disaling the log message output for now.
++
++            // logFanRedundancyLost();
+         }
+         else if (newState == redundancy::full)
+         {
+-            logFanRedundancyRestored();
++            // logFanRedundancyRestored();
+         }
+         state = newState;
+         iface->set_property("Status", state);
