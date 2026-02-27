@@ -52,8 +52,7 @@
     },
     {
       "group" : "bmc_booted",
-      "members" : [
-      ]
+      "members" : []
     }
   ]
 }

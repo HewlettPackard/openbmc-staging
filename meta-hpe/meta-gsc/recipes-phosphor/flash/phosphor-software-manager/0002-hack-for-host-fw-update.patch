@@ -1,0 +1,36 @@
+From d7b74b76f4f30017f40039938d3b93bf44d1ab74 Mon Sep 17 00:00:00 2001
+From: Dan Lewis <dan.c.lewis@hpe.com>
+Date: Mon, 16 Dec 2024 13:50:00 -0600
+Subject: [PATCH] hack for host fw updates
+
+Simple POST uploads from GUI do not specify the host as the type and always route
+to the BMC ItemUpdater path. This hack allows the BMC ItemUpdater
+(type==0) to accept Host purpose (purpose=4) firmware in addition to
+the BIOS ItemUpdater.
+
+Upstream-Status: Pending
+---
+ bmc/update_manager.cpp | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/bmc/update_manager.cpp b/bmc/update_manager.cpp
+index 922f2bc..3af63b8 100644
+--- a/bmc/update_manager.cpp
++++ b/bmc/update_manager.cpp
+@@ -43,9 +43,13 @@ void Manager::processImageFailed(sdbusplus::message::unix_fd image,
+ bool verifyImagePurpose(Version::VersionPurpose purpose,
+                         ItemUpdaterIntf::UpdaterType type)
+ {
++    info("DEBUG_VERIFY: purpose={P}, type={T}", "P", static_cast<int>(purpose), "T", static_cast<int>(type));
+     if (purpose == Version::VersionPurpose::Host)
+     {
+-        return (type == ItemUpdaterIntf::UpdaterType::BIOS ||
++        // Allow BMC ItemUpdater to handle Host firmware since simple POST
++        // uploads from GUI cannot specify target and always go to BMC path
++        return (type == ItemUpdaterIntf::UpdaterType::BMC ||
++                type == ItemUpdaterIntf::UpdaterType::BIOS ||
+                 type == ItemUpdaterIntf::UpdaterType::ALL);
+     }
+     return true;
+-- 
+2.34.1

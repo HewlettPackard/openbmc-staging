@@ -27,7 +27,7 @@ ls build/gsc/tmp/deploy/images/gsc/
 Installing OpenBMC on a HPE Proliant Gen12 server for the first time requires Transfer of Ownership, for more details please see https://www.hpe.com/us/en/compute/openbmc-proliant-servers.html.  iLO 1.16 or later is needed for this process to work.
 
 # Currently Supported Systems
-This code has been primarily tested against DL340 Gen 12 Proliant systems.
+This code has been primarily tested against DL340 Gen 12 Proliant systems.  The minimum BIOS version for a DL340 Gen12 is 1.52. Running with an earlier BIOS will result in a crash during host power operations.
 
 # Recovering Back to iLO
 There are several ways to recover your system back to iLO but all methods lead back to a recovery process which can take up to 30 minutes.  During recovery there is no feedback to the user.  Note: One a recovery is complete, a Transfer of Ownership process will need to begin again before OpenBMC can be used on the system.

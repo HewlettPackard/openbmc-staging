@@ -1,0 +1,51 @@
+From 3290d6fbc219642fdddfc41b87f0a1eb927b04c2 Mon Sep 17 00:00:00 2001
+From: Chris Sides <Christopher.Sides@hpe.com>
+Date: Mon, 6 Oct 2025 17:39:16 -0500
+Subject: [PATCH] stop reporting 'critical' health for empty dimm slots on
+ redfish/bmcweb inventory page
+
+Upstream-Status: Pending
+---
+ redfish-core/lib/memory.hpp | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/redfish-core/lib/memory.hpp b/redfish-core/lib/memory.hpp
+index 79ccdac1..a7aedd44 100644
+--- a/redfish-core/lib/memory.hpp
++++ b/redfish-core/lib/memory.hpp
+@@ -488,18 +488,33 @@ inline void assembleDimmProperties(
+             std::to_string(*revisionCode);
+     }
+ 
++    auto unpopulatedSlot = false;
++
+     if (present != nullptr && !*present)
+     {
++        unpopulatedSlot = true;
++        
+         asyncResp->res.jsonValue[jsonPtr]["Status"]["State"] =
+             resource::State::Absent;
++
++        asyncResp->res.jsonValue[jsonPtr]["Status"]["Health"] =
++            resource::Health::Invalid;
+     }
+ 
+     if (functional != nullptr)
+     {
+         if (!*functional)
+         {
+-            asyncResp->res.jsonValue[jsonPtr]["Status"]["Health"] =
+-                resource::Health::Critical;
++            if (unpopulatedSlot)
++            { 
++                // if slot is not populated, there's no need to mark it
++                // with an alarming 'Health::Critical' flag
++            }
++            else
++            {
++                asyncResp->res.jsonValue[jsonPtr]["Status"]["Health"] =
++                    resource::Health::Critical;
++            }
+         }
+     }
+ 
