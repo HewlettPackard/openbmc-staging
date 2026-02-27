@@ -1,51 +1,79 @@
-From 27fd7f418728aa0a2f15e88e5372ab94d2198d06 Mon Sep 17 00:00:00 2001
+From 2158303e2087ef5824b9cd770175772eaabbf960 Mon Sep 17 00:00:00 2001
 From: Chris Sides <Christopher.Sides@hpe.com>
 Date: Mon, 11 Aug 2025 16:10:55 -0500
 Subject: [PATCH] Entity-Manager support for cooling/cooled_by associations
 
+Add cooling/cooled_by association support to entity-manager topology.
+When a DownstreamPort exposes "FanPort": true, the downstream board
+(typically a Fan) is associated as "cooling" the upstream board
+(typically a Chassis), and the upstream board gets a "cooled_by"
+association to the downstream.
+
+This mirrors the existing powering/powered_by pattern that uses
+"PowerPort" on DownstreamPort items.
+
 Upstream-Status: Pending
 ---
- src/entity_manager/topology.cpp | 10 ++++++++++
- src/entity_manager/topology.hpp |  1 +
- 2 files changed, 11 insertions(+)
+ src/entity_manager/topology.cpp | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/src/entity_manager/topology.cpp b/src/entity_manager/topology.cpp
-index fa95a85..490c7fe 100644
+index bac865492..c51cbc143 100644
 --- a/src/entity_manager/topology.cpp
 +++ b/src/entity_manager/topology.cpp
-@@ -34,6 +34,10 @@ void Topology::addBoard(const std::string& path, const std::string& boardType,
-         {
-             powerPaths.insert(path);
-         }
-+        else if (exposesItem.find("FanPort") != exposesItem.end())
-+        {
-+            fanPaths.insert(path);
-+        }
-     }
-     else if (exposesType.ends_with("Port"))
-     {
-@@ -75,6 +79,12 @@ std::unordered_map<std::string, std::vector<Association>> Topology::getAssocs(
-                             result[upstream].emplace_back(
-                                 "powered_by", "powering", downstream);
-                         }
+@@ -15,6 +15,11 @@ const AssocName assocPowering =
+               {"Board", "Chassis", "PowerSupply"});
+ const AssocName assocPoweredBy = assocPowering.getReverse();
+
++const AssocName assocCooling =
++    AssocName("cooling", "cooled_by", {"Chassis", "Board", "Fan"},
++              {"Board", "Chassis", "Fan"});
++const AssocName assocCooledBy = assocCooling.getReverse();
 +
-+                        else if (fanPaths.contains(downstream))
-+                        {
-+                            result[upstream].emplace_back(
-+                                "cooled_by", "cooling", downstream);
-+                        }
-                     }
-                 }
-             }
-diff --git a/src/entity_manager/topology.hpp b/src/entity_manager/topology.hpp
-index 816704a..fed3353 100644
---- a/src/entity_manager/topology.hpp
-+++ b/src/entity_manager/topology.hpp
-@@ -28,6 +28,7 @@ class Topology
-     std::unordered_map<PortType, std::vector<Path>> upstreamPorts;
-     std::unordered_map<PortType, std::vector<Path>> downstreamPorts;
-     std::set<Path> powerPaths;
-+    std::set<Path> fanPaths;
-     std::unordered_map<Path, BoardType> boardTypes;
-     std::unordered_map<BoardName, Path> boardNames;
+ const AssocName assocProbing = AssocName("probing", "probed_by", {}, {});
+ const AssocName assocProbedBy = assocProbing.getReverse();
+
+@@ -23,6 +28,8 @@ const std::vector<AssocName> supportedAssocs = {
+     assocContainedBy,
+     assocPowering,
+     assocPoweredBy,
++    assocCooling,
++    assocCooledBy,
  };
+
+ AssocName::AssocName(const std::string& name, const std::string& reverse,
+@@ -84,6 +91,9 @@ void Topology::addBoard(const std::string& path, const std::string& boardType,
+         // in the
+         // powered_by association
+         addPort(exposesType, path, assocPoweredBy);
++
++        // same legacy quirk for cooled_by association
++        addPort(exposesType, path, assocCooledBy);
+     }
+     else
+     {
+@@ -141,6 +151,12 @@ void Topology::addDownstreamPort(const Path& path,
+     {
+         addPort(connectsTo, path, assocPowering);
+     }
++
++    auto findFanPort = exposesItem.find("FanPort");
++    if (findFanPort != exposesItem.end())
++    {
++        addPort(connectsTo, path, assocCooling);
++    }
+ }
+
+ void Topology::addPort(const PortType& port, const Path& path,
+@@ -235,7 +251,8 @@ void Topology::fillAssocForPortId(
+
+     // quirk: legacy code did not associate from both sides
+     // TODO(alexander): revisit this
+-    if (assocName == assocContaining || assocName == assocPoweredBy)
++    if (assocName == assocContaining || assocName == assocPoweredBy ||
++        assocName == assocCooledBy)
+     {
+         return;
+     }
+--
+2.53.0
