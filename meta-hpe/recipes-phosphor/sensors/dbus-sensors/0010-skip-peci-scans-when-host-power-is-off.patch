@@ -1,0 +1,103 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: GitHub Copilot <copilot@local>
+Date: Tue, 25 Mar 2026 12:00:00 +0000
+Subject: [PATCH] use presence and host power to skip unnecessary PECI scanning
+
+Use CPU presence information to skip PECI work for empty sockets and
+gate detectCpu() on host power state so PECI scans do not run while the
+host is off. Together these changes avoid repeated peci_SetDevName()
+logging and unnecessary PECI operations during empty-socket and
+host-power-off scenarios.
+
+Upstream-Status: Pending
+---
+--- a/src/intel-cpu/IntelCPUSensorMain.cpp
++++ b/src/intel-cpu/IntelCPUSensorMain.cpp
+@@ -79,13 +79,14 @@
+ struct CPUConfig
+ {
+     CPUConfig(const uint64_t& bus, const uint64_t& addr,
+-              const std::string& name, const State& state) :
+-        bus(bus), addr(addr), name(name), state(state)
++              const std::string& name, const State& state, const bool present) :
++        bus(bus), addr(addr), name(name), state(state), present(present)
+     {}
+     int bus;
+     int addr;
+     std::string name;
+     State state;
++    bool present;
+ 
+     bool operator<(const CPUConfig& rhs) const
+     {
+@@ -485,14 +486,39 @@
+     size_t rescanDelaySeconds = 0;
+     static bool keepPinging = false;
+     int peciFd = -1;
++    bool hostPowerOn = true;
++
++    try
++    {
++        hostPowerOn = isPowerOn();
++    }
++    catch (const std::exception& e)
++    {
++        lg2::debug("Unable to determine power state: {ERROR}", "ERROR",
++                   e.what());
++    }
+ 
+     for (CPUConfig& config : cpuConfigs)
+     {
+-        if (config.state == State::READY)
++        // Only continue the scan if the CPU is installed.
++        if ((config.state == State::READY) || !config.present)
+         {
+             continue;
+         }
+ 
++        // Skip PECI operations if host power is off to avoid unnecessary
++        // peci_SetDevName() logging and PECI calls
++        if (!hostPowerOn)
++        {
++            keepPinging = true;
++
++            if (config.state != State::OFF)
++            {
++                config.state = State::OFF;
++            }
++            continue;
++        }
++
+         std::fstream rescan{rescanPath, std::ios::out};
+         if (rescan.is_open())
+         {
+@@ -734,7 +760,7 @@
+                     }
+                 }
+ 
+-                if (!inventoryIfaces.contains(name) && present)
++                if (!inventoryIfaces.contains(name) && present.has_value())
+                 {
+                     auto iface = objectServer.add_interface(
+                         cpuInventoryPath + std::string("/") + name,
+@@ -769,7 +795,8 @@
+                     "bus: {BUS}, addr: {ADDR}, name: {NAME}, type: {TYPE}",
+                     "BUS", bus, "ADDR", addr, "NAME", name, "TYPE", type);
+ 
+-                cpuConfigs.emplace(bus, addr, name, State::OFF);
++                // if present was not set, then assume presence istrue.
++                cpuConfigs.emplace(bus, addr, name, State::OFF, present.has_value() ? *present : true);
+             }
+         }
+     }
+@@ -844,6 +871,7 @@
+     systemBus->request_name("xyz.openbmc_project.IntelCPUSensor");
+ 
+     setupManufacturingModeMatch(*systemBus);
++    setupPowerMatch(systemBus);
+     io.run();
+     return 0;
+ }
+-- 
+2.34.1
+
