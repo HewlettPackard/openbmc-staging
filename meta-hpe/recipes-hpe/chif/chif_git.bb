@@ -3,7 +3,7 @@ DESCRIPTION = "HPE CHIF service to support BIOS"
 
 BRANCH = "main"
 SRC_URI = "git://github.com/HewlettPackard/openbmc-chif-svc.git;branch=${BRANCH};protocol=https"
-SRCREV = "0889d236545f8b1b3b53d25bec0b23cce16e0a2d"
+SRCREV = "75f98cc221bd17a9ed00cd8b404ccccd2183934a"
 
 PV = "0.1+git${SRCPV}"
 

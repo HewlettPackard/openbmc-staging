@@ -3,7 +3,7 @@ DESCRIPTION = "Recipes to support HPE ProLiant server hardware and firmware"
 
 BRANCH = "main"
 SRC_URI = "git://github.com/HewlettPackard/openbmc-proliant-support.git;branch=${BRANCH};protocol=https"
-SRCREV = "b5d73359461cac84d2dd69f5ea60e71a25e33eb6"
+SRCREV = "be41cc5df6f7dfe5a14fbf375476f81b0e42a116"
 
 PV = "0.1+git${SRCPV}"
 
