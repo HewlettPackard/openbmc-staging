@@ -15,8 +15,8 @@ SRC_URI += "file://CMakeLists.patch file://findfans.patch file://fixTempManagedO
 SRC_URI += "file://0001-fix-update-io_service-to-io_context.patch"
 SRC_URI += "file://0002-fix-update-io.post-to-boost-asio-post.patch"
 SRC_URI += "file://0003-don-t-build-or-install-the-gxp-fan-sensors-daemon.patch"
+SRC_URI += "file://0004-remove-sdbusplus-project-dependency.patch"
 
-S = "${WORKDIR}/git"
 PV = "1.0+git"
 
 LICENSE = "MIT"
@@ -28,4 +28,5 @@ SYSTEMD_SERVICE:${PN} += "xyz.openbmc_project.GxpTempSensor.service"
 
 inherit cmake systemd
 
-EXTRA_OECMAKE = ""
+CXXFLAGS += "-Wno-error=deprecated-declarations"
+EXTRA_OECMAKE = "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"

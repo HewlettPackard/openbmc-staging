@@ -15,8 +15,7 @@ SRC_URI = "file://com.hpe.bmc.vnic-control.service \
 DEPENDS += "systemd"
 RDEPENDS:${PN} += " bash"
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit obmc-phosphor-systemd pkgconfig
 

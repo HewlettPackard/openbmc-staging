@@ -20,6 +20,5 @@ DEPENDS += " \
         "
 
 
-S = "${WORKDIR}/git"
 
 inherit meson obmc-phosphor-systemd pkgconfig

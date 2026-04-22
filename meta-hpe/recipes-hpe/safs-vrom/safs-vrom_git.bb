@@ -17,7 +17,6 @@ DEPENDS += "systemd phosphor-logging"
 RDEPENDS:${PN} += "systemd phosphor-logging"
 
 
-S = "${WORKDIR}/git"
 PV = "1.0+git"
 
 inherit meson pkgconfig systemd
