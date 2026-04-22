@@ -31,8 +31,9 @@ UBOOT_ENTRYPOINT = "0x00200000"
 # Configure the default kernel settings
 PREFERRED_PROVIDER_virtual/kernel ?= "linux-gsc"
 PREFERRED_VERSION_linux-kernel ?= "6.1%"
-KERNEL_CLASSES ?= "kernel-fitimage"
-KERNEL_IMAGETYPE = "fitImage"
+KERNEL_CLASSES ?= "kernel-fit-extra-artifacts"
+KERNEL_IMAGETYPE = "Image"
+KERNEL_IMAGETYPES = "Image"
 KERNEL_DEVICETREE = "hpe/gsc_b0.dtb"
 
 # OpenBMC Machine Features used by HPE GSC Platforms

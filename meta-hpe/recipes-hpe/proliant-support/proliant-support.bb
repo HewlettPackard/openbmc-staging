@@ -22,5 +22,3 @@ SYSTEMD_SERVICE:${PN} += " host-state-monitor.service"
 SYSTEMD_SERVICE:${PN} += " gsc-fru-service.service"
 # Enable the service by default
 SYSTEMD_AUTO_ENABLE:${PN} = "enable"
-
-S = "${WORKDIR}/git"

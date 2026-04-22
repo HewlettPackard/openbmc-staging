@@ -14,9 +14,7 @@ PROVIDES += "u-boot"
 SRC_URI = "git://github.com/HewlettPackard/gsc-uboot.git;protocol=https;branch=${BRANCH}"
 BRANCH ?= "gsc-${PV}"
 
-S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
-UNPACKDIR = "${WORKDIR}/sources-unpack"
 
 # use supplied configuration fragment
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
