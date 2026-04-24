@@ -107,6 +107,21 @@
                 "Type": "HPEFan"
             },
             {
+                "Connector": {
+                    "Name": "Fan Connector 8",
+                    "Pwm": 7,
+                    "Tachs": []
+                },
+                "Index": 7,
+                "Name": "Fan 8",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN8_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
                 "Class": "fan",
                 "FFGainCoefficient": 1,
                 "FFOffCoefficient": 0,
@@ -120,9 +135,10 @@
                     "Fan 4",
                     "Fan 5",
                     "Fan 6",
-                    "Fan 7"
+                    "Fan 7",
+                    "Fan 8"
                 ],
-                "Name": "Fan 1-7",
+                "Name": "Fan 1-8",
                 "NegativeHysteresis": 0,
                 "OutLimitMax": 100,
                 "OutLimitMin": 30,
@@ -133,7 +149,8 @@
                     "Pwm 3",
                     "Pwm 4",
                     "Pwm 5",
-                    "Pwm 6"
+                    "Pwm 6",
+                    "Pwm 7"
                 ],
                 "PCoefficient": 0,
                 "PositiveHysteresis": 0,
@@ -154,6 +171,46 @@
                 "Address": "0x4b",
                 "Bus": "2",
                 "Name": "23-BMC Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x49",
+                "Bus": "31",
+                "Name": "39-PCI 1 Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x49",
+                "Bus": "33",
+                "Name": "40-PCI 2 Zone",
                 "Type": "TMP1075",
                 "Thresholds": [
                     {
@@ -253,47 +310,7 @@
             {
                 "Address": "0x48",
                 "Bus": "7",
-                "Name": "49-P/S 2 Zone",
-                "Type": "TMP1075",
-                "Thresholds": [
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 95
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper non critical",
-                        "Severity": 0,
-                        "Value": 85
-                    }
-                ]
-            },
-            {
-                "Address": "0x49",
-                "Bus": "31",
-                "Name": "59-PCI 3 Zone",
-                "Type": "TMP1075",
-                "Thresholds": [
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 95
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper non critical",
-                        "Severity": 0,
-                        "Value": 85
-                    }
-                ]
-            },
-            {
-                "Address": "0x49",
-                "Bus": "33",
-                "Name": "60-PCI 6 Zone",
+                "Name": "49-P/S 1 Zone",
                 "Type": "TMP1075",
                 "Thresholds": [
                     {
@@ -370,13 +387,14 @@
                 ]
             }
         ],
-        "Name": "HPE ProLiant DL340 Gen12",
+        "Name": "chassis",
         "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0264'})",
             "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0264'})"
         ],
-        "Type": "Chassis"
+        "Type": "Chassis",
+        "xyz.openbmc_project.Inventory.Item.System": {}
     },
     {
         "Associations": [
@@ -442,9 +460,9 @@
         ],
         "Name": "PSU0_PowerSupply",
         "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0264'})",
             "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0264'})"
         ],
         "Type": "PowerSupply",
         "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
@@ -521,9 +539,9 @@
         ],
         "Name": "PSU1_PowerSupply",
         "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0264'})",
             "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0264'})"
         ],
         "Type": "PowerSupply",
         "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
@@ -533,164 +551,6 @@
         "xyz.openbmc_project.Inventory.Item": {
             "Present": true,
             "PrettyName": "Power Supply 2"
-        },
-        "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
-    },
-    {
-        "Associations": [
-            [
-                "powering",
-                "powered_by",
-                "/xyz/openbmc_project/inventory/system/chassis/chassis"
-            ]
-        ],
-        "Exposes": [
-            {
-                "Address": "0x5c",
-                "Associations": [
-                    [
-                        "chassis",
-                        "all_sensors",
-                        "/xyz/openbmc_project/inventory/system/chassis/chassis"
-                    ]
-                ],
-                "Bus": 51,
-                "Labels": [
-                    "iin",
-                    "iout1",
-                    "vin",
-                    "vout1",
-                    "pin"
-                ],
-                "Name": "PSU2",
-                "PollRate": 5.0,
-                "PowerState": "Always",
-                "Type": "CRPS185",
-                "Thresholds": [
-                    {
-                        "Direction": "less than",
-                        "Label": "vin",
-                        "Name": "lower critical",
-                        "Severity": 1,
-                        "Value": 90
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Label": "vin",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 264
-                    },
-                    {
-                        "Direction": "less than",
-                        "Label": "vout1",
-                        "Name": "lower critical",
-                        "Severity": 1,
-                        "Value": 11.4
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Label": "vout1",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 12.6
-                    }
-                ]
-            }
-        ],
-        "Name": "PSU2_PowerSupply",
-        "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
-            "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
-        ],
-        "Type": "PowerSupply",
-        "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
-            "FieldReplaceable": true,
-            "HotPluggable": true
-        },
-        "xyz.openbmc_project.Inventory.Item": {
-            "Present": true,
-            "PrettyName": "Power Supply 3"
-        },
-        "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
-    },
-    {
-        "Associations": [
-            [
-                "powering",
-                "powered_by",
-                "/xyz/openbmc_project/inventory/system/chassis/chassis"
-            ]
-        ],
-        "Exposes": [
-            {
-                "Address": "0x5c",
-                "Associations": [
-                    [
-                        "chassis",
-                        "all_sensors",
-                        "/xyz/openbmc_project/inventory/system/chassis/chassis"
-                    ]
-                ],
-                "Bus": 52,
-                "Labels": [
-                    "iin",
-                    "iout1",
-                    "vin",
-                    "vout1",
-                    "pin"
-                ],
-                "Name": "PSU3",
-                "PollRate": 5.0,
-                "PowerState": "Always",
-                "Type": "CRPS185",
-                "Thresholds": [
-                    {
-                        "Direction": "less than",
-                        "Label": "vin",
-                        "Name": "lower critical",
-                        "Severity": 1,
-                        "Value": 90
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Label": "vin",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 264
-                    },
-                    {
-                        "Direction": "less than",
-                        "Label": "vout1",
-                        "Name": "lower critical",
-                        "Severity": 1,
-                        "Value": 11.4
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Label": "vout1",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 12.6
-                    }
-                ]
-            }
-        ],
-        "Name": "PSU3_PowerSupply",
-        "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
-            "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
-        ],
-        "Type": "PowerSupply",
-        "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
-            "FieldReplaceable": true,
-            "HotPluggable": true
-        },
-        "xyz.openbmc_project.Inventory.Item": {
-            "Present": true,
-            "PrettyName": "Power Supply 4"
         },
         "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
     }
