@@ -15,6 +15,11 @@ SRC_URI += "file://host-boot-enable.service"
 SRC_URI:append = " file://host-boot-enable.sh \
                    file://host-boot-enable_0x0273.sh \
                    file://host-boot-enable_0x0000.sh \
+                   file://host-boot-enable_0x0261.sh \
+                   file://host-boot-enable_0x0264.sh \
+                   file://host-boot-enable_0x0265.sh \
+                   file://host-boot-enable_0x0266.sh \
+                   file://host-boot-enable_0x0285.sh \
                  "
 
 S = "${UNPACKDIR}"
@@ -24,4 +29,9 @@ do_install:append() {
     install -m 0755 -D ${UNPACKDIR}/host-boot-enable.sh ${D}/usr/bin/host-boot-enable.sh
     install -m 0755 -D ${UNPACKDIR}/host-boot-enable_0x0273.sh ${D}/usr/bin/host-boot-enable_0x0273.sh
     install -m 0755 -D ${UNPACKDIR}/host-boot-enable_0x0000.sh ${D}/usr/bin/host-boot-enable_0x0000.sh
+    install -m 0755 -D ${UNPACKDIR}/host-boot-enable_0x0264.sh ${D}/usr/bin/host-boot-enable_0x0261.sh
+    install -m 0755 -D ${UNPACKDIR}/host-boot-enable_0x0264.sh ${D}/usr/bin/host-boot-enable_0x0264.sh
+    install -m 0755 -D ${UNPACKDIR}/host-boot-enable_0x0265.sh ${D}/usr/bin/host-boot-enable_0x0265.sh
+    install -m 0755 -D ${UNPACKDIR}/host-boot-enable_0x0266.sh ${D}/usr/bin/host-boot-enable_0x0266.sh
+    install -m 0755 -D ${UNPACKDIR}/host-boot-enable_0x0285.sh ${D}/usr/bin/host-boot-enable_0x0285.sh
 }

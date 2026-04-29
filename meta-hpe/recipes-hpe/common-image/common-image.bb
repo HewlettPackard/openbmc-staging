@@ -3,7 +3,10 @@ SRC_URI = " \
   file://set-environment.service \
   file://load-dtbo.service \
   file://load-dtbo.sh \
+  file://proliant_0x0264.dtso \
+  file://proliant_0x0265.dtso \
   file://proliant_0x0273.dtso \
+  file://proliant_0x0285.dtso \
   "
 
 LICENSE = "Apache-2.0"
@@ -22,12 +25,18 @@ DEPENDS:append = " dtc-native"
 
 
 do_compile() {
+  dtc -I dts -o ${WORKDIR}/proliant_0x0264.dtbo ${UNPACKDIR}/proliant_0x0264.dtso
+  dtc -I dts -o ${WORKDIR}/proliant_0x0265.dtbo ${UNPACKDIR}/proliant_0x0265.dtso
   dtc -I dts -o ${WORKDIR}/proliant_0x0273.dtbo ${UNPACKDIR}/proliant_0x0273.dtso
+  dtc -I dts -o ${WORKDIR}/proliant_0x0285.dtbo ${UNPACKDIR}/proliant_0x0285.dtso
 }
 
 do_install() {
   install -d ${D}/boot
+  install -m 0755 ${WORKDIR}/proliant_0x0264.dtbo ${D}/boot/proliant_0x0264.dtbo
+  install -m 0755 ${WORKDIR}/proliant_0x0265.dtbo ${D}/boot/proliant_0x0265.dtbo
   install -m 0755 ${WORKDIR}/proliant_0x0273.dtbo ${D}/boot/proliant_0x0273.dtbo
+  install -m 0755 ${WORKDIR}/proliant_0x0285.dtbo ${D}/boot/proliant_0x0285.dtbo
   install -d ${D}/etc/profile.d
   echo 'BOARD=`cat /sys/devices/platform/ahb@80000000/d1000000.xreg/soc/xreg/server_id`' > ${D}/etc/profile.d/set_board_env.sh
   echo "export BOARD" >> ${D}/etc/profile.d/set_board_env.sh

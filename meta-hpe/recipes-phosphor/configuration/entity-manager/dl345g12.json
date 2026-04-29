@@ -151,49 +151,29 @@
                 "Type": "Pid.Zone"
             },
             {
-                "Address": "0x4b",
-                "Bus": "2",
-                "Name": "23-BMC Zone",
-                "Type": "TMP1075",
-                "Thresholds": [
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 95
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper non critical",
-                        "Severity": 0,
-                        "Value": 85
-                    }
-                ]
-            },
-            {
                 "Address": "0x4c",
                 "Bus": "47",
-                "Name": "45-Board Inlet",
+                "Name": "01-Inlet Ambient",
                 "Type": "TMP411",
                 "Thresholds": [
                     {
                         "Direction": "greater than",
                         "Name": "upper critical",
                         "Severity": 1,
-                        "Value": 95
+                        "Value": 46
                     },
                     {
                         "Direction": "greater than",
                         "Name": "upper non critical",
                         "Severity": 0,
-                        "Value": 85
+                        "Value": 42
                     }
                 ]
             },
             {
-                "Address": "0x4a",
-                "Bus": "48",
-                "Name": "46-Battery Zone",
+                "Address": "0x4b",
+                "Bus": "2",
+                "Name": "12-BMC Zone",
                 "Type": "TMP1075",
                 "Thresholds": [
                     {
@@ -212,68 +192,8 @@
             },
             {
                 "Address": "0x4b",
-                "Bus": "48",
-                "Name": "47-Sys Exhaust 1",
-                "Type": "TMP1075",
-                "Thresholds": [
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 95
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper non critical",
-                        "Severity": 0,
-                        "Value": 85
-                    }
-                ]
-            },
-            {
-                "Address": "0x49",
-                "Bus": "48",
-                "Name": "48-Sys Exhaust 2",
-                "Type": "TMP1075",
-                "Thresholds": [
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 95
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper non critical",
-                        "Severity": 0,
-                        "Value": 85
-                    }
-                ]
-            },
-            {
-                "Address": "0x48",
-                "Bus": "7",
-                "Name": "49-P/S 2 Zone",
-                "Type": "TMP1075",
-                "Thresholds": [
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 95
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Name": "upper non critical",
-                        "Severity": 0,
-                        "Value": 85
-                    }
-                ]
-            },
-            {
-                "Address": "0x49",
                 "Bus": "31",
-                "Name": "59-PCI 3 Zone",
+                "Name": "26-PCI 3 Zone",
                 "Type": "TMP1075",
                 "Thresholds": [
                     {
@@ -293,7 +213,7 @@
             {
                 "Address": "0x49",
                 "Bus": "33",
-                "Name": "60-PCI 6 Zone",
+                "Name": "27-PCI 6 Zone",
                 "Type": "TMP1075",
                 "Thresholds": [
                     {
@@ -311,70 +231,91 @@
                 ]
             },
             {
-                "Address": "0x30",
-                "Bus": 0,
-                "CpuID": 1,
-                "DtsCritOffset": -2,
-                "Name": "CPU 1",
-                "Type": "XeonCPU",
+                "Address": "0x4b",
+                "Bus": "48",
+                "Name": "29-Sys Exhaust 1",
+                "Type": "TMP1075",
                 "Thresholds": [
                     {
                         "Direction": "greater than",
-                        "Label": "DIMM",
                         "Name": "upper critical",
                         "Severity": 1,
-                        "Value": 99
+                        "Value": 95
                     },
                     {
                         "Direction": "greater than",
-                        "Label": "DIMM",
                         "Name": "upper non critical",
                         "Severity": 0,
-                        "Value": 89
-                    }
-                ],
-                "PresenceGpio": [
-                    {
-                        "Name": "PROC1_INST",
-                        "Polarity": "High"
+                        "Value": 85
                     }
                 ]
             },
             {
-                "Class": "temp",
-                "Name": "DIMMs FanAlg",
-                "Inputs": [
-                    "CPU\\d+_DIMM_[a-zA-Z]\\d+"
-                ],
-                "Outputs": [],
-                "MissingIsAcceptable": [
-                    "CPU\\d+_DIMM_[a-zA-Z]\\d+"
-                ],
-                "SetPoint": 76,
-                "PCoefficient": -5,
-                "ICoefficient": -0.5,
-                "DCoefficient": 0,
-                "OutLimitMin": 0,
-                "OutLimitMax": 100,
-                "ILimitMin": 12,
-                "ILimitMax": 100,
-                "FFGainCoefficient": 0,
-                "FFOffCoefficient": 0,
-                "NegativeHysteresis": 0.0,
-                "PositiveHysteresis": 0,
-                "SlewNeg": 0,
-                "SlewPos": 0,
-                "Type": "Pid",
-                "Zones": [
-                    "Zone 1"
+                "Address": "0x49",
+                "Bus": "48",
+                "Name": "30-OCP A Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x4a",
+                "Bus": "48",
+                "Name": "31-OCP B Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x48",
+                "Bus": "48",
+                "Name": "32-P/S 1 Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
                 ]
             }
         ],
-        "Name": "HPE ProLiant DL340 Gen12",
+        "Name": "chassis",
         "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0285'})",
             "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0285'})"
         ],
         "Type": "Chassis"
     },
@@ -442,9 +383,9 @@
         ],
         "Name": "PSU0_PowerSupply",
         "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0285'})",
             "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0285'})"
         ],
         "Type": "PowerSupply",
         "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
@@ -475,7 +416,7 @@
                         "/xyz/openbmc_project/inventory/system/chassis/chassis"
                     ]
                 ],
-                "Bus": 68,
+                "Bus": 63,
                 "Labels": [
                     "iin",
                     "iout1",
@@ -521,9 +462,9 @@
         ],
         "Name": "PSU1_PowerSupply",
         "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0285'})",
             "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0285'})"
         ],
         "Type": "PowerSupply",
         "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
@@ -533,164 +474,6 @@
         "xyz.openbmc_project.Inventory.Item": {
             "Present": true,
             "PrettyName": "Power Supply 2"
-        },
-        "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
-    },
-    {
-        "Associations": [
-            [
-                "powering",
-                "powered_by",
-                "/xyz/openbmc_project/inventory/system/chassis/chassis"
-            ]
-        ],
-        "Exposes": [
-            {
-                "Address": "0x5c",
-                "Associations": [
-                    [
-                        "chassis",
-                        "all_sensors",
-                        "/xyz/openbmc_project/inventory/system/chassis/chassis"
-                    ]
-                ],
-                "Bus": 51,
-                "Labels": [
-                    "iin",
-                    "iout1",
-                    "vin",
-                    "vout1",
-                    "pin"
-                ],
-                "Name": "PSU2",
-                "PollRate": 5.0,
-                "PowerState": "Always",
-                "Type": "CRPS185",
-                "Thresholds": [
-                    {
-                        "Direction": "less than",
-                        "Label": "vin",
-                        "Name": "lower critical",
-                        "Severity": 1,
-                        "Value": 90
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Label": "vin",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 264
-                    },
-                    {
-                        "Direction": "less than",
-                        "Label": "vout1",
-                        "Name": "lower critical",
-                        "Severity": 1,
-                        "Value": 11.4
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Label": "vout1",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 12.6
-                    }
-                ]
-            }
-        ],
-        "Name": "PSU2_PowerSupply",
-        "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
-            "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
-        ],
-        "Type": "PowerSupply",
-        "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
-            "FieldReplaceable": true,
-            "HotPluggable": true
-        },
-        "xyz.openbmc_project.Inventory.Item": {
-            "Present": true,
-            "PrettyName": "Power Supply 3"
-        },
-        "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
-    },
-    {
-        "Associations": [
-            [
-                "powering",
-                "powered_by",
-                "/xyz/openbmc_project/inventory/system/chassis/chassis"
-            ]
-        ],
-        "Exposes": [
-            {
-                "Address": "0x5c",
-                "Associations": [
-                    [
-                        "chassis",
-                        "all_sensors",
-                        "/xyz/openbmc_project/inventory/system/chassis/chassis"
-                    ]
-                ],
-                "Bus": 52,
-                "Labels": [
-                    "iin",
-                    "iout1",
-                    "vin",
-                    "vout1",
-                    "pin"
-                ],
-                "Name": "PSU3",
-                "PollRate": 5.0,
-                "PowerState": "Always",
-                "Type": "CRPS185",
-                "Thresholds": [
-                    {
-                        "Direction": "less than",
-                        "Label": "vin",
-                        "Name": "lower critical",
-                        "Severity": 1,
-                        "Value": 90
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Label": "vin",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 264
-                    },
-                    {
-                        "Direction": "less than",
-                        "Label": "vout1",
-                        "Name": "lower critical",
-                        "Severity": 1,
-                        "Value": 11.4
-                    },
-                    {
-                        "Direction": "greater than",
-                        "Label": "vout1",
-                        "Name": "upper critical",
-                        "Severity": 1,
-                        "Value": 12.6
-                    }
-                ]
-            }
-        ],
-        "Name": "PSU3_PowerSupply",
-        "Probe": [
-            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
-            "OR",
-            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0273'})"
-        ],
-        "Type": "PowerSupply",
-        "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
-            "FieldReplaceable": true,
-            "HotPluggable": true
-        },
-        "xyz.openbmc_project.Inventory.Item": {
-            "Present": true,
-            "PrettyName": "Power Supply 4"
         },
         "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
     }
