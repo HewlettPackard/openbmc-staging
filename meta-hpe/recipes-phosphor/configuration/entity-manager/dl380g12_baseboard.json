@@ -1,0 +1,597 @@
+[
+    {
+        "Exposes": [
+            {
+                "Connector": {
+                    "Name": "Fan Connector 1",
+                    "Pwm": 0,
+                    "Tachs": []
+                },
+                "Index": 0,
+                "Name": "Fan 1",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN1_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 2",
+                    "Pwm": 1,
+                    "Tachs": []
+                },
+                "Index": 1,
+                "Name": "Fan 2",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN2_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 3",
+                    "Pwm": 2,
+                    "Tachs": []
+                },
+                "Index": 2,
+                "Name": "Fan 3",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN3_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 4",
+                    "Pwm": 3,
+                    "Tachs": []
+                },
+                "Index": 3,
+                "Name": "Fan 4",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN4_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 5",
+                    "Pwm": 4,
+                    "Tachs": []
+                },
+                "Index": 4,
+                "Name": "Fan 5",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN5_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 6",
+                    "Pwm": 5,
+                    "Tachs": []
+                },
+                "Index": 5,
+                "Name": "Fan 6",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN6_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 7",
+                    "Pwm": 6,
+                    "Tachs": []
+                },
+                "Index": 6,
+                "Name": "Fan 7",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN7_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 8",
+                    "Pwm": 7,
+                    "Tachs": []
+                },
+                "Index": 7,
+                "Name": "Fan 8",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN8_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 9",
+                    "Pwm": 8,
+                    "Tachs": []
+                },
+                "Index": 8,
+                "Name": "Fan 9",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN9_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 10",
+                    "Pwm": 9,
+                    "Tachs": []
+                },
+                "Index": 9,
+                "Name": "Fan 10",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN10_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 11",
+                    "Pwm": 10,
+                    "Tachs": []
+                },
+                "Index": 10,
+                "Name": "Fan 11",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN11_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Class": "fan",
+                "FFGainCoefficient": 1,
+                "FFOffCoefficient": 0,
+                "ICoefficient": 0,
+                "ILimitMax": 0,
+                "ILimitMin": 0,
+                "Inputs": [
+                    "Fan 1",
+                    "Fan 2",
+                    "Fan 3",
+                    "Fan 4",
+                    "Fan 5",
+                    "Fan 6",
+                    "Fan 7",
+                    "Fan 8",
+                    "Fan 9",
+                    "Fan 10",
+                    "Fan 11"
+                ],
+                "Name": "Fan 1-11",
+                "NegativeHysteresis": 0,
+                "OutLimitMax": 100,
+                "OutLimitMin": 30,
+                "Outputs": [
+                    "Pwm 0",
+                    "Pwm 1",
+                    "Pwm 2",
+                    "Pwm 3",
+                    "Pwm 4",
+                    "Pwm 5",
+                    "Pwm 6",
+                    "Pwm 7",
+                    "Pwm 8",
+                    "Pwm 9",
+                    "Pwm 10"
+                ],
+                "PCoefficient": 0,
+                "PositiveHysteresis": 0,
+                "SlewNeg": 0,
+                "SlewPos": 0,
+                "Type": "Pid",
+                "Zones": [
+                    "Zone 1"
+                ]
+            },
+            {
+                "FailSafePercent": 100,
+                "MinThermalOutput": 10,
+                "Name": "Zone 1",
+                "Type": "Pid.Zone"
+            },
+            {
+                "Address": "0x4c",
+                "Bus": "49",
+                "Name": "01-Inlet Ambient",
+                "Type": "TMP411",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 47
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 42
+                    }
+                ]
+            },
+            {
+                "Address": "0x48",
+                "Bus": "50",
+                "Name": "70-P/S 2 Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x49",
+                "Bus": "50",
+                "Name": "71-OCP 1 Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x4a",
+                "Bus": "50",
+                "Name": "72-OCP 2 Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x4b",
+                "Bus": "50",
+                "Name": "73-Sys Exhaust 1",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x4c",
+                "Bus": "50",
+                "Name": "74-Sys Exhaust 2",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x30",
+                "Bus": 0,
+                "CpuID": 1,
+                "DtsCritOffset": -2,
+                "Name": "CPU 1",
+                "Type": "XeonCPU",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Label": "DIMM",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 99
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "DIMM",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 89
+                    }
+                ],
+                "PresenceGpio": [
+                    {
+                        "Name": "PROC1_INST",
+                        "Polarity": "High"
+                    }
+                ]
+            },
+            {
+                "Address": "0x31",
+                "Bus": 0,
+                "CpuID": 2,
+                "DtsCritOffset": -2,
+                "Name": "CPU 2",
+                "Type": "XeonCPU",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Label": "DIMM",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 99
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "DIMM",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 89
+                    }
+                ],
+                "PresenceGpio": [
+                    {
+                        "Name": "PROC2_INST",
+                        "Polarity": "High"
+                    }
+                ]
+            },
+            {
+                "Class": "temp",
+                "Name": "DIMMs FanAlg",
+                "Inputs": [
+                    "CPU\\d+_DIMM_[a-zA-Z]\\d+"
+                ],
+                "Outputs": [],
+                "MissingIsAcceptable": [
+                    "CPU\\d+_DIMM_[a-zA-Z]\\d+"
+                ],
+                "SetPoint": 76,
+                "PCoefficient": -5,
+                "ICoefficient": -0.5,
+                "DCoefficient": 0,
+                "OutLimitMin": 0,
+                "OutLimitMax": 100,
+                "ILimitMin": 12,
+                "ILimitMax": 100,
+                "FFGainCoefficient": 0,
+                "FFOffCoefficient": 0,
+                "NegativeHysteresis": 0.0,
+                "PositiveHysteresis": 0,
+                "SlewNeg": 0,
+                "SlewPos": 0,
+                "Type": "Pid",
+                "Zones": [
+                    "Zone 1"
+                ]
+            }
+        ],
+        "Name": "chassis",
+        "Probe": [
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0266'})",
+            "OR",
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0266'})"
+        ],
+        "Type": "Chassis"
+    },
+    {
+        "Associations": [
+            [
+                "powering",
+                "powered_by",
+                "/xyz/openbmc_project/inventory/system/chassis/chassis"
+            ]
+        ],
+        "Exposes": [
+            {
+                "Address": "0x58",
+                "Associations": [
+                    [
+                        "chassis",
+                        "all_sensors",
+                        "/xyz/openbmc_project/inventory/system/chassis/chassis"
+                    ]
+                ],
+                "Bus": 67,
+                "Labels": [
+                    "iin",
+                    "iout1",
+                    "vin",
+                    "vout1",
+                    "pin"
+                ],
+                "Name": "PSU0",
+                "PollRate": 5.0,
+                "PowerState": "Always",
+                "Type": "CRPS185",
+                "Thresholds": [
+                    {
+                        "Direction": "less than",
+                        "Label": "vin",
+                        "Name": "lower critical",
+                        "Severity": 1,
+                        "Value": 90
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "vin",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 264
+                    },
+                    {
+                        "Direction": "less than",
+                        "Label": "vout1",
+                        "Name": "lower critical",
+                        "Severity": 1,
+                        "Value": 11.4
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "vout1",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 12.6
+                    }
+                ]
+            }
+        ],
+        "Name": "PSU0_PowerSupply",
+        "Probe": [
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0266'})",
+            "OR",
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0266'})"
+        ],
+        "Type": "PowerSupply",
+        "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+            "FieldReplaceable": true,
+            "HotPluggable": true
+        },
+        "xyz.openbmc_project.Inventory.Item": {
+            "Present": true,
+            "PrettyName": "Power Supply 1"
+        },
+        "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
+    },
+    {
+        "Associations": [
+            [
+                "powering",
+                "powered_by",
+                "/xyz/openbmc_project/inventory/system/chassis/chassis"
+            ]
+        ],
+        "Exposes": [
+            {
+                "Address": "0x59",
+                "Associations": [
+                    [
+                        "chassis",
+                        "all_sensors",
+                        "/xyz/openbmc_project/inventory/system/chassis/chassis"
+                    ]
+                ],
+                "Bus": 68,
+                "Labels": [
+                    "iin",
+                    "iout1",
+                    "vin",
+                    "vout1",
+                    "pin"
+                ],
+                "Name": "PSU1",
+                "PollRate": 5.0,
+                "PowerState": "Always",
+                "Type": "CRPS185",
+                "Thresholds": [
+                    {
+                        "Direction": "less than",
+                        "Label": "vin",
+                        "Name": "lower critical",
+                        "Severity": 1,
+                        "Value": 90
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "vin",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 264
+                    },
+                    {
+                        "Direction": "less than",
+                        "Label": "vout1",
+                        "Name": "lower critical",
+                        "Severity": 1,
+                        "Value": 11.4
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "vout1",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 12.6
+                    }
+                ]
+            }
+        ],
+        "Name": "PSU1_PowerSupply",
+        "Probe": [
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0266'})",
+            "OR",
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0266'})"
+        ],
+        "Type": "PowerSupply",
+        "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+            "FieldReplaceable": true,
+            "HotPluggable": true
+        },
+        "xyz.openbmc_project.Inventory.Item": {
+            "Present": true,
+            "PrettyName": "Power Supply 2"
+        },
+        "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
+    }
+]
