@@ -370,7 +370,7 @@
                 ]
             }
         ],
-        "Name": "HPE ProLiant DL340 Gen12",
+        "Name": "chassis",
         "Probe": [
             "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0273'})",
             "OR",
