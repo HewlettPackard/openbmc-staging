@@ -311,20 +311,21 @@
                 ]
             }
         ],
-        "Name": "chassis",
+        "Name": "HPE ProLiant DL345 Gen12",
         "Probe": [
             "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0285'})",
             "OR",
             "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0285'})"
         ],
-        "Type": "Chassis"
+        "Type": "Chassis",
+        "xyz.openbmc_project.Inventory.Item.System": {}
     },
     {
         "Associations": [
             [
                 "powering",
                 "powered_by",
-                "/xyz/openbmc_project/inventory/system/chassis/chassis"
+                "/xyz/openbmc_project/inventory/system/chassis/HPE_ProLiant_DL345_Gen12"
             ]
         ],
         "Exposes": [
@@ -334,7 +335,7 @@
                     [
                         "chassis",
                         "all_sensors",
-                        "/xyz/openbmc_project/inventory/system/chassis/chassis"
+                        "/xyz/openbmc_project/inventory/system/chassis/HPE_ProLiant_DL345_Gen12"
                     ]
                 ],
                 "Bus": 67,
@@ -403,7 +404,7 @@
             [
                 "powering",
                 "powered_by",
-                "/xyz/openbmc_project/inventory/system/chassis/chassis"
+                "/xyz/openbmc_project/inventory/system/chassis/HPE_ProLiant_DL345_Gen12"
             ]
         ],
         "Exposes": [
@@ -413,7 +414,7 @@
                     [
                         "chassis",
                         "all_sensors",
-                        "/xyz/openbmc_project/inventory/system/chassis/chassis"
+                        "/xyz/openbmc_project/inventory/system/chassis/HPE_ProLiant_DL345_Gen12"
                     ]
                 ],
                 "Bus": 63,
