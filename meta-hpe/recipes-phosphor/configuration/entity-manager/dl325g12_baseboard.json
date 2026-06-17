@@ -1,0 +1,498 @@
+[
+    {
+        "Exposes": [
+            {
+                "Connector": {
+                    "Name": "Fan Connector 1",
+                    "Pwm": 0,
+                    "Tachs": []
+                },
+                "Index": 0,
+                "Name": "Fan 1",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN1_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 2",
+                    "Pwm": 1,
+                    "Tachs": []
+                },
+                "Index": 1,
+                "Name": "Fan 2",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN2_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 3",
+                    "Pwm": 2,
+                    "Tachs": []
+                },
+                "Index": 2,
+                "Name": "Fan 3",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN3_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 4",
+                    "Pwm": 3,
+                    "Tachs": []
+                },
+                "Index": 3,
+                "Name": "Fan 4",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN4_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 5",
+                    "Pwm": 4,
+                    "Tachs": []
+                },
+                "Index": 4,
+                "Name": "Fan 5",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN5_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 6",
+                    "Pwm": 5,
+                    "Tachs": []
+                },
+                "Index": 5,
+                "Name": "Fan 6",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN6_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 7",
+                    "Pwm": 6,
+                    "Tachs": []
+                },
+                "Index": 6,
+                "Name": "Fan 7",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN7_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Connector": {
+                    "Name": "Fan Connector 8",
+                    "Pwm": 7,
+                    "Tachs": []
+                },
+                "Index": 7,
+                "Name": "Fan 8",
+                "Presence": {
+                    "MonitorType": "Polling",
+                    "PinName": "FAN8_INST",
+                    "Polarity": "High"
+                },
+                "Type": "HPEFan"
+            },
+            {
+                "Class": "fan",
+                "FFGainCoefficient": 1,
+                "FFOffCoefficient": 0,
+                "ICoefficient": 0,
+                "ILimitMax": 0,
+                "ILimitMin": 0,
+                "Inputs": [
+                    "Fan 1",
+                    "Fan 2",
+                    "Fan 3",
+                    "Fan 4",
+                    "Fan 5",
+                    "Fan 6",
+                    "Fan 7",
+                    "Fan 8"
+                ],
+                "Name": "Fan 1-8",
+                "NegativeHysteresis": 0,
+                "OutLimitMax": 100,
+                "OutLimitMin": 30,
+                "Outputs": [
+                    "Pwm 0",
+                    "Pwm 1",
+                    "Pwm 2",
+                    "Pwm 3",
+                    "Pwm 4",
+                    "Pwm 5",
+                    "Pwm 6",
+                    "Pwm 7"
+                ],
+                "PCoefficient": 0,
+                "PositiveHysteresis": 0,
+                "SlewNeg": 0,
+                "SlewPos": 0,
+                "Type": "Pid",
+                "Zones": [
+                    "Zone 1"
+                ]
+            },
+            {
+                "FailSafePercent": 100,
+                "MinThermalOutput": 10,
+                "Name": "Zone 1",
+                "Type": "Pid.Zone"
+            },
+            {
+                "Address": "0x4c",
+                "Bus": "47",
+                "Name": "01-Inlet Ambient",
+                "Type": "TMP411",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 46
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 42
+                    }
+                ]
+            },
+            {
+                "Address": "0x4b",
+                "Bus": "2",
+                "Name": "12-BMC Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 0
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 0
+                    }
+                ]
+            },
+            {
+                "Address": "0x4b",
+                "Bus": "31",
+                "Name": "26-PCI 1 Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x49",
+                "Bus": "33",
+                "Name": "27-PCI 2 Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x4b",
+                "Bus": "48",
+                "Name": "29-Sys Exhaust 1",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x49",
+                "Bus": "48",
+                "Name": "30-OCP A Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x4a",
+                "Bus": "48",
+                "Name": "31-OCP B Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            },
+            {
+                "Address": "0x48",
+                "Bus": "48",
+                "Name": "32-P/S 1 Zone",
+                "Type": "TMP1075",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85
+                    }
+                ]
+            }
+        ],
+        "Name": "HPE ProLiant DL325 Gen12",
+        "Probe": [
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0284'})",
+            "OR",
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0284'})"
+        ],
+        "Type": "Chassis",
+        "xyz.openbmc_project.Inventory.Item.System": {}
+    },
+    {
+        "Associations": [
+            [
+                "powering",
+                "powered_by",
+                "/xyz/openbmc_project/inventory/system/chassis/HPE_ProLiant_DL325_Gen12"
+            ]
+        ],
+        "Exposes": [
+            {
+                "Address": "0x5c",
+                "Associations": [
+                    [
+                        "chassis",
+                        "all_sensors",
+                        "/xyz/openbmc_project/inventory/system/chassis/HPE_ProLiant_DL325_Gen12"
+                    ]
+                ],
+                "Bus": 67,
+                "Labels": [
+                    "iin",
+                    "iout1",
+                    "vin",
+                    "vout1",
+                    "pin"
+                ],
+                "Name": "PSU0",
+                "PollRate": 5.0,
+                "PowerState": "Always",
+                "Type": "CRPS185",
+                "Thresholds": [
+                    {
+                        "Direction": "less than",
+                        "Label": "vin",
+                        "Name": "lower critical",
+                        "Severity": 1,
+                        "Value": 90
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "vin",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 264
+                    },
+                    {
+                        "Direction": "less than",
+                        "Label": "vout1",
+                        "Name": "lower critical",
+                        "Severity": 1,
+                        "Value": 11.4
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "vout1",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 12.6
+                    }
+                ]
+            }
+        ],
+        "Name": "PSU0_PowerSupply",
+        "Probe": [
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0284'})",
+            "OR",
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0284'})"
+        ],
+        "Type": "PowerSupply",
+        "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+            "FieldReplaceable": true,
+            "HotPluggable": true
+        },
+        "xyz.openbmc_project.Inventory.Item": {
+            "Present": true,
+            "PrettyName": "Power Supply 1"
+        },
+        "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
+    },
+    {
+        "Associations": [
+            [
+                "powering",
+                "powered_by",
+                "/xyz/openbmc_project/inventory/system/chassis/HPE_ProLiant_DL325_Gen12"
+            ]
+        ],
+        "Exposes": [
+            {
+                "Address": "0x5c",
+                "Associations": [
+                    [
+                        "chassis",
+                        "all_sensors",
+                        "/xyz/openbmc_project/inventory/system/chassis/HPE_ProLiant_DL325_Gen12"
+                    ]
+                ],
+                "Bus": 63,
+                "Labels": [
+                    "iin",
+                    "iout1",
+                    "vin",
+                    "vout1",
+                    "pin"
+                ],
+                "Name": "PSU1",
+                "PollRate": 5.0,
+                "PowerState": "Always",
+                "Type": "CRPS185",
+                "Thresholds": [
+                    {
+                        "Direction": "less than",
+                        "Label": "vin",
+                        "Name": "lower critical",
+                        "Severity": 1,
+                        "Value": 90
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "vin",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 264
+                    },
+                    {
+                        "Direction": "less than",
+                        "Label": "vout1",
+                        "Name": "lower critical",
+                        "Severity": 1,
+                        "Value": 11.4
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Label": "vout1",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 12.6
+                    }
+                ]
+            }
+        ],
+        "Name": "PSU1_PowerSupply",
+        "Probe": [
+            "xyz.openbmc_project.Inventory.Decorator.Asset({'Model': 'hpe,0x0284'})",
+            "OR",
+            "xyz.openbmc_project.FruDevice({'SERVER_ID': '0x0284'})"
+        ],
+        "Type": "PowerSupply",
+        "xyz.openbmc_project.Inventory.Decorator.Replaceable": {
+            "FieldReplaceable": true,
+            "HotPluggable": true
+        },
+        "xyz.openbmc_project.Inventory.Item": {
+            "Present": true,
+            "PrettyName": "Power Supply 2"
+        },
+        "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
+    }
+]
