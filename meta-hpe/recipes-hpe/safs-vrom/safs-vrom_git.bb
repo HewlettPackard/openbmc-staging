@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 BRANCH = "main"
-SRCREV = "39a4fa037cbb0c95a91aff6858ea5e740722c506"
+SRCREV = "5c8d04af2eb840d2eaf372bc665933298c9a5563"
 SRC_URI = "git://github.com/HewlettPackard/safs-vrom-service.git;protocol=https;branch=${BRANCH}"
 
 
