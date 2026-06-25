@@ -1,0 +1,26 @@
+From 6af3e4f0f0a995a5d7a3a4a53187b12345670001 Mon Sep 17 00:00:00 2001
+From: automated <automated@example.com>
+Date: Thu, 25 Jun 2026 00:00:00 +0000
+Subject: [PATCH] Fix sdbusplus API compatibility
+
+Update deprecated/removed sdbusplus type names to current aliases.
+
+Upstream-Status: Inappropriate [oe-specific compatibility]
+---
+ src/host_state_monitor.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/host_state_monitor.cpp b/src/host_state_monitor.cpp
+index 39f4db7..f76ecf0 100644
+--- a/src/host_state_monitor.cpp
++++ b/src/host_state_monitor.cpp
+@@ -21,2 +21,2 @@ private:
+-    sdbusplus::bus::bus bus;
+-    std::unique_ptr<sdbusplus::bus::match::match> match;
++    sdbusplus::bus_t bus;
++    std::unique_ptr<sdbusplus::bus::match_t> match;
+@@ -47 +47 @@ int initialize() {
+-            match = std::make_unique<sdbusplus::bus::match::match>(
++            match = std::make_unique<sdbusplus::bus::match_t>(
+-- 
+2.34.1

@@ -16,6 +16,7 @@ SRC_URI += "file://0001-fix-update-io_service-to-io_context.patch"
 SRC_URI += "file://0002-fix-update-io.post-to-boost-asio-post.patch"
 SRC_URI += "file://0003-don-t-build-or-install-the-gxp-fan-sensors-daemon.patch"
 SRC_URI += "file://0004-remove-sdbusplus-project-dependency.patch"
+SRC_URI += "file://0005-fix-sdbusplus-api-compat.patch"
 
 PV = "1.0+git"
 

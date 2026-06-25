@@ -1,4 +1,4 @@
-From e05ac448fd640d914ebe89b268eecac59046b806 Mon Sep 17 00:00:00 2001
+From 61fb573b671bed382edc15fab7c529c9a2437a1c Mon Sep 17 00:00:00 2001
 From: Nick Hawkins <nick.hawkins@hpe.com>
 Date: Mon, 22 Apr 2024 09:34:27 -0500
 Subject: [PATCH] Fix x86-power-control issues
@@ -16,7 +16,7 @@ Signed-off-by: Nick Hawkins <nick.hawkins@hpe.com>
  2 files changed, 21 insertions(+), 3 deletions(-)
 
 diff --git a/config/power-config-host0.json b/config/power-config-host0.json
-index 74e96c9..0b7eb8b 100644
+index 88b506e..39766c2 100644
 --- a/config/power-config-host0.json
 +++ b/config/power-config-host0.json
 @@ -40,7 +40,7 @@
@@ -38,22 +38,22 @@ index 74e96c9..0b7eb8b 100644
          {
              "Name": "SioOnControl",
 diff --git a/src/power_control.cpp b/src/power_control.cpp
-index bba7088..0b4995e 100644
+index b58cd59..11682c9 100644
 --- a/src/power_control.cpp
 +++ b/src/power_control.cpp
-@@ -197,6 +197,10 @@ static gpiod::line postCompleteLine;
- static boost::asio::posix::stream_descriptor postCompleteEvent(io);
+@@ -208,6 +208,10 @@ static gpiod::line PlatformResetLine;
+ static boost::asio::posix::stream_descriptor platformResetEvent(io);
  static gpiod::line nmiOutLine;
  static gpiod::line slotPowerLine;
 +static gpiod::line fwValidatePassLine;
 +std::string fwValidatePasslineName = "FW_VALIDATION_PASSED";
 +static gpiod::line pS5tS5SSLine;
 +std::string pS5tS5SSLineName = "PS5_TS5_SS_CMP";
-
+ 
  static constexpr uint8_t beepPowerFail = 8;
-
-@@ -1177,7 +1181,15 @@ static bool requestGPIOEvents(
-
+ 
+@@ -1141,7 +1145,15 @@ static bool requestGPIOEvents(
+ 
      try
      {
 -        gpioLine.request({appName, gpiod::line_request::EVENT_BOTH_EDGES, {}});
@@ -69,7 +69,7 @@ index bba7088..0b4995e 100644
      }
      catch (const std::exception& e)
      {
-@@ -1831,10 +1843,16 @@ static void powerStateOff(const Event event)
+@@ -1801,10 +1813,16 @@ static void powerStateOff(const Event event)
              setPowerState(PowerState::waitForPowerOK);
              break;
          case Event::sioPowerGoodAssert:
