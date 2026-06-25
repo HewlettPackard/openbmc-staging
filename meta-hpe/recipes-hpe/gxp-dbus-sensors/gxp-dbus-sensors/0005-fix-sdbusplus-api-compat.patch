@@ -1,0 +1,99 @@
+From 9a9bcf8f84c2d4e8a2b522d13bcbf4a2d8350001 Mon Sep 17 00:00:00 2001
+From: automated <automated@example.com>
+Date: Thu, 25 Jun 2026 00:00:00 +0000
+Subject: [PATCH] Fix sdbusplus API compatibility
+
+Update deprecated/removed sdbusplus type names to current aliases.
+
+Upstream-Status: Inappropriate [oe-specific compatibility]
+---
+ include/Utils.hpp     | 2 +-
+ src/GxpTempSensor.cpp | 6 +++---
+ src/Utils.cpp         | 8 ++++----
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/include/Utils.hpp b/include/Utils.hpp
+index 0123b33..dcc8fdf 100644
+--- a/include/Utils.hpp
++++ b/include/Utils.hpp
+@@ -51,7 +51,7 @@ using SensorBaseConfigMap =
+ using SensorBaseConfiguration = std::pair<std::string, SensorBaseConfigMap>;
+ using SensorData = boost::container::flat_map<std::string, SensorBaseConfigMap>;
+ using ManagedObjectType =
+-    boost::container::flat_map<sdbusplus::message::object_path, SensorData>;
++    boost::container::flat_map<sdbusplus::object_path, SensorData>;
+ 
+ using GetSubTreeType = std::vector<
+     std::pair<std::string,
+diff --git a/src/GxpTempSensor.cpp b/src/GxpTempSensor.cpp
+index 90d09cd..e7a5293 100644
+--- a/src/GxpTempSensor.cpp
++++ b/src/GxpTempSensor.cpp
+@@ -225,7 +225,7 @@ void createSensor(
+                 const char* sensorType = nullptr;
+                 const SensorBaseConfiguration* baseConfiguration = nullptr;
+                 const SensorBaseConfigMap* baseConfigMap = nullptr;
+-                for (const std::pair<sdbusplus::message::object_path, SensorData>& sensorConfiguration : sensorConfigurations)
++                for (const std::pair<sdbusplus::object_path, SensorData>& sensorConfiguration : sensorConfigurations)
+                 {
+                     sensorData = &(sensorConfiguration.second);
+                     for (const char* type : sensorTypes)
+@@ -302,7 +302,7 @@ int main()
+     sdbusplus::asio::object_server objectServer(dbusConnection);
+     objectServer.add_manager("/xyz/openbmc_project/sensors");
+     std::shared_ptr<GxpTempSensor> sensor = nullptr;
+-    std::vector<std::unique_ptr<sdbusplus::bus::match::match>> matches;
++    std::vector<std::unique_ptr<sdbusplus::bus::match_t>> matches;
+ 
+     boost::asio::post(io, [&]()
+     {
+@@ -347,8 +347,8 @@ int main()
+ 
+     for (const char* type : sensorTypes)
+     {
+-        auto match = std::make_unique<sdbusplus::bus::match::match>(
+-            static_cast<sdbusplus::bus::bus&>(*dbusConnection),
++        auto match = std::make_unique<sdbusplus::bus::match_t>(
++            static_cast<sdbusplus::bus_t&>(*dbusConnection),
+             "type='signal',member='PropertiesChanged',path_namespace='" +
+             std::string(inventoryPath) + "',arg0namespace='" + type + "'",
+             eventHandler);
+diff --git a/src/Utils.cpp b/src/Utils.cpp
+index f11a520..81c4ea7 100644
+--- a/src/Utils.cpp
++++ b/src/Utils.cpp
+@@ -37,8 +37,8 @@ namespace fs = std::filesystem;
+ static bool powerStatusOn = false;
+ static bool biosHasPost = false;
+ 
+-static std::unique_ptr<sdbusplus::bus::match::match> powerMatch = nullptr;
+-static std::unique_ptr<sdbusplus::bus::match::match> postMatch = nullptr;
++static std::unique_ptr<sdbusplus::bus::match_t> powerMatch = nullptr;
++static std::unique_ptr<sdbusplus::bus::match_t> postMatch = nullptr;
+ 
+ bool getSensorConfiguration(
+     const std::string& type,
+@@ -147,8 +147,8 @@ void setupPowerMatch(const std::shared_ptr<sdbusplus::asio::connection>& conn)
+         return;
+     }
+ 
+-    powerMatch = std::make_unique<sdbusplus::bus::match::match>(
+-        static_cast<sdbusplus::bus::bus&>(*conn),
++    powerMatch = std::make_unique<sdbusplus::bus::match_t>(
++        static_cast<sdbusplus::bus_t&>(*conn),
+         "type='signal',interface='" + std::string(properties::interface) +
+             "',path='" + std::string(power::path) + "',arg0='" +
+             std::string(power::interface) + "'",
+@@ -185,8 +185,8 @@ void setupPowerMatch(const std::shared_ptr<sdbusplus::asio::connection>& conn)
+             }
+         });
+ 
+-    postMatch = std::make_unique<sdbusplus::bus::match::match>(
+-        static_cast<sdbusplus::bus::bus&>(*conn),
++    postMatch = std::make_unique<sdbusplus::bus::match_t>(
++        static_cast<sdbusplus::bus_t&>(*conn),
+         "type='signal',interface='" + std::string(properties::interface) +
+             "',path='" + std::string(post::path) + "',arg0='" +
+             std::string(post::interface) + "'",
+-- 
+2.34.1

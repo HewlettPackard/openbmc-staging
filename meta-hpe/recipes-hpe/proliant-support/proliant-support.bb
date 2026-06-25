@@ -3,6 +3,7 @@ DESCRIPTION = "Recipes to support HPE ProLiant server hardware and firmware"
 
 BRANCH = "main"
 SRC_URI = "git://github.com/HewlettPackard/openbmc-proliant-support.git;branch=${BRANCH};protocol=https"
+SRC_URI += "file://0001-fix-sdbusplus-api-compat.patch"
 SRCREV = "be41cc5df6f7dfe5a14fbf375476f81b0e42a116"
 
 PV = "0.1+git${SRCPV}"

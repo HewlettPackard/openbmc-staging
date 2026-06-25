@@ -1,4 +1,4 @@
-From 2158303e2087ef5824b9cd770175772eaabbf960 Mon Sep 17 00:00:00 2001
+From 778f3ef34908e7fed1745e0970299188a7081e8e Mon Sep 17 00:00:00 2001
 From: Chris Sides <Christopher.Sides@hpe.com>
 Date: Mon, 11 Aug 2025 16:10:55 -0500
 Subject: [PATCH] Entity-Manager support for cooling/cooled_by associations
@@ -18,13 +18,13 @@ Upstream-Status: Pending
  1 file changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/src/entity_manager/topology.cpp b/src/entity_manager/topology.cpp
-index bac865492..c51cbc143 100644
+index cc87ba5..3194026 100644
 --- a/src/entity_manager/topology.cpp
 +++ b/src/entity_manager/topology.cpp
-@@ -15,6 +15,11 @@ const AssocName assocPowering =
+@@ -17,6 +17,11 @@ const AssocName assocPowering =
                {"Board", "Chassis", "PowerSupply"});
  const AssocName assocPoweredBy = assocPowering.getReverse();
-
+ 
 +const AssocName assocCooling =
 +    AssocName("cooling", "cooled_by", {"Chassis", "Board", "Fan"},
 +              {"Board", "Chassis", "Fan"});
@@ -32,17 +32,17 @@ index bac865492..c51cbc143 100644
 +
  const AssocName assocProbing = AssocName("probing", "probed_by", {}, {});
  const AssocName assocProbedBy = assocProbing.getReverse();
-
-@@ -23,6 +28,8 @@ const std::vector<AssocName> supportedAssocs = {
+ 
+@@ -25,6 +30,8 @@ const std::vector<AssocName> supportedAssocs = {
      assocContainedBy,
      assocPowering,
      assocPoweredBy,
 +    assocCooling,
 +    assocCooledBy,
  };
-
+ 
  AssocName::AssocName(const std::string& name, const std::string& reverse,
-@@ -84,6 +91,9 @@ void Topology::addBoard(const std::string& path, const std::string& boardType,
+@@ -87,6 +94,9 @@ void Topology::addBoard(const sdbusplus::object_path& path,
          // in the
          // powered_by association
          addPort(exposesType, path, assocPoweredBy);
@@ -52,7 +52,7 @@ index bac865492..c51cbc143 100644
      }
      else
      {
-@@ -141,6 +151,12 @@ void Topology::addDownstreamPort(const Path& path,
+@@ -144,6 +154,12 @@ void Topology::addDownstreamPort(const sdbusplus::object_path& path,
      {
          addPort(connectsTo, path, assocPowering);
      }
@@ -63,10 +63,10 @@ index bac865492..c51cbc143 100644
 +        addPort(connectsTo, path, assocCooling);
 +    }
  }
-
- void Topology::addPort(const PortType& port, const Path& path,
-@@ -235,7 +251,8 @@ void Topology::fillAssocForPortId(
-
+ 
+ void Topology::addPort(const PortType& port, const sdbusplus::object_path& path,
+@@ -238,7 +254,8 @@ void Topology::fillAssocForPortId(
+ 
      // quirk: legacy code did not associate from both sides
      // TODO(alexander): revisit this
 -    if (assocName == assocContaining || assocName == assocPoweredBy)
@@ -75,5 +75,3 @@ index bac865492..c51cbc143 100644
      {
          return;
      }
---
-2.53.0
