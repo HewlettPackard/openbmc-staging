@@ -594,5 +594,31 @@
             "PrettyName": "Power Supply 2"
         },
         "xyz.openbmc_project.Inventory.Item.PowerSupply": {}
+    },
+    {
+        "Exposes": [
+            {
+                "Name": "BMC SoC Temp",
+                "Thresholds": [
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 105
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 95
+                    }
+                ],
+                "Type": "BmcTempSensor"
+            }
+        ],
+        "Name": "BMC_SoC",
+        "Probe": "TRUE",
+        "Type": "Board",
+        "xyz.openbmc_project.Inventory.Item.Board": {}
     }
 ]

@@ -84,7 +84,6 @@ RDEPENDS:${PN}-system:append = " \
     openssl-bin \
     openssl-engines \
     proliant-support \
-    gxp-dbus-sensors \
     common-image \
     vnic \
     host-boot-enable \
