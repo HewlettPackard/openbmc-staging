@@ -1,0 +1,596 @@
+From 85bed4ef670df25c19f9a5493aabc6f53e2f3826 Mon Sep 17 00:00:00 2001
+From: danclewis <dan.c.lewis@hpe.com>
+Date: Wed, 15 Jul 2026 14:20:52 -0700
+Subject: [PATCH] Add BmcTempSensor daemon for BMC SoC core temperature
+
+The BMC SoC core temperature is exposed via the kernel coretemp driver
+as a platform hwmon device (c0000130.coretemp) rather than an I2C device.
+HwmonTempSensor cannot handle it because it matches devices by I2C
+bus/address which platform devices do not have.
+
+Add a dedicated hpe-temp sensor daemon that:
+- Scans /sys/class/hwmon for temp*_input files
+- Identifies the BMC SoC coretemp device by its sysfs symlink suffix
+- Matches it against a BmcTempSensor Entity Manager configuration
+- Publishes the reading to D-Bus as a standard Sensor.Value object
+- Supports Warning and Critical thresholds from Entity Manager config
+
+This allows gxp-dbus-sensors to be removed from the build entirely.
+
+Upstream-Status: Pending
+---
+ meson.options                                 |   6 +
+ service_files/meson.build                     |   1 +
+ .../xyz.openbmc_project.bmctempsensor.service |  15 ++
+ src/hpe-temp/BmcTempMain.cpp                  | 224 ++++++++++++++++++
+ src/hpe-temp/BmcTempSensor.cpp                | 166 +++++++++++++
+ src/hpe-temp/BmcTempSensor.hpp                |  68 ++++++
+ src/hpe-temp/meson.build                      |  13 +
+ src/meson.build                               |   1 +
+ 8 files changed, 494 insertions(+)
+ create mode 100644 service_files/xyz.openbmc_project.bmctempsensor.service
+ create mode 100644 src/hpe-temp/BmcTempMain.cpp
+ create mode 100644 src/hpe-temp/BmcTempSensor.cpp
+ create mode 100644 src/hpe-temp/BmcTempSensor.hpp
+ create mode 100644 src/hpe-temp/meson.build
+
+diff --git a/meson.options b/meson.options
+index c8a8d34..97b60c6 100644
+--- a/meson.options
++++ b/meson.options
+@@ -22,6 +22,12 @@ option(
+     value: 'enabled',
+     description: 'Enable fan sensor.',
+ )
++option(
++    'hpe-temp',
++    type: 'feature',
++    value: 'enabled',
++    description: 'Enable HPE BMC SoC core temperature sensor.',
++)
+ option(
+     'hwmon-temp',
+     type: 'feature',
+diff --git a/service_files/meson.build b/service_files/meson.build
+index 5b949a2..650ed67 100644
+--- a/service_files/meson.build
++++ b/service_files/meson.build
+@@ -10,6 +10,7 @@ unit_files = [
+     ['exit-air', 'xyz.openbmc_project.exitairsensor.service'],
+     ['external', 'xyz.openbmc_project.externalsensor.service'],
+     ['fan', 'xyz.openbmc_project.fansensor.service'],
++    ['hpe-temp', 'xyz.openbmc_project.bmctempsensor.service'],
+     ['hwmon-temp', 'xyz.openbmc_project.hwmontempsensor.service'],
+     ['intel-cpu', 'xyz.openbmc_project.intelcpusensor.service'],
+     ['intrusion', 'xyz.openbmc_project.intrusionsensor.service'],
+diff --git a/service_files/xyz.openbmc_project.bmctempsensor.service b/service_files/xyz.openbmc_project.bmctempsensor.service
+new file mode 100644
+index 0000000..f84c047
+--- /dev/null
++++ b/service_files/xyz.openbmc_project.bmctempsensor.service
+@@ -0,0 +1,15 @@
++[Unit]
++Description=BMC SoC Core Temperature Sensor
++StopWhenUnneeded=false
++Requires=xyz.openbmc_project.EntityManager.service
++After=xyz.openbmc_project.EntityManager.service
++
++[Service]
++Type=dbus
++BusName=xyz.openbmc_project.BmcTempSensor
++Restart=always
++RestartSec=5
++ExecStart=/usr/libexec/dbus-sensors/bmctempsensor
++
++[Install]
++WantedBy=multi-user.target
+diff --git a/src/hpe-temp/BmcTempMain.cpp b/src/hpe-temp/BmcTempMain.cpp
+new file mode 100644
+index 0000000..8627f87
+--- /dev/null
++++ b/src/hpe-temp/BmcTempMain.cpp
+@@ -0,0 +1,224 @@
++/*
++ * Copyright (c) 2021 Hewlett-Packard Development Company, L.P.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#include "BmcTempSensor.hpp"
++#include "Thresholds.hpp"
++#include "Utils.hpp"
++
++#include <boost/asio/io_context.hpp>
++#include <boost/asio/post.hpp>
++#include <boost/asio/steady_timer.hpp>
++#include <boost/container/flat_map.hpp>
++#include <phosphor-logging/lg2.hpp>
++#include <sdbusplus/asio/connection.hpp>
++#include <sdbusplus/asio/object_server.hpp>
++#include <sdbusplus/bus/match.hpp>
++#include <sdbusplus/message.hpp>
++#include <sdbusplus/message/native_types.hpp>
++
++#include <array>
++#include <chrono>
++#include <filesystem>
++#include <functional>
++#include <memory>
++#include <string>
++#include <utility>
++#include <vector>
++
++// Short type name used with GetSensorConfiguration / setupPropertiesChangedMatches
++// (those helpers prepend "xyz.openbmc_project.Configuration." themselves).
++static constexpr std::string_view sensorType = "BmcTempSensor";
++
++// Full D-Bus interface name, used when searching the ManagedObjectType map
++// returned by GetSensorConfiguration (keys are full interface names).
++static constexpr std::string_view sensorInterface =
++    "xyz.openbmc_project.Configuration.BmcTempSensor";
++
++static constexpr float pollRateDefault = 0.5F; // seconds
++
++// The BMC SoC core temperature is presented as a platform hwmon device
++// via the kernel coretemp driver.  Identify it by the sysfs symlink
++// name rather than an I2C bus/address (it has neither).
++static constexpr std::string_view coretempDeviceSuffix = "c0000130.coretemp";
++
++namespace fs = std::filesystem;
++
++// Returns true if the hwmon directory belongs to the BMC SoC coretemp device.
++static bool isBmcSocTemp(const fs::path& hwmonDir)
++{
++    std::error_code ec;
++    fs::path device = fs::read_symlink(hwmonDir / "device", ec);
++    if (ec)
++    {
++        return false;
++    }
++    return device.filename().string().ends_with(coretempDeviceSuffix);
++}
++
++void createSensors(
++    boost::asio::io_context& io,
++    sdbusplus::asio::object_server& objectServer,
++    boost::container::flat_map<std::string, std::shared_ptr<BmcTempSensor>>&
++        sensors,
++    std::shared_ptr<sdbusplus::asio::connection>& dbusConnection)
++{
++    auto getter = std::make_shared<GetSensorConfiguration>(
++        dbusConnection,
++        [&io, &objectServer, &sensors,
++         &dbusConnection](const ManagedObjectType& sensorConfigurations) {
++            // Find all hwmon temp input files under /sys/class/hwmon.
++            std::vector<fs::path> paths;
++            findFiles(fs::path("/sys/class/hwmon"), R"(temp\d+_input)", paths);
++
++            for (const auto& path : paths)
++            {
++                const fs::path hwmonDir = path.parent_path();
++
++                // Only process the BMC SoC coretemp device.
++                if (!isBmcSocTemp(hwmonDir))
++                {
++                    continue;
++                }
++
++                // Find the matching BmcTempSensor configuration in Entity
++                // Manager.  There is exactly one coretemp device on the BMC
++                // SoC, so we match the first config of this type.
++                const SensorData* sensorData = nullptr;
++                const std::string* configurationPath = nullptr;
++                const SensorBaseConfigMap* baseConfigMap = nullptr;
++
++                for (const auto& [objPath, cfgData] : sensorConfigurations)
++                {
++                    auto sensorBase = cfgData.find(std::string(sensorInterface));
++                    if (sensorBase == cfgData.end())
++                    {
++                        continue;
++                    }
++                    sensorData = &cfgData;
++                    configurationPath = &objPath.str;
++                    baseConfigMap = &sensorBase->second;
++                    break;
++                }
++
++                if (configurationPath == nullptr)
++                {
++                    lg2::error(
++                        "BmcTempSensor: no Entity Manager configuration found "
++                        "for '{PATH}'",
++                        "PATH", path.string());
++                    continue;
++                }
++
++                // Extract sensor name.
++                auto findName = baseConfigMap->find("Name");
++                if (findName == baseConfigMap->end())
++                {
++                    lg2::error(
++                        "BmcTempSensor: configuration missing 'Name' for "
++                        "'{PATH}'",
++                        "PATH", path.string());
++                    continue;
++                }
++                const std::string sensorName =
++                    std::get<std::string>(findName->second);
++
++                // Extract optional poll rate override.
++                float pollRate = pollRateDefault;
++                auto findRate = baseConfigMap->find("PollRate");
++                if (findRate != baseConfigMap->end())
++                {
++                    pollRate = static_cast<float>(
++                        std::visit(VariantToDoubleVisitor(),
++                                   findRate->second));
++                    if (pollRate <= 0.0F)
++                    {
++                        pollRate = pollRateDefault;
++                    }
++                }
++
++                // Extract threshold data.
++                std::vector<thresholds::Threshold> sensorThresholds;
++                if (!parseThresholdsFromConfig(*sensorData, sensorThresholds))
++                {
++                    lg2::error(
++                        "BmcTempSensor: failed to parse thresholds for '{NAME}'",
++                        "NAME", sensorName);
++                }
++
++                lg2::info(
++                    "BmcTempSensor: creating sensor '{NAME}' from '{PATH}'",
++                    "NAME", sensorName, "PATH", path.string());
++
++                // Destroy any previous instance before re-creating.
++                sensors[sensorName] = nullptr;
++                sensors[sensorName] = std::make_shared<BmcTempSensor>(
++                    path.string(), std::string(sensorInterface), objectServer,
++                    dbusConnection, io, sensorName,
++                    std::move(sensorThresholds), *configurationPath, pollRate);
++                sensors[sensorName]->setupRead();
++            }
++        });
++    getter->getConfiguration(
++        std::to_array<std::string_view>({sensorType})); // short name; prefix added internally
++}
++
++int main()
++{
++    boost::asio::io_context io;
++    auto dbusConnection =
++        std::make_shared<sdbusplus::asio::connection>(io);
++    dbusConnection->request_name("xyz.openbmc_project.BmcTempSensor");
++
++    sdbusplus::asio::object_server objectServer(dbusConnection);
++    objectServer.add_manager("/xyz/openbmc_project/sensors");
++
++    boost::container::flat_map<std::string, std::shared_ptr<BmcTempSensor>>
++        sensors;
++
++    boost::asio::post(io, [&]() {
++        createSensors(io, objectServer, sensors, dbusConnection);
++    });
++
++    // Rescan timer used after a configuration change signal.
++    boost::asio::steady_timer filterTimer(io);
++
++    // Lambda that schedules a debounced rescan on configuration changes.
++    auto eventHandler = [&](sdbusplus::message_t& message) {
++        if (message.is_method_error())
++        {
++            lg2::error("BmcTempSensor: callback method error");
++            return;
++        }
++        filterTimer.expires_after(std::chrono::seconds(1));
++        filterTimer.async_wait([&](const boost::system::error_code& ec) {
++            if (ec == boost::asio::error::operation_aborted)
++            {
++                return;
++            }
++            createSensors(io, objectServer, sensors, dbusConnection);
++        });
++    };
++
++    std::vector<std::unique_ptr<sdbusplus::bus::match_t>> matches =
++        setupPropertiesChangedMatches(
++            *dbusConnection,
++            std::to_array<std::string_view>({sensorType}),
++            eventHandler);
++
++    setupManufacturingModeMatch(*dbusConnection);
++    io.run();
++    return 0;
++}
+diff --git a/src/hpe-temp/BmcTempSensor.cpp b/src/hpe-temp/BmcTempSensor.cpp
+new file mode 100644
+index 0000000..bf905a7
+--- /dev/null
++++ b/src/hpe-temp/BmcTempSensor.cpp
+@@ -0,0 +1,166 @@
++/*
++ * Copyright (c) 2021 Hewlett-Packard Development Company, L.P.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++
++#include "BmcTempSensor.hpp"
++
++#include "SensorPaths.hpp"
++#include "Thresholds.hpp"
++#include "Utils.hpp"
++#include "sensor.hpp"
++
++#include <boost/algorithm/string/replace.hpp>
++#include <boost/asio/buffer.hpp>
++#include <boost/asio/error.hpp>
++#include <boost/asio/io_context.hpp>
++#include <boost/asio/random_access_file.hpp>
++#include <phosphor-logging/lg2.hpp>
++#include <sdbusplus/asio/connection.hpp>
++#include <sdbusplus/asio/object_server.hpp>
++
++#include <charconv>
++#include <chrono>
++#include <limits>
++#include <memory>
++#include <string>
++#include <system_error>
++#include <utility>
++#include <vector>
++
++BmcTempSensor::BmcTempSensor(
++    const std::string& path, const std::string& objectType,
++    sdbusplus::asio::object_server& objectServer,
++    std::shared_ptr<sdbusplus::asio::connection>& conn,
++    boost::asio::io_context& io, const std::string& sensorName,
++    std::vector<thresholds::Threshold>&& thresholdsIn,
++    const std::string& sensorConfiguration, float pollRate) :
++    Sensor(boost::replace_all_copy(sensorName, " ", "_"),
++           std::move(thresholdsIn), sensorConfiguration, objectType,
++           /*isSettable=*/false, /*isMutable=*/false, maxReading, minReading,
++           conn),
++    objServer(objectServer),
++    inputDev(io, path, boost::asio::random_access_file::read_only),
++    waitTimer(io), path(path),
++    sensorPollMs(static_cast<unsigned int>(pollRate * 1000))
++{
++    sensorInterface = objectServer.add_interface(
++        "/xyz/openbmc_project/sensors/temperature/" + name,
++        "xyz.openbmc_project.Sensor.Value");
++
++    for (const auto& threshold : thresholds)
++    {
++        std::string interface = thresholds::getInterface(threshold.level);
++        thresholdInterfaces[static_cast<size_t>(threshold.level)] =
++            objectServer.add_interface(
++                "/xyz/openbmc_project/sensors/temperature/" + name, interface);
++    }
++    association = objectServer.add_interface(
++        "/xyz/openbmc_project/sensors/temperature/" + name,
++        association::interface);
++
++    setInitialProperties(sensor_paths::unitDegreesC);
++}
++
++BmcTempSensor::~BmcTempSensor()
++{
++    inputDev.close();
++    waitTimer.cancel();
++    for (const auto& iface : thresholdInterfaces)
++    {
++        objServer.remove_interface(iface);
++    }
++    objServer.remove_interface(sensorInterface);
++    objServer.remove_interface(association);
++}
++
++void BmcTempSensor::setupRead()
++{
++    if (!readingStateGood())
++    {
++        markAvailable(false);
++        updateValue(std::numeric_limits<double>::quiet_NaN());
++        restartRead();
++        return;
++    }
++
++    std::weak_ptr<BmcTempSensor> weakRef = weak_from_this();
++    inputDev.async_read_some_at(
++        0, boost::asio::buffer(readBuf),
++        [weakRef](const boost::system::error_code& ec,
++                  std::size_t bytesRead) {
++            std::shared_ptr<BmcTempSensor> self = weakRef.lock();
++            if (self)
++            {
++                self->handleResponse(ec, bytesRead);
++            }
++        });
++}
++
++void BmcTempSensor::restartRead()
++{
++    std::weak_ptr<BmcTempSensor> weakRef = weak_from_this();
++    waitTimer.expires_after(std::chrono::milliseconds(sensorPollMs));
++    waitTimer.async_wait([weakRef](const boost::system::error_code& ec) {
++        if (ec == boost::asio::error::operation_aborted)
++        {
++            return; // we're being cancelled
++        }
++        std::shared_ptr<BmcTempSensor> self = weakRef.lock();
++        if (!self)
++        {
++            return;
++        }
++        self->setupRead();
++    });
++}
++
++void BmcTempSensor::handleResponse(const boost::system::error_code& err,
++                                   std::size_t bytesRead)
++{
++    if ((err == boost::system::errc::bad_file_descriptor) ||
++        (err == boost::asio::error::misc_errors::not_found))
++    {
++        lg2::error("BMC SoC temp sensor '{NAME}' removed '{PATH}'", "NAME", name,
++                   "PATH", path);
++        return; // we're being destroyed
++    }
++
++    if (!err)
++    {
++        const char* bufEnd = readBuf.data() + bytesRead;
++        int nvalue = 0;
++        std::from_chars_result ret =
++            std::from_chars(readBuf.data(), bufEnd, nvalue);
++        if (ret.ec != std::errc())
++        {
++            incrementError();
++        }
++        else
++        {
++            updateValue(static_cast<double>(nvalue) * scaleValue);
++        }
++    }
++    else
++    {
++        incrementError();
++    }
++
++    restartRead();
++}
++
++void BmcTempSensor::checkThresholds()
++{
++    thresholds::checkThresholds(this);
++}
+diff --git a/src/hpe-temp/BmcTempSensor.hpp b/src/hpe-temp/BmcTempSensor.hpp
+new file mode 100644
+index 0000000..654934b
+--- /dev/null
++++ b/src/hpe-temp/BmcTempSensor.hpp
+@@ -0,0 +1,68 @@
++/*
++ * Copyright (c) 2021 Hewlett-Packard Development Company, L.P.
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++#pragma once
++
++#include "Thresholds.hpp"
++#include "sensor.hpp"
++
++#include <boost/asio/io_context.hpp>
++#include <boost/asio/random_access_file.hpp>
++#include <boost/asio/steady_timer.hpp>
++#include <sdbusplus/asio/connection.hpp>
++#include <sdbusplus/asio/object_server.hpp>
++
++#include <array>
++#include <memory>
++#include <string>
++#include <vector>
++
++// Sensor daemon for the BMC SoC core temperature, which is exposed as a
++// platform hwmon device (c0000130.coretemp) rather than an I2C device.
++// This makes it incompatible with HwmonTempSensor's I2C bus/addr matching.
++class BmcTempSensor :
++    public Sensor,
++    public std::enable_shared_from_this<BmcTempSensor>
++{
++  public:
++    // pollRate is in seconds (fractional allowed, e.g. 0.5 = 500 ms)
++    BmcTempSensor(const std::string& path, const std::string& objectType,
++                  sdbusplus::asio::object_server& objectServer,
++                  std::shared_ptr<sdbusplus::asio::connection>& conn,
++                  boost::asio::io_context& io, const std::string& sensorName,
++                  std::vector<thresholds::Threshold>&& thresholdsIn,
++                  const std::string& sensorConfiguration, float pollRate);
++    ~BmcTempSensor() override;
++    void setupRead();
++
++  private:
++    // Ordering: readBuf first so it outlives async ops on other members.
++    std::array<char, 128> readBuf{};
++    sdbusplus::asio::object_server& objServer;
++    boost::asio::random_access_file inputDev;
++    boost::asio::steady_timer waitTimer;
++    std::string path;
++    unsigned int sensorPollMs;
++
++    // The kernel coretemp driver reports millidegrees C; scale to degrees C.
++    static constexpr double scaleValue = 0.001;
++    static constexpr double maxReading = 127.0;
++    static constexpr double minReading = -128.0;
++
++    void handleResponse(const boost::system::error_code& err,
++                        std::size_t bytesRead);
++    void restartRead();
++    void checkThresholds() override;
++};
+diff --git a/src/hpe-temp/meson.build b/src/hpe-temp/meson.build
+new file mode 100644
+index 0000000..d2da25d
+--- /dev/null
++++ b/src/hpe-temp/meson.build
+@@ -0,0 +1,13 @@
++if not get_option('hpe-temp').allowed()
++    subdir_done()
++endif
++
++executable(
++    'bmctempsensor',
++    'BmcTempMain.cpp',
++    'BmcTempSensor.cpp',
++    dependencies: [default_deps, thresholds_dep, utils_dep],
++    include_directories: src_inc,
++    install: true,
++    install_dir: '/usr/libexec/dbus-sensors',
++)
+diff --git a/src/meson.build b/src/meson.build
+index 9e6da9e..9bcfada 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -118,6 +118,7 @@ subdir('cable-monitor')
+ subdir('exit-air')
+ subdir('external')
+ subdir('fan')
++subdir('hpe-temp')
+ subdir('hwmon-temp')
+ subdir('intel-cpu')
+ subdir('intrusion')
+-- 
+2.34.1
+
