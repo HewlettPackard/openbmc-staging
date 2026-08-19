@@ -170,7 +170,8 @@
             {
                 "Address": "0x4c",
                 "Bus": "47",
-                "Name": "01-Inlet Ambient",
+                "Name": "01-Inlet Ambient Local",
+                "Name1": "01-Inlet Ambient Remote",
                 "Type": "TMP411",
                 "Thresholds": [
                     {
@@ -184,6 +185,20 @@
                         "Name": "upper non critical",
                         "Severity": 0,
                         "Value": 42
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 46,
+                        "Index": 2
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 42,
+                        "Index": 2
                     }
                 ]
             },
