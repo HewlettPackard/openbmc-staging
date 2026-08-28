@@ -173,7 +173,8 @@
             {
                 "Address": "0x4c",
                 "Bus": "47",
-                "Name": "45-Board Inlet",
+                "Name": "45-Board Inlet Local",
+                "Name1": "45-Board Inlet Remote",
                 "Type": "TMP411",
                 "Thresholds": [
                     {
@@ -187,6 +188,20 @@
                         "Name": "upper non critical",
                         "Severity": 0,
                         "Value": 85
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper critical",
+                        "Severity": 1,
+                        "Value": 95,
+                        "Index": 2
+                    },
+                    {
+                        "Direction": "greater than",
+                        "Name": "upper non critical",
+                        "Severity": 0,
+                        "Value": 85,
+                        "Index": 2
                     }
                 ]
             },
