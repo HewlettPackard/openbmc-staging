@@ -10,10 +10,10 @@ Upstream-Status: Pending
  1 file changed, 17 insertions(+), 2 deletions(-)
 
 diff --git a/redfish-core/lib/memory.hpp b/redfish-core/lib/memory.hpp
-index 79ccdac1..a7aedd44 100644
+index 13972c38f8..19aa203df1 100644
 --- a/redfish-core/lib/memory.hpp
 +++ b/redfish-core/lib/memory.hpp
-@@ -488,18 +488,33 @@ inline void assembleDimmProperties(
+@@ -491,23 +491,38 @@ inline void assembleDimmProperties(
              std::to_string(*revisionCode);
      }
  
@@ -22,12 +22,17 @@ index 79ccdac1..a7aedd44 100644
      if (present != nullptr && !*present)
      {
 +        unpopulatedSlot = true;
-+        
++
          asyncResp->res.jsonValue[jsonPtr]["Status"]["State"] =
              resource::State::Absent;
 +
 +        asyncResp->res.jsonValue[jsonPtr]["Status"]["Health"] =
 +            resource::Health::Invalid;
+     }
+     else if (available != nullptr && !*available)
+     {
+         asyncResp->res.jsonValue[jsonPtr]["Status"]["State"] =
+             resource::State::UnavailableOffline;
      }
  
      if (functional != nullptr)
@@ -37,7 +42,7 @@ index 79ccdac1..a7aedd44 100644
 -            asyncResp->res.jsonValue[jsonPtr]["Status"]["Health"] =
 -                resource::Health::Critical;
 +            if (unpopulatedSlot)
-+            { 
++            {
 +                // if slot is not populated, there's no need to mark it
 +                // with an alarming 'Health::Critical' flag
 +            }
